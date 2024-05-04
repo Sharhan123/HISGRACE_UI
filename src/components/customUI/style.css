@@ -1,0 +1,122 @@
+.bg-trans{
+    background-color: rgba(255, 255, 255, 0.666);
+    box-shadow: 0px 0px 2px 0px;
+    border-radius: 5px;
+}
+
+.scroll-hidden{
+scrollbar-width: thin;
+}
+.scroll-hidden::-moz-scrollbar {
+  width: 5px; 
+}
+.scroll-hidden::-webkit-scrollbar{
+    display: none;
+}
+.scroll-hidden::-moz-scrollbar-track {
+  background: transparent; /* Background color of the scrollbar track */
+}
+.scroll-hidden::-moz-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners of the scrollbar thumb */
+  }
+.component {
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+}
+
+blockquote {
+    background:
+        linear-gradient(to right, #ffffff 6px, transparent 4px) 0 100%,
+        linear-gradient(to left, #ffffff 6px, transparent 4px) 100% 0,
+        linear-gradient(to bottom, #ffffff 6px, transparent 4px) 100% 0,
+        linear-gradient(to top, #ffffff 6px, transparent 4px) 0 100%;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    position: relative;
+    color: #fff;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+}
+
+blockquote:before,
+blockquote:after {
+    font-family: 'FontAwesome';
+    font-size: 34px;
+    color: #ffffff;
+    position: absolute;
+}
+
+blockquote:before {
+    content: "\f10d";
+    top: -12px;
+    right: 100%;
+    margin-right: -20px;
+}
+
+blockquote:after {
+    content: "\f10e";
+    bottom: -20px;
+    left: 100%;
+    margin-left: -20px;
+}
+
+.quote-text {
+    display: block;
+    position: relative;
+    z-index: 1; 
+}
+
+cite {
+    display: block;
+    margin-top: 10px;
+}
+
+
+/* HTML: <div class="loader"></div> */
+/* HTML: <div class="loader"></div> */
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 60px;
+    aspect-ratio: 8;
+    --_g: no-repeat radial-gradient(circle closest-side,#fbfbfb 90%,#ffffff00);
+    background: 
+      var(--_g) 0%   50%,
+      var(--_g) 50%  50%,
+      var(--_g) 100% 50%;
+    background-size: calc(100%/3) 100%;
+    animation: l7 1s infinite linear;
+  }
+  @keyframes l7 {
+      33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
+      50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
+      66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+  }
+
+
+  body::-webkit-scrollbar {
+    display: none; /* WebKit browsers */
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader-second {
+    width: 50px;
+    aspect-ratio: 1;
+    
+    border-radius: 50%;
+    display: grid;
+    background: 
+      conic-gradient(from 90deg at 4px 4px,#0000 90deg,currentColor 0)
+      -4px -4px/calc(50% + 2px) calc(50% + 2px),
+      radial-gradient(farthest-side,currentColor 6px,#0000 7px calc(100% - 6px),currentColor calc(100% - 5px)) no-repeat;
+    animation: l10 2s infinite linear;
+    position: relative;
+  }
+  .loader-second:before {
+    content: "";
+    border-radius: inherit;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+  @keyframes l10 {to{transform: rotate(.5turn)}}

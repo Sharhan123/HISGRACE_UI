@@ -1,0 +1,13 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* @media  only screen and (max-width:800px){
+    body{
+        width: 100vh;
+    }
+} */
+
+
+body::-webkit-scrollbar {
+    display: none; /* WebKit browsers */
+}

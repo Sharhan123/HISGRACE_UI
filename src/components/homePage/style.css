@@ -1,0 +1,169 @@
+.bg-set{
+  background-image: url('../../assets/banner.webp');
+  /* background:no-repeat; */
+  object-fit: contain;
+}
+
+/* .main {
+    background-color: #07162D;
+    height: 30vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: 'center'
+}
+
+.main-cont {
+
+    width: 95%;
+    height: 50%;
+    display: flex;
+    justify-content: space-between
+}
+
+.main-logo {
+    background-image: url('../../assets/HISGRACE-logos_transparent.png');
+    background-size: cover;
+    background-position: center;
+    height: 60%;
+    width: 30%;
+}
+
+.btn-containers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   
+    
+} */
+
+  
+  /* @media (max-width: 768px) {
+    .btn-containers {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .container-fluid {
+      margin-bottom: 10px; /* Add some spacing between buttons */
+      
+    
+      .h-30vh {
+        height: 15vh;
+      }
+      .bg-signin {
+        background-image: linear-gradient(to right, #8E0505 50%, #960606 );
+      }
+      .bg-about{
+        background-color: #79797921;
+        background-image: linear-gradient(to right, #8E0505 50%, #960606 ),
+      }
+      .kanit-thin {
+        font-family: "Kanit", sans-serif;
+        font-weight: 100;
+        font-style: normal;
+      }
+      
+      .kanit-extralight {
+        font-family: "Kanit", sans-serif;
+        font-weight: 200;
+        font-style: normal;
+      }
+      
+      .kanit-light {
+        font-family: "Kanit", sans-serif;
+        font-weight: 300;
+        font-style: normal;
+      }
+      
+      .kanit-regular {
+        font-family: "Kanit", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      
+      .kanit-medium {
+        font-family: "Kanit", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+      }
+      
+      .kanit-semibold {
+        font-family: "Kanit", sans-serif;
+        font-weight: 600;
+        font-style: normal;
+      }
+      
+      .kanit-bold {
+        font-family: "Kanit", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+      }
+      
+      .kanit-extrabold {
+        font-family: "Kanit", sans-serif;
+        font-weight: 800;
+        font-style: normal;
+      }
+      
+      .kanit-black {
+        font-family: "Kanit", sans-serif;
+        font-weight: 900;
+        font-style: normal;
+      }
+      
+      .kanit-thin-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 100;
+        font-style: italic;
+      }
+      
+      .kanit-extralight-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 200;
+        font-style: italic;
+      }
+      
+      .kanit-light-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 300;
+        font-style: italic;
+      }
+      
+      .kanit-regular-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 400;
+        font-style: italic;
+      }
+      
+      .kanit-medium-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 500;
+        font-style: italic;
+      }
+      
+      .kanit-semibold-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 600;
+        font-style: italic;
+      }
+      
+      .kanit-bold-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 700;
+        font-style: italic;
+      }
+      
+      .kanit-extrabold-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 800;
+        font-style: italic;
+      }
+      
+      .kanit-black-italic {
+        font-family: "Kanit", sans-serif;
+        font-weight: 900;
+        font-style: italic;
+      }
+      

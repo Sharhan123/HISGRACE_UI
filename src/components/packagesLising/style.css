@@ -1,0 +1,12 @@
+.scroll-container {
+    -webkit-overflow-scrolling: touch; /* Enables momentum scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: none; /* Hide the scrollbar */
+    /* Optional: Replace scrollbar appearance with custom styles */
+    scrollbar-color: transparent transparent; /* Hide scrollbar color */
+  }
+
+  /* Optional: Customize scrollbar appearance for WebKit browsers */
+  .scroll-container::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar */
+  }

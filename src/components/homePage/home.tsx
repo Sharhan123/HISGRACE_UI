@@ -1,0 +1,126 @@
+import React, { useEffect, useState } from 'react'
+import './style.css'
+import VehiclesSection from '../customUI/vehicle';
+import banner from '../../assets/banner.jpg'
+import Footer from '../customUI/Footer';
+import { getPackages } from '../../services/packageService';
+import { IpackageRes, IvehicleRes } from '../../interfaces';
+import OnewayCard from '../customUI/onewayCard';
+import Alert from '../customUI/alert';
+import PackagesCard from './packagesCard';
+import { getVehicles } from '../../services/vehicleService';
+import MainLoader from '../customUI/mainLoader';
+import ImageSlider from './carousal';
+const Home: React.FC = () => {
+  const [packages, setPackages] = useState<IpackageRes[]>([])
+  const [vehicles, setVehicles] = useState<IvehicleRes[] | null>([])
+  const [loader, setLoader] = useState(true)
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await getPackages()
+        const response = await getVehicles()
+        setPackages(res.data.data)
+        setVehicles(response.data.data)
+      } catch (err) {
+        console.log(err);
+
+      }
+      finally {
+        setTimeout(() => {
+
+          setLoader(false)
+        }, 1500)
+        
+        
+      }
+    }
+
+     fetch()
+     console.log(packages,vehicles,'...');
+     
+
+  }, [])
+
+
+
+
+  return (
+    <>
+
+      <MainLoader open={loader} />
+      <div className='h-screen  lg:w-full md:w-full  ' >
+
+        <Alert />
+
+        <div className="w-screen h-4/6 overflow-hidden relative before:block before:absolute before:bg-black before:h-full before:w-full before:top-0 before:left-0 before:z-10 before:opacity-20">
+          <img src={banner} className="absolute top-0 left-0 min-h-full w-full ob" alt="" />
+          <div className="relative  z-20 container  mx-auto grid grid-cols-12 h-full items-center">
+            <div className="col-span-6">
+              <span className="uppercase text-white text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span>
+              <h1 className="text-white kanit-bold text-4xl mb-8">Make Your journey extra ordinary and valuable</h1>
+              <p className="text-white kanit-regular text-md">
+                Hisgrace cabs is providing exiting tour packages to enjoy with with family, friend, Any ones dear to you .
+              </p>
+              <button className="mt-8 text-white uppercase py-4 kanit-regular text-base  px-10 bg-blue-600 rounded  hover:bg-white hover:bg-opacity-10">Get started</button>
+            </div>
+            <div className='col-span-6'>
+
+            {packages && packages.length > 0 && <ImageSlider packages={packages} />}
+              
+            </div>
+          </div>
+
+        </div>
+        {/* <OnewayCard /> */}
+
+
+
+
+
+        <div className=" mx-auto mt-4 	 text-white py-4 px-6 flex justify-between items-center">
+
+          <h1 className="text-lg text-black font-semibold">Exclusive <span className='text-red-500'>Packages</span></h1>
+
+          <nav>
+            <ul className="flex space-x-6 text-black">
+              <li>
+                <a href="#" className="flex items-center underline underline-offset-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                  </svg>
+                  Sedan
+                </a>
+              </li>
+              <li>
+                <a href="#" className="flex items-center underline underline-offset-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                  </svg>
+
+                  SUV
+                </a>
+              </li>
+              <li>
+                <a href="#" className="flex items-center underline underline-offset-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                  </svg>
+                  Van
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <a href="/packages" className="text-red-500 underline">View All Packages</a>
+        </div>
+        <PackagesCard loading={loader} packages={packages} />
+        <VehiclesSection loading={loader} vehicles={vehicles} />
+        <Footer />
+      </div>
+    </>
+
+  )
+}
+
+export default Home
