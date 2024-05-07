@@ -22,7 +22,7 @@ import VehicleSelectionPage from '../pages/userPages/vehicleSelectionPage';
 import BookingConfirmPage from '../pages/userPages/bookingConfirmPage';
 import PaymentConfirmation from '../components/bookingComponent/successPage';
 import PaymentFailure from '../components/bookingComponent/failurePage';
-import Success from '../components/bookingComponent/success';
+import ChatingPage from '../pages/userPages/chatingPage';
 const UserRoutes = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   useEffect(() => {
@@ -69,7 +69,7 @@ const UserRoutes = () => {
       <Route path='/cofirmBooking' element={<auth.bookingWrapper><BookingConfirmPage/></auth.bookingWrapper>} />
       <Route path='/success' element={<PaymentConfirmation/>} />
       <Route path='/failure' element={<PaymentFailure/>} />
-      <Route path='/one' element={<Success/>} />
+      <Route path='/chat' element={<auth.authRouterWrapper><ChatingPage/></auth.authRouterWrapper>} />
     </Routes>
 
   );

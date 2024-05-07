@@ -46,7 +46,7 @@ const navigate = useNavigate()
                   <CustomsButtons first='View Image' image={item.image} second='view details' secondFunction={()=>navigate(`/packageDetails/${item._id}`)}/>
                 </div>
                 </div>
-              )}
+              )}  
             </div>
           ))}
         </div>

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom';
-import { Iuser } from '../../interfaces';
+import { Iuser, IuserRes } from '../../interfaces';
 import { blockUser, getUsers } from '../../services/adminService';
 import BlockModalItem from '../customUI/blockCard';
 
 
 
 const RecordTable: React.FC = () => {
-    const [data, setdata] = useState<Iuser[] | null>([])
+    const [data, setdata] = useState<IuserRes[] | null>([])
 
 
     const naviagate = useNavigate()

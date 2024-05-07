@@ -8,7 +8,6 @@ const PackagesListing:React.FC = ()=> {
     <>
      <Navbar/> 
      <MainContent/>
-     <Footer/>
     </>
   )
 }

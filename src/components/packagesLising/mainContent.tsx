@@ -1,95 +1,165 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import Navbar from '../homePage/navbar'
-import ListingCard from '../customUI/listingCard'
-import './style.css'
+import ListingCard from './listingCard'
+import {  IpackageRes, Ivehicle } from '../../interfaces'
+import SidebarMenu from '../vehicleListing/filter'
+import Footer from '../customUI/Footer'
 import { getPackages } from '../../services/packageService'
-import { IpackageRes } from '../../interfaces'
 const MainContent: React.FC = () => {
-    const [data, setData] = useState<IpackageRes[]>([])
-    const [showData,setShowData] = useState<IpackageRes[]>([])
-    const fetch = async () => {
-        try {
-            const res = await getPackages()
-            setShowData(res.data.data)
-            setData(res.data.data)
-        } catch (err) {
-            console.log(err);
+    const [data, setData] = useState<IpackageRes[]>([]);
+    const [showData, setShowData] = useState<IpackageRes[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [filter,setFilter] = useState('')
+    const [search,setSearch] = useState('')
+    const [available,setAvailable] = useState<boolean | string>('')
+    const itemsPerPage = 4; 
 
-        }
-
-
-    }
     useEffect(() => {
-        
-        fetch()
-    }, [])
+        const fetchVehicles = async () => {
+            try {
+                const res = await getPackages();
+                setData(res.data.data);
+                setShowData(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-    const handleFilter = (e:string)=>{
-        const arr = data.filter((item)=>item.vehicle.type === e)
-        setShowData(arr)
-    }
+        fetchVehicles();
+    }, []);
 
-    const handleSearch = (e:ChangeEvent<HTMLInputElement>)=>{
-        const value = e.target.value
-        
-            setShowData(data)
-        
-       
-        const arr = data?.filter((item)=>item.title.toLowerCase().split('').includes(value.toLowerCase()))
-        if(arr){
-
-            setShowData(arr)
+    const handleFilter = (e: string) => {
+        let filteredData
+        if(search){
+            const arr = data.filter((item) =>
+                item.title.toLowerCase().includes(search)
+            );
+            filteredData = arr.filter((item) => item.vehicle.type === e);
         }else{
-            setShowData([])
+            filteredData = data.filter((item) => item.vehicle.type === e);
         }
+        setFilter(e) 
+        setShowData(filteredData);
+        setCurrentPage(1);
+    };
+
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.toLowerCase()
+        let filteredData
+        if(filter){
+            const arr = data.filter((item)=>item.vehicle.type === filter)
+            filteredData = arr.filter((item) =>
+                item.title.toLowerCase().includes(value)
+        );
+    }else{
+        filteredData = data.filter((item)=>item.title.toLowerCase().includes(value))
     }
+        setSearch(value)
+        setShowData(filteredData);
+        setCurrentPage(1); 
+    };
+
+    const handleAvailability = (e:boolean)=>{
+        const val = e
+        let filteredData:IpackageRes[]=[]
+        if(search || filter){
+            if(search && filter){
+                const arr = data.filter((item) =>item.title.toLowerCase().includes(search))
+                const arr2 = arr.filter((item) => item.vehicle.type === filter)
+                filteredData = arr2.filter((item)=>item.isAvailable === val)
+                
+            }else if(search && !filter){
+                const arr = data.filter((item) =>item.title.toLowerCase().includes(search))
+                filteredData = arr.filter((item)=>item.isAvailable === val)
+
+            }else if(filter && !search){
+                const arr = data.filter((item) =>item.vehicle.type === filter)
+                filteredData = arr.filter((item)=>item.isAvailable === val)
+            }
+
+        }else{
+            filteredData = data.filter((item)=>item.isAvailable === val)
+        }
+        setAvailable(val)
+        setShowData(filteredData)
+        setCurrentPage(1)
+    }
+
+    const totalPages = Math.ceil(showData.length / itemsPerPage);
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = showData.slice(startIndex, endIndex);
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage((prevPage) => prevPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage((prevPage) => prevPage + 1);
+        }
+    };
     return (
-        <div className='h-auto'>
-            <div className="mt-6 md:flex md:items-center md:justify-evenly">
-                <div className="inline-flex  overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
+           <div className='h-screen'>
+                        <SidebarMenu handleAvailability={(e)=>handleAvailability(e)} filter={filter} handleSearch={handleSearch} clear={()=>{setShowData(data)
+                            setFilter('')
+                        }} handleFilter={(e)=>handleFilter(e)}/>
+
+        <div className='h-4/6 '>
+            
 
 
-                <button onClick={() => handleFilter('SUV')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            SUV
-                        </button>
-                        <button onClick={() => handleFilter('SEDAN')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            SEDAN
-                        </button>
-                        <button onClick={() => handleFilter('VAN')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            VAN
-                        </button>
-                        <button onClick={() => handleFilter('HATCHBACK')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            HATCHBACK
-                        </button>
-                        <button onClick={() => handleFilter('BUS')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            BUS
-                        </button>
-                        <button onClick={()=>setShowData(data)}  className="px-5 py-2  bg-red-700 text-xs font-medium text-white transition-colors duration-200 sm:text-sm ">
-                            Clear Filters
-                        </button>
-                </div>
-
-                <div className="relative flex items-center mt-4 md:mt-0">
-                <div className="relative w-full min-w-[300px] h-10">
-                            <input onChange={handleSearch}  className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
-                            <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal peer-placeholder-shown:text-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-blue-500 before:border-blue-gray-200 peer-focus:before:border-blue-500 after:border-blue-gray-200 peer-focus:after:border-blue-500">Search here</label>
-                        </div>
-                        </div>
-            </div>
-            <h1 className='text-center text-custom kanit-regular text-3xl  mt-5 underline-offset-1'>Our Packages</h1>
-            <div className='scroll-container   mt-5 flex flex-col items-center bg-gray-50 container mx-auto h-5/6 shadow-lg '>
-                <div className='container p-5 h-4/5 '>
-
-                    {showData && showData.length > 0 ?(showData.map((item, index) => (
+            {currentItems.length > 0 ? (
+                <div className="py-5 grid grid-cols-4 gap-10 container mx-auto">
+                    {currentItems.map((item, index) => (
                         <ListingCard key={index} datas={item} />
-                    ))):(
-                        <h6 className='text-center text-lg kanit-regular text-black'>No Packages </h6>
-
-                    )
-                }
-
+                    ))}
                 </div>
-            </div>
+            ) : (
+                <h6 className="text-center text-lg kanit-regular text-black">No Vehicles</h6>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="flex justify-center mt-5">
+                    <nav className="flex space-x-2" aria-label="Pagination">
+                        <button
+                            onClick={handlePrevPage}
+                            className="relative inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-red-500 to-red-700 border border-fuchsia-100 hover:border-violet-100 text-white font-semibold cursor-pointer leading-5 rounded-md transition duration-150 ease-in-out focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10"
+                        >
+                            Prev
+                        </button>
+                        
+                        {pageNumbers.map((page) => (
+                <button
+                    key={page}
+                    onClick={() => {setCurrentPage(page)
+                        
+                    }}
+                    className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
+                        currentPage === page
+                            ? 'bg-custom text-white'
+                            : 'bg-white text-gray-700 hover:bg-custom hover:text-white'
+                    } border border-gray-200 hover:border-violet-100 cursor-pointer leading-5 rounded-md transition duration-150 ease-in-out focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10`}
+                >
+                    {page}
+                </button>
+            ))}
+                        <button
+                            onClick={handleNextPage}
+                            className="relative inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-custom to-blue-950 border border-fuchsia-100 hover:border-violet-100 text-white font-semibold cursor-pointer leading-5 rounded-md transition duration-150 ease-in-out focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10"
+                        >
+                            Next
+                        </button>
+                    </nav>
+                </div>
+            )}
+        </div>
+           <Footer/>
+
         </div>
     )
 }

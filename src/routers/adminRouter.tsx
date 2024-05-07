@@ -7,12 +7,13 @@ import AdminUsers from "../pages/adminPages/adminUsers"
 import AdminPackagesPage from "../pages/adminPages/adminPackagesPage"
 import AdminDriverPage from "../pages/adminPages/adminDrivers"
 import AdminBookingsPage from "../pages/adminPages/adminBookingPage"
+import AdminMessagesPage from "../pages/adminPages/adminMessagesPage"
 
 const AdminRoutes: React.FC = () => {
-    
-    return (
+
+return (
         
-            <Routes>
+            <Routes> 
                 <Route path="/admin" element={<adminProtected.ProtectedAuthWrapper><AdminLoginPage /> </adminProtected.ProtectedAuthWrapper>} />
                 <Route path="/admin/dashboard" element={<adminProtected.ProtectedRouteWrapper><AdminDashboardPage /></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/vehicles" element={<adminProtected.ProtectedRouteWrapper><AdminVehiclePage /></adminProtected.ProtectedRouteWrapper>} />
@@ -20,6 +21,7 @@ const AdminRoutes: React.FC = () => {
                 <Route path="/admin/packages" element={<adminProtected.ProtectedRouteWrapper><AdminPackagesPage/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/drivers" element={<adminProtected.ProtectedRouteWrapper><AdminDriverPage/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/bookings" element={<adminProtected.ProtectedRouteWrapper><AdminBookingsPage/></adminProtected.ProtectedRouteWrapper>} />
+                <Route path="/admin/chats" element={<adminProtected.ProtectedRouteWrapper><AdminMessagesPage /></adminProtected.ProtectedRouteWrapper>} />
             </Routes>
        
     )

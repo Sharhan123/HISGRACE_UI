@@ -11,6 +11,7 @@ import PackagesCard from './packagesCard';
 import { getVehicles } from '../../services/vehicleService';
 import MainLoader from '../customUI/mainLoader';
 import ImageSlider from './carousal';
+import ChatbotComponent from '../chatingUser/chatingUser';
 const Home: React.FC = () => {
   const [packages, setPackages] = useState<IpackageRes[]>([])
   const [vehicles, setVehicles] = useState<IvehicleRes[] | null>([])
@@ -52,13 +53,12 @@ const Home: React.FC = () => {
       <div className='h-screen  lg:w-full md:w-full  ' >
 
         <Alert />
-
-        <div className="w-screen h-4/6 overflow-hidden relative before:block before:absolute before:bg-black before:h-full before:w-full before:top-0 before:left-0 before:z-10 before:opacity-20">
+        <div className="w-screen h-4/6 overflow-hidden relative before:block before:absolute before:bg-black/80 before:h-full before:w-full before:top-0 before:opacity-35 before:z-10 before:left-0 ">
           <img src={banner} className="absolute top-0 left-0 min-h-full w-full ob" alt="" />
           <div className="relative  z-20 container  mx-auto grid grid-cols-12 h-full items-center">
             <div className="col-span-6">
-              <span className="uppercase text-white text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span>
-              <h1 className="text-white kanit-bold text-4xl mb-8">Make Your journey extra ordinary and valuable</h1>
+              <span className="uppercase text-white  text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span>
+              <h1 className="text-white   kanit-bold text-4xl mb-8">Make Your journey extra ordinary and valuable</h1>
               <p className="text-white kanit-regular text-md">
                 Hisgrace cabs is providing exiting tour packages to enjoy with with family, friend, Any ones dear to you .
               </p>

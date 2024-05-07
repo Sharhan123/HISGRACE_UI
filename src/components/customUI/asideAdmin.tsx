@@ -4,7 +4,7 @@ import User from '@mui/icons-material/People';
 import Packages from '@mui/icons-material/Luggage';
 import Driver from '@mui/icons-material/CoffeeMaker';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';import { useNavigate } from "react-router-dom";
-
+import ChatIcon from '@mui/icons-material/Chat';
 interface props {
     dash?:any,
     vehicles?:any,
@@ -12,9 +12,10 @@ interface props {
     packages?:any
     drivers?:any
     bookings?:any
+    chat?:any
 }
 
-const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=null, packages=null,bookings=null}) => {
+const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=null,chat=null, packages=null,bookings=null}) => {
     const navigate = useNavigate()
     return (
         <aside className="bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
@@ -81,6 +82,14 @@ const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=nu
                             <button className={`middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg ${bookings?'bg-blue-600':'bg-dark'}  text-white hover:bg-slate-600  active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize`} type="button">
                                <BookmarkAddedIcon/>
                                 <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Bookings</p>
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-current="page" className="active" href="/admin/chats">
+                            <button className={`middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg ${chat?'bg-blue-600':'bg-dark'}  text-white hover:bg-slate-600  active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize`} type="button">
+                               <ChatIcon/>
+                                <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Messages</p>
                             </button>
                         </a>
                     </li>

@@ -1,0 +1,331 @@
+import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { IuserRes } from '../../interfaces';
+import { getUsers } from '../../services/adminService';
+import { Socket, io } from 'socket.io-client';
+import { findChats, saveChat } from '../../services/chatService';
+import EmojiPicker from 'emoji-picker-react';
+// import 'emoji-mart/css/emoji-mart.css';
+
+
+console.log('admin rendering..............');
+
+const AdminChat: React.FC = () => {
+    const [showMessages, setShowMessages] = useState<{ content: string, reciever: string, sender: string, time: string }[]>([])
+    const [users, setUsers] = useState<IuserRes[] | null>([])
+    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: string }[]>([]);
+    const [socket, setSocket] = useState<Socket | null>()
+    const [show, setShow] = useState(false)
+    const [text, setText] = useState('')
+    const [selected, setSelected] = useState<IuserRes>()
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const [showPicker, setShowPicker] = useState(false)
+
+
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            // Scroll to the bottom of the chat container
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    };
+
+    const fetch = async () => {
+        try {
+            const res = await getUsers()
+            setUsers(res.data.users)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                await fetch();
+
+
+                const newSocket = io('http://localhost:3000');
+                newSocket.emit('user_connect', 'admin')
+                setSocket(newSocket)
+                newSocket.on('from_admin', (data) => {
+                    console.log("received");
+                    setMessages((prevMessages) => [...prevMessages, data]);
+                });
+                newSocket.on('admin-recive', (data: { content: string, reciever: string, sender: string, time: string }) => {
+                    console.log('recived');
+                    setMessages((prev) => [...prev, data])
+                    if (data.reciever || data.sender === selected?._id) {
+
+                        setShowMessages((prev) => [...prev, data])
+                    }
+                })
+                scrollToBottom()
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+
+    }, [selected])
+
+
+    const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+        scrollToBottom()
+    };
+
+
+
+
+    const handleSelect = async (data: IuserRes) => {
+        try {
+            const res = await findChats(data._id)
+            setSelected(data)
+            // const filtered = messages.filter((item) => item.sender === data._id && item.reciever === data._id )
+            setShowMessages(res.data.data)
+            setShow(true)
+            scrollToBottom()
+        } catch (err) {
+
+        }
+
+    }
+    const sendMessage = async () => {
+        if (!text.trim()) {
+            return
+        }
+        const data: any = {
+            content: text,
+            sender: 'admin',
+            reciever: selected?._id,
+            time: Date.now()
+        }
+        try {
+            const res = await saveChat(data)
+        } catch (err) {
+            console.log(err);
+        }
+        setText('')
+        setMessages((prev) => [...prev, data])
+        setShowMessages((prev) => [...prev, data])
+        socket?.emit('admin_message', data)
+    }
+
+    return (
+        <div className="flex h-screen antialiased text-gray-800">
+            <div className="flex flex-row h-full w-full overflow-x-hidden">
+                {/* Sidebar */}
+                <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
+                    <div className="flex flex-row items-center justify-center h-12 w-full">
+                        <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                                />
+                            </svg>
+                        </div>
+                        <div className="ml-2 font-bold text-2xl"> Messages</div>
+                    </div>
+                    {/* User Profile */}
+
+                    {/* Active Conversations */}
+                    <div className="flex flex-col mt-8">
+                        <div className="flex flex-row items-center justify-between text-xs">
+                            <span className="font-bold">Active Conversations</span>
+                            <span className="flex items-center justify-center bg-emerald-600 text-white h-4 w-4 rounded-full">4</span>
+                        </div>
+
+                        <div className="flex scroll-hidden flex-col space-y-1 mt-4 -mx-2  max-h-[25rem] overflow-y-auto">
+                            {
+                                users && users.length > 0 ? (
+                                    users.map((item, index) => (
+                                        <button onClick={() => handleSelect(item)} key={index} className={`${selected?._id === item._id ? 'bg-custom text-white' : ''} flex flex-row items-center  rounded-xl p-2`}>
+                                            {
+                                                item.profile ? (
+                                                    <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full bg-contain" style={{ backgroundImage: `url(${item.profile})` }}>
+
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                                                        {item.name.slice(0, 1)}
+                                                    </div>
+                                                )
+                                            }
+
+                                            <div className="ml-2 text-sm font-semibold">{item.name}</div>
+                                        </button>
+                                    ))
+
+                                ) : (
+                                    <p className='kanit-regular text-center'>No users</p>
+                                )
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                {/* Main Chat Area */}
+
+                {
+                    show ? (
+                        <div className=" flex flex-col flex-auto h-full p-6">
+                            <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+                                {/* Chat messages */}
+                                <div className='h-20 grid grid-cols-2 rounded-2xl bg-custom'>
+                                    <div className='p-4 flex gap-5 items-center'>
+                                        <div style={{ backgroundImage: `url(${selected?.profile})` }} className="flex items-center bg-contain  justify-center h-10 w-10 rounded-full  flex-shrink-0"></div>
+                                        <h1 className='text-white kanit-regular text-lg'>{selected?.name}</h1>
+                                    </div>
+                                </div>
+                                <div ref={chatContainerRef} className="scroll-hidden flex mt-5 flex-col h-full overflow-x-auto mb-4">
+
+                                    <div className="grid  grid-cols-12 gap-y-1">
+                                        {
+                                            showMessages && showMessages.length > 0 ? (
+                                                showMessages.map((item, index) => (
+
+                                                    item.sender !== 'admin' ? (
+                                                        <div key={index} className="col-start-1 col-end-8 p-2 rounded-lg" style={{ borderTopLeftRadius: '0' }}>
+                                                            <div className="flex flex-row items-center">
+                                                                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-500 flex-shrink-0">A</div>
+                                                                <div className="relative ml-3 text-sm text-white kanit-regular bg-gradient-to-br from-blue-700 to-sky-300 py-2 px-4 shadow rounded-md" style={{ borderTopLeftRadius: '0' }}>
+                                                                    <div>{item.content}</div>
+                                                                </div>
+                                                            </div>
+                                                            <p className='kanit-light ml-14 text-xs text-white-400'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+
+                                                        </div>
+
+
+                                                    ) : (
+                                                        <>
+                                                            <div className="col-start-6   col-end-13 p-3 rounded-lg" >
+                                                                <div className="flex items-center justify-start flex-row-reverse">
+                                                                    <div
+                                                                        style={{ backgroundImage: `url(${selected?.profile})` }}
+                                                                        className="flex bg-contain  items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
+                                                                    >
+
+                                                                    </div>
+                                                                    <div className="justify-between flex items-start text-sm mr-2 text-white kanit-regular bg-gradient-to-br from-orange-700 to-yellow-300 py-2 px-4 shadow rounded-md" style={{ borderTopRightRadius: 0 }}>
+                                                                        <div>{item.content}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className=' flex justify-end '>
+
+                                                                    <p className='kanit-light mr-12 text-xs text-white-400'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+
+
+
+                                                ))
+                                            ) : (
+                                                <h1 className='text-center kanit-light text-xl col-span-12'>No Messages yet start chat to get messages.</h1>
+                                            )
+
+                                        }
+
+
+
+                                    {showPicker && (
+                                        <div 
+                                        className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 p-6 rounded-lg  w-[440px] h-auto">
+                                            <EmojiPicker className='z-[99] relative left-' />
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                </div>
+
+                                {/* Chat input */}
+                                <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+
+                                    <div>
+                                        <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
+                                            <svg
+                                                className="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className="flex-grow ml-4">
+                                        <div className="relative w-full">
+                                            <input onKeyDown={handleKeyPress} type="text" onChange={(e) => setText(e.target.value)} value={text} className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+                                            <button onClick={() => setShowPicker(!showPicker)} className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
+                                                <svg
+                                                    className="w-6 h-6"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </button>
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <div className="ml-4">
+                                        <button onClick={sendMessage} className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
+                                            <span>Send</span>
+                                            <span className="ml-2">
+                                                <svg
+                                                    className="w-4 h-4 transform rotate-45 -mt-px"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                                </svg>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    ) : (
+                        <div className=" flex flex-col flex-auto h-full p-6">
+                            <div className="flex flex-col justify-center flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+                                <h1 className='mx-auto kanit-regular text-2xl'>Select a user to chat</h1>
+                            </div>
+                        </div>
+                    )
+                }
+
+
+
+            </div>
+        </div>
+    );
+};
+
+export default AdminChat;

@@ -12,6 +12,7 @@ import RouteIcon from '@mui/icons-material/Route';
 import TourIcon from '@mui/icons-material/Tour';
 import MessageIcon from '@mui/icons-material/Message';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import OnewayCard from '../customUI/onewayCard';
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const state = useSelector((state: RootState) => state.auth.token ?? null);
@@ -94,7 +95,7 @@ const Navbar: React.FC = () => {
 
                                         </li>
                                         <li>
-                                            <a href="" className=" ml-5 text-md text-black kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                            <a href="/chat" className=" ml-5 text-md text-black kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                             <MessageIcon fontSize= {'small'} className='text-black text-xs'/>
 
                                                 <span className='kanit-regular ml-1 text-md'>Chat</span>
@@ -124,6 +125,7 @@ const Navbar: React.FC = () => {
                         </div>
 
                     </div>
+            
 
                 </nav>
 
