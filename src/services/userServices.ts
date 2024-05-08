@@ -125,3 +125,12 @@ export const sendPayment = async(data:any)=>{
         throw err
     }
 }
+
+export const updateLastseen = async ()=>{
+    try{
+        const response = await axiosWithAuth.get('/user/updateLastseen')
+        return response
+    }catch(err){
+        throw err
+    }
+}

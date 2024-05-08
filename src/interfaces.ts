@@ -85,6 +85,7 @@ export interface IuserRes {
   profile?: string
   isBlocked: boolean
   address?: IuserAddres
+  lastseen?:Date
 
 }
 

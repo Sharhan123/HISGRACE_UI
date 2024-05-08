@@ -1,22 +1,26 @@
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+
 import { Socket, io } from "socket.io-client"
-import { getUser } from '../../services/userServices';
+import { getUser, updateLastseen } from '../../services/userServices';
 import { IuserRes, Iuser } from '../../interfaces';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { jwtDecode } from 'jwt-decode';
 import { findChats, saveChat } from '../../services/chatService';
-
+import EmojiPicker from "emoji-picker-react"
+import VoiceRecorder from '../customUI/audio';
 
 const ChatbotComponent: React.FC = () => {
-    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string ,time:Date}[]>([])
+    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: Date,contentType:string }[]>([])
     const [message, setMessage] = useState<string>('');
-    const [socket,setSocket] = useState<Socket | null>()
+    const [socket, setSocket] = useState<Socket | null>()
     const [user, setUser] = useState<IuserRes>()
     const token = useSelector((state: RootState) => state.auth.token)
     const chatContainerRef = useRef<HTMLDivElement>(null);
-
-    
+    const [showPicker, setShowPicker] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [start, setStart] = useState(false)
 
     const scrollToBottom = () => {
         if (chatContainerRef.current) {
@@ -25,7 +29,7 @@ const ChatbotComponent: React.FC = () => {
         }
     };
 
-    const fetch = async (id:any) => {
+    const fetch = async (id: any) => {
         try {
             const res = await getUser()
             const mes = await findChats(id.id)
@@ -37,115 +41,300 @@ const ChatbotComponent: React.FC = () => {
 
         }
     }
+    const update = async () => {
+        await updateLastseen()
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const decoded: any = jwtDecode(token as string);
                 await fetch(decoded);
-                
+
                 const newSocket = io('http://localhost:3000');
                 newSocket.emit('user_connect', decoded.id);
-    
+
                 newSocket.on('from_admin', (data) => {
                     console.log("received");
                     setMessages((prevMessages) => [...prevMessages, data]);
                 });
-    
+
                 setSocket(newSocket); // If you need to set the socket in state
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-    
-        fetchData();
-    
-        return () => {
-           socket?.off('from_admin')
-        };
-    }, [token])   
 
+        fetchData();
+        document.body.style.overflowY = 'hidden'
+        return () => {
+            update()
+            socket?.off('from_admin')
+        };
+    }, [token])
+
+    useEffect(() => {
+        scrollToBottom()
+
+    }, [messages])
+
+    const handleEmojiClick = (emojiObject: any) => {
+        const { emoji } = emojiObject;
+        console.log(emoji, emojiObject, '.....');
+
+        setMessage((prevText) => prevText + emoji);
+    };
     const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            event.preventDefault(); 
-                        sendMessage();
+            event.preventDefault();
+            sendMessage();
         }
     };
 
     const sendMessage = async () => {
-        const data:any = {
+        if (!message.trim()) return
+        const data: any = {
             content: message,
             sender: user?._id,
             reciever: 'admin',
-            time:Date.now()
+            time: Date.now()
         }
-        try{
+        try {
             const res = await saveChat(data)
-        }catch(err){
+        } catch (err) {
             console.log(err);
-            
+
         }
         setMessage('')
-        setMessages((prev)=>[...prev,data]) 
+        setMessages((prev) => [...prev, data])
         socket?.emit('message', data);
 
     };
 
+    const sendVoice = async (voice: Blob) => {
 
+        const base64Voice = await blobToBase64(voice);
+        const data: any = {
+            content: base64Voice,
+            sender: user?._id,
+            reciever: 'admin',
+            time: Date.now(),
+            contentType: 'voice'
+
+        }
+        try {
+            const res = await saveChat(data)
+        } catch (err) {
+            console.log(err);
+        }
+
+        setMessages((prev) => [...prev, data])
+
+        socket?.emit('admin_message', data)
+
+    }
+
+    const blobToBase64 = (blob: Blob): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                const base64String = reader.result?.toString();
+                if (base64String) {
+                    // Extract base64 data (remove prefix)
+                    const base64Data = base64String.split(',')[1];
+                    resolve(base64Data);
+                } else {
+                    reject(new Error('Failed to read Blob as base64'));
+                }
+            };
+            reader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
 
     return (
         <>
 
-            <div className="right-0 mr-4 bg-white flex flex-col justify-between p-6 rounded-lg border border-[#e5e7eb] w-full h-screen  shadow-md" style={{ zIndex: '999' }}>
+            <div className="right-0 mr-4 bg-gradient-to-br from-black to-slate-600  w-full flex flex-col justify-between p-6     mx-auto h-[100dvh]  shadow-md" style={{ zIndex: '999' }}>
                 <div className="flex flex-col space-y-1.5 pb-6">
-                    <h2 className="kanit-medium text-custom text-lg tracking-tight">Connect With Admin</h2>
-                    <p className="text-sm text-[#6b7280] kanit-regular">You can make enquiries on any trip details or every booking related queries</p>
+                    <h2 className="kanit-medium text-white text-lg tracking-tight">Connect With Admin</h2>
+                    <p className="text-sm text-white kanit-regular">You can make enquiries on any trip details or every booking related queries</p>
                 </div>
 
 
-                <div className="scroll-hidden py-5  pr-4 h-fit overflow-y-auto">
+                <div ref={chatContainerRef} className=" no-scroll py-5  pr-4 h-fit overflow-y-auto">
                     {
                         messages.map((item, index) => (
                             item.sender !== user?._id ? (
                                 <div key={index} className="col-start-1 col-end-8 p-2 rounded-lg" style={{ borderTopLeftRadius: '0' }}>
-                                <div className="flex flex-row items-center">
-                                    <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-500 flex-shrink-0">A</div>
-                                    <div className="relative ml-3 text-sm text-white kanit-regular bg-gradient-to-br from-blue-700 to-sky-300 py-2 px-4 shadow rounded-md" style={{ borderTopLeftRadius: '0' }}>
-                                        <div>{item.content}</div>
-                                    </div>
-                                </div>
-                                <p className='kanit-light ml-14 text-xs text-white-400'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                                    <div className="flex flex-row items-center">
+                                        <div className="flex items-center justify-center h-10 w-10 rounded-full text-white bg-red-500 flex-shrink-0">A</div>
+                                        {item.contentType === 'voice' ? (
+                                            <audio controls color='' className='custom-audio-player'>
+                                                <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
 
-                            </div>
+                                                Your browser does not support the audio element.
+                                            </audio>
+
+                                        ) : (
+                                            <div className="relative ml-3  text-sm text-white kanit-regular bg-blue-600 py-2 px-4 shadow rounded-md" style={{ borderTopLeftRadius: '0' }}>
+
+                                                <div className='break-words  max-w-[480px]'>{item.content}</div>
+                                            </div>
+                                        )
+                                        }
+
+                                    </div>
+                                    <p className='kanit-light ml-14 text-xs text-white'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+
+                                </div>
 
 
                             ) : (
                                 <div className="col-start-6   col-end-13 p-3 rounded-lg" >
-                                                        <div className="flex items-center justify-start flex-row-reverse">
-                                                            <div
-                                                            style={{backgroundImage:`url(${user?.profile})`}}
-                                                                className="flex bg-contain  items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
-                                                            >
-                                                                
-                                                            </div>
-                                                            <div className="justify-between flex items-start text-sm mr-2 text-white kanit-regular bg-gradient-to-br from-orange-700 to-yellow-300 py-2 px-4 shadow rounded-md" style={{borderTopRightRadius:0}}>
-                                                                <div>{item.content}</div>
-                                                            </div>
-                                                        </div>
-                                                        <div className=' flex justify-end '>
+                                    <div className="flex items-center justify-start flex-row-reverse">
+                                        <div
+                                            style={{ backgroundImage: `url(${user?.profile})` }}
+                                            className="flex bg-contain  items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
+                                        >
 
-                                                        <p className='kanit-light mr-12 text-xs text-white-400'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
-                                                        </div>
-                                                    </div>
+                                        </div>
+                                        {item.contentType === 'voice' ? (
+                                            <audio controls color='' className='custom-audio-player'>
+                                                <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
+
+                                                Your browser does not support the audio element.
+                                            </audio>
+
+                                        ) : (
+                                            <div className="justify-between flex items-start text-sm mr-2 break-words max-w-[500px] text-white kanit-regular  bg-purple-900  py-2 px-4 shadow rounded-md" style={{ borderTopRightRadius: 0 }}>
+                                                <div className='break-words  max-w-[480px]'>{item.content}</div>
+                                            </div>
+                                        )
+                                        }
+                                    </div>
+                                    <div className=' flex justify-end '>
+
+                                        <p className='kanit-light mr-12 text-xs text-white'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                                    </div>
+                                </div>
                             )
                         ))
                     }
+                    {showPicker && (
+                        <div
+                            className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 p-6 rounded-lg  w-[440px] h-auto">
+                            <EmojiPicker onEmojiClick={handleEmojiClick} className='z-[99] relative left-' />
+                        </div>
+                    )}
                 </div>
 
+                <div className="flex flex-row items-center h-16 rounded-xl w-full px-4">
+
+                    <div>
+                        <button className="flex items-center justify-center text-white hover:text-gray-300">
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="flex-grow ml-4">
+                        <div className="relative w-full ">
+                            {
+                                start ? (
+                                    <VoiceRecorder storeAndEmitRecording={(voice: Blob) => sendVoice(voice)} stop={() => setStart(false)} start={start} />
+                                ) : (
+                                    <>
+                                        <input ref={inputRef} onKeyDown={handleKeyPress} type="text" onChange={(e) => setMessage(e.target.value)} value={message} className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+
+                                        <button onClick={() => {
+                                            inputRef?.current?.focus()
+                                            setShowPicker(!showPicker)
+
+                                        }
+                                        }
+                                            className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
+                                            <svg
+                                                className="w-6 h-6"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </button>
+                                    </>
+                                )
+                            }
 
 
-                <div className="flex items-center justify-between  pt-0">
-                    {/* <form className="flex bg-black justify-between w-full "> */}
+
+                        </div>
+
+
+
+                    </div>
+                    <div className="ml-4">
+                        {
+                            message ? (
+                                <button onClick={sendMessage} className="flex items-center justify-center bg-gradient-to-br from-custom to-slate-800 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
+                                    <span>Send</span>
+                                    <span className="ml-2">
+                                        <svg
+                                            className="w-4 h-4 transform rotate-45 -mt-px"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            ) : (
+                                <>
+                                    {
+                                        start ? (
+                                            <button onClick={() => setStart(true)} className="flex py-2 items-center justify-center bg-gradient-to-br from-custom to-slate-800 hover:bg-indigo-600 rounded-full text-white px-4 flex-shrink-0">
+                                                <span className="">
+                                                    <svg
+                                                        className="w-4 h-4 transform rotate-45 -mt-px"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                                    </svg>
+                                                </span>
+
+                                            </button>
+                                        ) : (
+                                            <button onClick={() => setStart(true)} className="flex py-2 items-center justify-center bg-gradient-to-br from-custom to-slate-800 hover:bg-indigo-600 rounded-full text-white px-4 flex-shrink-0">
+                                                <KeyboardVoiceIcon />
+
+                                            </button>
+                                        )
+                                    }
+
+
+                                </>
+                            )
+                        }
+
+                    </div>
+                </div>
+
+                {/* <div className="flex items-center justify-between  pt-0">
                     <input
                         className="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af]"
                         placeholder="Type your message"
@@ -160,8 +349,7 @@ const ChatbotComponent: React.FC = () => {
                     >
                         Send
                     </button>
-                    {/* </form> */}
-                </div>
+                </div> */}
             </div>
         </>
 

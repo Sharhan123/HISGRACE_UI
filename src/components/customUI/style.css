@@ -120,3 +120,43 @@ cite {
     transform: rotate(45deg);
   }
   @keyframes l10 {to{transform: rotate(.5turn)}}
+
+
+
+
+.custom-audio-player::-webkit-media-controls-panel {
+    background-color: rgba(37, 99, 235, 1); /* Adjust background color using rgba for better compatibility */
+    border-radius: 4px;
+}
+.custom-audio-player-1::-webkit-media-controls-panel {
+  --tw-bg-opacity: 1;
+  background-color: rgb(88 28 135 / var(--tw-bg-opacity)); /* Adjust background color using rgba for better compatibility */
+    border-radius: 4px;
+}
+
+.custom-audio-player::-controls{
+  background-color: white;
+}
+.custom-audio-player::-webkit-media-controls-play-button {
+  /* Customize play button */
+  color: white; /* Set color of play button */
+}
+
+.custom-audio-player::-webkit-media-controls-seek-back-button,
+.custom-audio-player::-webkit-media-controls-seek-forward-button {
+  /* Customize seek buttons (optional) */
+  color: white; /* Set color of seek buttons */
+}
+
+.custom-audio-player::-webkit-media-controls-current-time-display,
+.custom-audio-player::-webkit-media-controls-time-remaining-display {
+  /* Customize time display */
+  color: white; /* Set color of time display */
+}
+.custom-audio-player.custom-audio-player::-webkit-media-controls-play-button
+
+.custom-audio-player::-webkit-media-controls-volume-slider-container,
+.custom-audio-player::-webkit-media-controls-mute-button {
+  /* Hide volume slider and mute button */
+  display: none;
+}
