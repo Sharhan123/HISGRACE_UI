@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Image from '../../assets/logo.jpg'
 import {  jwtDecode } from 'jwt-decode';
-import { Itoken } from '../../interfaces';
+import { Itoken, Iuser, IuserRes } from '../../interfaces';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
 import RouteIcon from '@mui/icons-material/Route';
@@ -13,16 +13,27 @@ import TourIcon from '@mui/icons-material/Tour';
 import MessageIcon from '@mui/icons-material/Message';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import OnewayCard from '../customUI/onewayCard';
+import { getUser } from '../../services/userServices';
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const state = useSelector((state: RootState) => state.auth.token ?? null);
     const [data,setData] = useState<Itoken>()
-    
+    const [user,setUser] = useState<IuserRes>()
     const [isOpen, setIsOpen] = useState(false);
-
+    const [count ,setCount] = useState(0)
+    const fetch = async ()=>{
+        try{
+            const res = await getUser()
+            setUser(res.data.data) 
+            setCount(res.data.data.newMessage)
+        }catch(err){
+            console.log(err);
+            
+        }
+    }
     useEffect(()=>{
         if(state){
-
+            fetch()
             const decoded = jwtDecode<Itoken>(state)
             console.log(decoded);
             setData(decoded)
@@ -95,10 +106,11 @@ const Navbar: React.FC = () => {
 
                                         </li>
                                         <li>
-                                            <a href="/chat" className=" ml-5 text-md text-black kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                            <a href="/chat" className=" ml-5 text-md text-black gap-2 kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                             <MessageIcon fontSize= {'small'} className='text-black text-xs'/>
 
-                                                <span className='kanit-regular ml-1 text-md'>Chat</span>
+                                                <span className='kanit-regular ml-1 text-md'>Chat </span>
+                                                {count>0 && <span className='h-4 w-4  bg-red-600 rounded-full flex justify-center items-center text-white kanit-light text-xs'>{count}</span>}
                                             </a>
 
                                         </li>

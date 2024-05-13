@@ -9,12 +9,14 @@ interface BoardingPassProps {
 }
 
 import Barcode from 'react-barcode';
+import { useNavigate } from 'react-router-dom';
 
 interface props{
   value:any
 }
 
 const BarcodeComponent :React.FC<props> = ({ value }) => {
+
   return (
     <div>
       <Barcode fontSize={12} height={30} value={value} />
@@ -25,6 +27,7 @@ const BarcodeComponent :React.FC<props> = ({ value }) => {
 
 
 const BoardingPass: React.FC<BoardingPassProps> = () => {
+  const navigate = useNavigate()
   return (
    
         <div className="flex flex-col container  items-center justify-center">
@@ -107,8 +110,8 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                 <div className="flex flex-col py-5 justify-center text-sm">
                   <h6 className="kanit-regular  text-center">Please show the QR CODE to driver Thankyou !</h6>
                   <div className="justify-center flex w-full mt-4 ">
-
-                <BarcodeComponent  value={'#6746788'} />
+                    <button onClick={()=>navigate('/')} className='px-3 py-2 bg-blue-600 kanit-regular rounded text-white mt-2'>Back to Home</button>
+                {/* <BarcodeComponent  value={'#6746788'} /> */}
                   </div>
                 </div>
               </div>

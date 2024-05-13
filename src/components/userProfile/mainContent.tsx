@@ -12,6 +12,8 @@ import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 import { selectBookingData } from '../../redux/slices/bookingSice';
 import AddressModal from './addressModal';
+import ProfilePage from './profilePage';
+import BookingsPage from './bookingsPage';
 
 
 
@@ -20,6 +22,7 @@ import AddressModal from './addressModal';
 const Profile: React.FC = () => {
   const dispatch = useDispatch()
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selected,setSelected] = useState('profile')
   const [showModal, setShowModal] = useState(false)
   const [edit, setEdit] = useState(false)
   const [user, setUser] = useState<IuserRes>()
@@ -188,34 +191,34 @@ const Profile: React.FC = () => {
 
 
 
-            <a href="/profile" aria-label="dashboard" className="relative px-4 py-3 flex items-center space-x-4 rounded-lg text-black bg-white">
+            <span onClick={()=>setSelected('profile')} aria-label="dashboard" className={`cursor-pointer kanit-regular relative px-4 py-3 flex items-center space-x-4 rounded-lg   ${selected ==='profile'? 'text-black bg-white':'' } `}>
               <i className="fas fa-user"></i>
               <span className="-mr-1 font-medium">Profile</span>
-            </a>
+            </span>
             {/* <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
                 <i className="fas fa-gift"></i>
                 <span>Recompensas</span>
             </a> */}
 
-            <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
+            <span  className="px-4 cursor-pointer py-3 flex items-center kanit-regular space-x-4 rounded-md text-white group">
               <i className="fas fa-store"></i>
               <span>Packages</span>
-            </a>
+            </span>
 
-            <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
+            <span  className="px-4 py-3 cursor-pointer flex items-center kanit-regular space-x-4 rounded-md text-white group">
               <i className="fas fa-wallet"></i>
               <span>Saved</span>
-            </a>
-            <a href="/bookings" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
+            </span>
+            <span onClick={()=>setSelected('bookings')} className={`px-4 py-3  cursor-pointer kanit-regular flex items-center space-x-4 rounded-md  ${selected ==='bookings'?'bg-white text-black':'' } group`}>
               <i className="fas fa-exchange-alt"></i>
               <span>Bookings</span>
-            </a>
-            <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
+            </span>
+            <span className="px-4 py-3 flex items-center cursor-pointer kanit-regular space-x-4 rounded-md text-white group">
               <i className="fas fa-user"></i>
               <span>Address</span>
-            </a>
+            </span>
           </div>
-          <a onClick={handleLogout} href="" className="px-4 py-3 flex items-center space-x-4 rounded-md bg-gradient-to-r from-red-700 to-red-500 text-white group">
+          <a onClick={handleLogout} className="px-4 py-3 flex cursor-pointer kanit-regular items-center space-x-4 rounded-md bg-gradient-to-r from-red-700 to-red-500 text-white group">
             <i className="fas fa-sign-out-alt"></i>
             <span>Logout</span>
           </a>
@@ -225,45 +228,20 @@ const Profile: React.FC = () => {
 
         {/* Main Content */}
         <main
-          className={`main flex flex-grow flex-col p-4 transition-all duration-150 ease-in  ${open ? 'ml-0' : '-ml-48'
+          className={`main w-full flex flex-grow flex-col p-4 transition-all duration-150 ease-in  ${open ? 'ml-0' : '-ml-48'
             } md:ml-0`}
         >
-          <div className="flex flex-col h-full items-center justify-evenly bg-custom text-center text-md overflow-auto shadow-md">
-            <QuoteComponent name={user?.name} />
-            <section className="component h-auto w-11/12 gap-5 grid grid-cols-2 rounded-md p-2  ">
+          {
+            selected === 'profile'&&(
 
-              <div style={{boxShadow:""}} className='bg-white shadow shadow-white  rounded-md'>
-                <h1 className='kanit-regular  text-custom text-xl mt-3 '>User Details</h1>
-                <div className=' p-5 mx-1 mb-2 flex flex-col justify-between items-start md:mx-10'>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Full Name : {user?.name}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Email : {user?.email}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Mobile Number : {user?.mobile ? user.mobile : 'Nill'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Alternative Mobile Number : {user?.secondaryMobile ? user.secondaryMobile : 'NILL'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Age : {user?.age ? user.age : 'Nill'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Gender : {user?.gender ? user.gender : 'NILL'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Language : {user?.language ? user.language : 'NILL'}</h1>
-
-                </div>
-                <button onClick={() => {
-                  setEdit(true)
-                }} className="mb-5  bg-custom kanit-regular  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md px-10 py-2 ">
-                  Edit Profile
-                </button>
-              </div>
-
-              <div className='bg-white rounded-md'>
-                <h1 className='kanit-regular text-xl mt-3 text-custom'>Address Details</h1>
-                <div className=' p-5 mx-1 mb-2 flex flex-col justify-between items-center md:mx-10'>
-                  <p className='kanit-light text-md text-custom'>You didn't yet have a address please setup a address. </p>
-                  <button onClick={() => {
-                    setAddress(true)
-                  }} className="mt-5  bg-custom kanit-regular  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md px-10 py-2 ">
-                    Setup address
-                  </button>
-                </div>
-              </div>
-            </section>
-          </div>
+              <ProfilePage user={user} setAddress={()=>setAddress(true)} setEdit={()=>setEdit(true)} /> 
+            ) 
+          }
+          {
+            selected === 'bookings'&&(
+              <BookingsPage/>
+            ) 
+          }
         </main>
       </div>
     </>

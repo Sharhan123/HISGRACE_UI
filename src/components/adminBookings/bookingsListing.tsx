@@ -19,7 +19,7 @@ const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IbookingRes[] | null>([])
     const [showData, setShowData] = useState<IbookingRes[] | null>([])
     const [showLoading, setShowLoading] = useState(false)
-
+    const [selected,setSelected] = useState('')
 
     const naviagate = useNavigate()
     const fetch = async () => {
@@ -123,29 +123,29 @@ const RecordTable: React.FC = () => {
                     <div>
                         <div className="flex mt-5 items-center gap-x-3">
                             <h2 className="text-2xl font-medium text-gray-800 ">Vehicles</h2>
-                            <span className="px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-full ">Active</span>
+                            <span className="px-3 py-1 text-sm text-custom bg-blue-100 rounded-full ">Active</span>
                         </div>
-                        <h3 className="mt-10 text-md text-black text-xl kanit-regular">Filter Bookings</h3>
+                        {/* <h3 className="mt-10 text-md text-black text-xl kanit-regular">Filter Bookings</h3> */}
                     </div>
 
 
                 </div>
-                <div className="mt-6 md:flex md:items-center md:justify-between">
-                    <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
+                <div className="mt-6  md:flex md:items-center md:justify-between">
+                    <div className="grid grid-cols-4 w-full overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
 
 
-                        <button className="px-5 py-2 text-xs font-medium text-blue-600 transition-colors duration-200 sm:text-sm ">
+                        <button onClick={()=>setSelected('ACTIVE')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'ACTIVE'?'bg-custom text-white':''} text-blue-600 transition-colors duration-200 sm:text-sm `}>
                             ACTIVE
                         </button>
-                        <button className="px-5 py-2 text-xs font-medium text-red-600 transition-colors duration-200 sm:text-sm ">
+                        <button     onClick={()=>setSelected('CANCELLED')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'CANCELLED'?'bg-red-600 text-white':''} text-red-500 transition-colors duration-200 sm:text-sm `}>
                             CANCELLED
                         </button>
-                        <button className="px-5 py-2 text-xs font-medium text-green transition-colors duration-200 sm:text-sm ">
+                        <button onClick={()=>setSelected('COMPLETED')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'COMPLETED'?'bg-green text-white':''} text-green transition-colors duration-200 sm:text-sm `}>
                             COMPLETED
                         </button>
 
-                        <button onClick={() => setShowData(data)} className="px-5 py-2  bg-red-700 text-xs font-medium text-white transition-colors duration-200 sm:text-sm ">
-                            Clear Filters
+                        <button onClick={()=>setSelected('REQUESTS')} className={`px-5  py-2 text-xs uppercase kanit-regular ${selected === 'REQUESTS'?'bg-blue-600 text-white':''} text-blue-500 transition-colors duration-200 sm:text-sm `}>
+                            Cancellation Request
                         </button>
                     </div>
 

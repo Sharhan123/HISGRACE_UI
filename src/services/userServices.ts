@@ -117,18 +117,32 @@ export const updateProfile = async(data:any)=>{
     }
 }
 
-export const sendPayment = async(data:any)=>{
+
+export const updateLastseen = async ()=>{
     try{
-        const response = await axiosWithAuth.post('/user/getBookingSession',data)
+        const response = await axiosWithAuth.get('/user/updateLastseen')
         return response
     }catch(err){
         throw err
     }
 }
 
-export const updateLastseen = async ()=>{
+export const updateAddress = async (data:any)=>{
     try{
-        const response = await axiosWithAuth.get('/user/updateLastseen')
+        const response = await axiosWithAuth.post('/user/updateAddress',data)
+        return response
+    }catch(err){
+        throw err
+    }
+}
+export const updateUnRead = async (data:any)=>{
+    const response = await axiosWithAuth.post('/user/updateUnRead',data)
+    return response
+}
+
+export const updateNewMessage = async (data:any)=>{
+    try{
+        const response = await axiosWithAuth.post('/user/updateNewMessage',data)
         return response
     }catch(err){
         throw err

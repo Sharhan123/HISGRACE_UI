@@ -49,7 +49,7 @@ const Home: React.FC = () => {
   return (
     <>
 
-      <MainLoader open={loader} />
+      {/* <MainLoader open={loader} /> */}
       <div className='h-screen  lg:w-full md:w-full  ' >
 
         <Alert />

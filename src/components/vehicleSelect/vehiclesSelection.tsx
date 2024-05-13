@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IbookingAuth, IvehicleRes } from '../../interfaces'
-import { getVehicles } from '../../services/vehicleService'
+import { getBookingVehicles, getVehicles } from '../../services/vehicleService'
 import ModalImage from '../customUI/imageModal'
 import { useSelector } from 'react-redux'
 import { selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
@@ -19,7 +19,13 @@ const VehicleSelection: React.FC = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const res = await getVehicles()
+                let dates:any 
+                if(booking.type === 'one-way'){
+                    dates = {startingDate:booking.period.date,endingDate:booking.period.date,type:booking.type}
+                }else{
+                    dates = {startingDate:booking.period.date,endingDate:booking.returnDate,type:booking.type}
+                }
+                const res = await getBookingVehicles(dates)
                 const arr: [] = res.data.data
                 setVehicles(res.data.data)
             } catch (err) {

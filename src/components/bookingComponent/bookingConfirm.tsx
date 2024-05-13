@@ -9,9 +9,10 @@ import { getDrivers } from '../../services/driverService';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import DatePicker from 'react-datepicker';
 import '../customUI/style.css'
-import { getUser, sendPayment } from '../../services/userServices';
+import { getUser } from '../../services/userServices';
 import { loadStripe } from '@stripe/stripe-js';
 import { useDispatch } from 'react-redux';
+import { sendPayment } from '../../services/bookingsServices';
 
 
 const BookingConfirm: React.FC = () => {
@@ -344,6 +345,21 @@ const BookingConfirm: React.FC = () => {
 
                             />
                         </span>
+                        {
+                            booking.type === 'round-way' && (
+                                <span className='kanit-regular text-md text-white text-start '>
+                            Return Date : <DatePicker
+                                disabled
+                                onChange={() => ''}
+                                selected={booking.returnDate}
+                                dateFormat="dd MMM yyyy"
+                                className="text-white  kanit-regular text-lg outline-none bg-transparent"
+
+                            />
+                        </span>
+                            )
+                        }
+                        
                         <span className='kanit-regular text-md text-white text-start '>
                             Trip Time : {booking.period.time}
                         </span>

@@ -25,13 +25,15 @@ const OnewayCard: React.FC = () => {
     const [open, setOpen] = useState(false)
     const [selectedFrom, setSelectedFrom] = useState<Ilocation>()
     const [selectedTo, setSelectedTo] = useState<Ilocation>()
+    const [returnDate,setReturnDate] = useState<Date>(new Date())
     const [type, setType] = useState<string>('')
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedTime, setSelectedTime] = useState<string>('12:00');
     const [pOpen, setPopen] = useState(false)
+    const [selected, setSelected] = useState('one-way')
     const [count, setCount] = useState<{ adult: number, child: number }>({ adult: 0, child: 0 })
     const [data, setData] = useState<IbookingAuth>()
-    const token = useSelector((state:RootState)=>state.auth.token)
+    const token = useSelector((state: RootState) => state.auth.token)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const close = () => {
@@ -48,7 +50,7 @@ const OnewayCard: React.FC = () => {
     };
 
 
-    const handleDateChange = (date: Date ) => {
+    const handleDateChange = (date: Date) => {
         setSelectedDate(date);
     };
     const getTimePeriod = (time: any) => {
@@ -57,9 +59,9 @@ const OnewayCard: React.FC = () => {
     };
 
     const handleBooking = async () => {
-        if(!token){
-            dispatch(showAlert({content:'Please login to your account for booking',color:"red"}))
-        return
+        if (!token) {
+            dispatch(showAlert({ content: 'Please login to your account for booking', color: "red" }))
+            return
         }
         if (!selectedFrom) {
             dispatch(showAlert({ head: 'Hisgrace Booking Incomplete', content: 'Please select a FROM location to complete your booking', color: 'red' }))
@@ -75,99 +77,111 @@ const OnewayCard: React.FC = () => {
             return
         }
 
-        if(!selectedDate){
+        if (!selectedDate) {
             dispatch(showAlert({ head: 'Hisgrace Booking Incomplete', content: 'Please select a date for your trip ', color: 'red' }))
-            return 
+            return
         }
-        if(!selectedTime){
+        if(selected === 'round-way' && !returnDate){
+            dispatch(showAlert({ head: 'Hisgrace Booking Incomplete', content: 'Please select a return date for your round way trip ', color: 'red' }))
+            return
+        }
+        if (!selectedTime) {
             dispatch(showAlert({ head: 'Hisgrace Booking Incomplete', content: 'Please select a time for your trip ', color: 'red' }))
-            return 
+            return
         }
-        if(count.adult <1){
+        if (count.adult < 1) {
             dispatch(showAlert({ head: 'Hisgrace Booking Incomplete', content: 'Please select a adult for your trip ', color: 'red' }))
             return
         }
 
         const response = await matrix({ lon: selectedFrom?.lon, lat: selectedFrom?.lat }, { lon: selectedTo?.lon, lat: selectedTo?.lat })
-         setData({
-            from:selectedFrom,
-            to:selectedTo,
-            period:{
-                time:selectedTime,
-                date:selectedDate
+        let data:IbookingAuth
+        if(selected === 'round-way'){
+            data = {
+                from: selectedFrom,
+                to: selectedTo,
+            period: {
+                time: selectedTime,
+                date: selectedDate
             },
-            distance:response[0][0].distance,
-            person:count
+            distance: response[0][0].distance,
+            person: count,
+            type: selected,
+            returnDate:returnDate
         }
-        )
-        localStorage.setItem('booking',JSON.stringify({
-            from:selectedFrom,
-            to:selectedTo,
-            distance:response[0][0].distance,
-            person:count,
-            period:{
-                time:selectedTime,
-                date:selectedDate
+        }else{
+            data = {
+                from: selectedFrom,
+                to: selectedTo,
+            period: {
+                time: selectedTime,
+                date: selectedDate
             },
-        }))
+            distance: response[0][0].distance,
+            person: count,
+            type: selected,
+        }
+        }
+        setData(data)
+        localStorage.setItem('booking', JSON.stringify(data))
 
-        dispatch(setBookingData({
-            from:selectedFrom,
-            to:selectedTo,
-            distance:response[0][0].distance,
-            person:count,
-            period:{
-                time:selectedTime,
-                date:selectedDate
-            },
-        })) 
+        dispatch(setBookingData(data))
         navigate('/choosevehicle')
     }
 
     return (
-        <div className='w-10/12 mt-5 rounded-lg flex flex-col justify-between mx-auto h-2/6 bg-custom'>
-            <LocationInfo close={close} selectedFrom={(data: Ilocation) => setSelectedFrom(data)} type={type} selectedTo={(data: Ilocation) => setSelectedTo(data)} open={open} />
-            <PassengersCount count={(data: { adult: number, child: number }) => {
+        <div className='h-full py-5 px-5 w-full mx-auto'>
+    <LocationInfo close={close} selectedFrom={(data: Ilocation) => setSelectedFrom(data)} type={type} selectedTo={(data: Ilocation) => setSelectedTo(data)} open={open} />
+    <PassengersCount count={(data: { adult: number, child: number }) => {
                 setCount(data)
                 console.log(data)
             }
             } open={pOpen} close={() => setPopen(false)} />
-            <div className='h-1/6 flex border-b  items-center justify-start '>
-                <p className='text-xs ml-5 text-yellow-400 kanit-light'>One Way Trip - In this method you can book vehicle for one place to another the price will be calculated according to you total km so if you faces any confusions connect with admin <span className='text-blue-400'>9847109700</span></p>
-            </div>
-            <div className='h-3/6 grid mt-2 grid-cols-5 '>
-                <div className='border-r flex flex-col  ml-5  items-start justify-evenly col-span-1'>
+            <div className='drop-shadow-md bg-custom px-5 flex flex-col justify-evenly items-center  border rounded container mx-auto h-full'>
+                <div className='w-full bg-white h-auto rounded-sm grid grid-rows-6'>
+                    <span className=' col-span-1 py-2 flex pl-5 border-b items-center gap-5 '>
+                        <div onClick={() => setSelected('one-way')} className='cursor-pointer flex gap-2 items-center'>
+                            <span className={`h-4 w-4 ${selected === 'one-way' ? 'bg-red-600' : ''} border rounded-full`}></span>
+                            <label className='kanit-regular' htmlFor="oneWay">One-way</label>
+                        </div>
+                        <div onClick={() => setSelected('round-way')} className='cursor-pointer flex gap-2 items-center'>
+                            <span className={`h-4 w-4 ${selected === 'round-way' ? 'bg-red-600' : ''} border rounded-full`}></span>
+                            <label className='kanit-regular' htmlFor="roundTrip">Round-trip</label>
+                        </div>
+                    </span>
+                    <span className={`grid ${selected === 'one-way' ? 'grid-cols-5' : 'grid-cols-6'} row-span-4`}>
+                        <div className='border-r flex flex-col ml-5  items-start justify-evenly col-span-1'>
 
-                    <div onClick={() => {
-                        setType('from')
-                        setOpen(true)
-                    }} className='flex  w-full justify-between'>
-                        <p className='cursor-pointer kanit-light text-md text-white'>From</p>
+                            <div onClick={() => {
+                                setType('from')
+                                setOpen(true)
+                            }} className='flex  w-full justify-between'>
+                                <p className='cursor-pointer kanit-light text-md text-black'>From</p>
 
-                    </div>
-                    <div className='cursor-pointer flex items-center' >
+                            </div>
+                            <div className='cursor-pointer flex items-center' >
 
-                        <span onClick={() => {
-                            setType('from')
-                            setOpen(true)
-                        }} className='text-white kanit-regular text-lg'>{selectedFrom ? selectedFrom.name || selectedFrom.city : 'Select From Location'}</span>
-                        <MyLocation className='text-green ml-8' />
-                    </div>
-                    <div className='flex '>
-                        <span className='text-white kanit-light text-sm '>
-                            [{selectedFrom ? selectedFrom.formatted : ''}]
-                        </span>
+                                <span onClick={() => {
+                                    setType('from')
+                                    setOpen(true)
+                                }} className='text-black kanit-regular text-lg'>{selectedFrom ? selectedFrom.name || selectedFrom.city : 'Select From Location'}</span>
+                                <MyLocation className='text-green ml-8' />
+                            </div>
+                            <div className='flex '>
+                                <span className='text-black kanit-light text-sm '>
+                                    [{selectedFrom ? selectedFrom.formatted : ''}]
+                                </span>
 
-                    </div>
-                </div>
-                <div className='border-r flex flex-col ml-5  items-start justify-evenly col-span-1'>
+                            </div>
+                        </div>
+                        <div className='border-r flex flex-col ml-5  items-start justify-evenly col-span-1'>
 
-                    <div className='flex  w-full justify-between'>
+                     <div className='flex  w-full justify-between'>
 
                         <p onClick={() => {
                             setType('to')
                             setOpen(true)
-                        }} className='cursor-pointer kanit-light text-md text-white'>To</p>
+                        }} className='cursor-pointer kanit-light text-md text-black'>To</p>
 
                     </div>
                     <div className='cursor-pointer flex items-center' >
@@ -176,28 +190,28 @@ const OnewayCard: React.FC = () => {
                                 setType('to')
                                 setOpen(true)
                             }
-                        } className='text-white kanit-regular text-lg'>{selectedTo ? selectedTo.name || selectedTo.city : 'Select To Location'}</span>
+                        } className='text-black kanit-regular text-lg'>{selectedTo ? selectedTo.name || selectedTo.city : 'Select To Location'}</span>
 
                     </div>
                     <div className='flex '>
-                        <span className='text-white kanit-light text-sm '>
+                        <span className='text-black kanit-light text-sm '>
                             [{selectedTo ? selectedTo.formatted : ''}]
                         </span>
 
                     </div>
                 </div>
                 <div className="border-r flex flex-col ml-5 items-center justify-evenly col-span-1">
-                    <div className="flex ">
-                        <CalendarMonthIcon color="success" />
-                        <p className="kanit-light ml-5 text-md text-white">Pick up date</p>
-                    </div>
-                    <div className='flex items-center justify-center '>
+                     <div className="flex ">
+                         <CalendarMonthIcon color="success" />
+                         <p className="kanit-light ml-5 text-md text-black">Pick up date</p>
+                     </div>
+                     <div className='flex items-center justify-center '>
 
-                        <DatePicker
+                         <DatePicker
                             selected={selectedDate}
                             onChange={handleDateChange}
                             dateFormat="dd MMM yy"
-                            className="text-white text-center kanit-regular text-lg outline-none bg-transparent"
+                            className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
                             popperPlacement="bottom-start"
                             popperModifiers={[
                                 {
@@ -214,17 +228,55 @@ const OnewayCard: React.FC = () => {
                         />
                     </div>
                     <div className="flex">
-                        <span className="text-white kanit-regular text-md">
+                        <span className="text-black kanit-regular text-md">
                             {selectedDate ? selectedDate.toLocaleDateString('en-GB', { weekday: 'long' }) : ''}
                         </span>
                     </div>
                 </div>
-                <div className="border-r  flex flex-col ml-5 items-center justify-evenly col-span-1">
+                {
+                    selected === 'round-way' && (
+                        <div className="border-r flex flex-col ml-5 items-center justify-evenly col-span-1">
+                    <div className="flex ">
+                        <CalendarMonthIcon color="success" />
+                        <p className="kanit-light ml-5 text-md text-black">Return date</p>
+                    </div>
+                    <div className='flex items-center justify-center '>
+
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={handleDateChange}
+                            dateFormat="dd MMM yy"
+                            className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
+                            popperPlacement="bottom-start"
+                            popperModifiers={[
+                                {
+                                    name: 'offset',
+                                    options: {
+                                        offset: [0, 10],
+                                    },
+                                    fn: (data) => ({
+                                        ...data,
+
+                                    }),
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div className="flex">
+                        <span className="text-black kanit-regular text-md">
+                            {selectedDate ? selectedDate.toLocaleDateString('en-GB', { weekday: 'long' }) : ''}
+                        </span>
+                    </div>
+                </div>
+                    )
+                }
+
+<div className="border-r  flex flex-col ml-5 items-center justify-evenly col-span-1">
                     <div className="flex" onClick={handleTextClick}>
                         <AccessTimeIcon color="info" />
-                        <p className="kanit-light ml-5 text-md text-white cursor-pointer">Pick up time</p>
+                        <p className="kanit-light ml-5 text-md text-black cursor-pointer">Pick up time</p>
                     </div>
-                    {isTimePickerOpen ? (
+                     {isTimePickerOpen ? (
                         <TextField
                             id="time"
                             label="Time"
@@ -237,7 +289,7 @@ const OnewayCard: React.FC = () => {
                                 shrink: true,
                             }}
                             sx={{
-                                color: 'white'
+                                color: 'black'
                             }}
                             inputProps={{
                                 step: 300,
@@ -246,45 +298,70 @@ const OnewayCard: React.FC = () => {
                         />
                     ) : (
                         <div className="flex">
-                            <span className="text-white kanit-regular text-lg">{
+                            <span className="text-black kanit-regular text-lg">{
                                 selectedTime
 
                             }</span>
                         </div>
                     )}
                     <div className="flex">
-                        <span className="text-white kanit-regular text-md">
+                        <span className="text-black kanit-regular text-md">
                             {getTimePeriod(selectedTime)}
                         </span>
                     </div>
                 </div>
                 <div className=' flex flex-col ml-5 items-center justify-evenly col-span-1'>
 
-                    <div className='flex   '>
-                        <GroupIcon color='error' />
-                        <p onClick={() => setPopen(true)} className='kanit-light ml-5 text-md text-white'>No of passengers</p>
+                     <div className='flex   '>
+                     <GroupIcon color='error' />
+                         <p onClick={() => setPopen(true)} className='kanit-light ml-5 text-md text-black'>No of passengers</p>
 
-                    </div>
-                    <div onClick={() => setPopen(true)} className='cursor-pointer flex items-center' >
-                        <span className='text-white kanit-regular text-lg'>{count.adult} adults</span>
+                     </div>
+                     <div onClick={() => setPopen(true)} className='cursor-pointer flex items-center' >
+                         <span className='text-black kanit-regular text-lg'>{count.adult} adults</span>
 
-                    </div>
-                    <div className='flex '>
-                        <span className='text-white kanit-regular text-md '>
-                            {count.child} childs
-                        </span>
+                     </div>
+                     <div className='flex '>
+                         <span className='text-black kanit-regular text-md '>
+                             {count.child} childs
+                         </span>
 
-                    </div>
+                     </div>
                 </div>
-
-
-            </div>
-            <div onClick={handleBooking} className='h-1/6 border-t flex flex-col mt-2'>
-                <button className=" bg-red-600 kanit-regular h-full rounded-lg opacity-100 hover:opacity-100 text-white hover:text-white  px-10 py-2 ">
+                    </span>
+                    <div onClick={handleBooking} className='row-span-1 border-t flex flex-col mt-2'>
+                <button className=" bg-red-600 kanit-regular h-full  opacity-100 hover:opacity-100 text-white hover:text-white  px-10 py-2 ">
                     Book your Trip
-                </button>
+                 </button>
+             </div>
+                </div>
+                
+                <p className='kanit-light text-left text-white text-lg '>Note : Please note in this booking card you are able to book as two types one is <span className='kanit-medium text-yellow-400'>One-Way</span> and the other one is <span className='kanit-medium text-yellow-400'>Round-Way</span>.In one-way trip you can book our vehicle
+                    for traveling from a location to a location (eg:Malappuram to Kozhikode) and if you are slecting option round trip it means  that you can book a vehicle from a location to a location and also you can select multiple days means stay or slecting
+                    the same starting date and ending date means going and return back to your place.
+                    <span className='kanit-medium text-yellow-200'> Important thing that our vehicle is from kottakkal, Malappuram Dist , Kerala so the prices will be according to that the price showing in the website will be only estimate you can get the exact price by chating with admin or contact <span className='text-yellow-400'>9847109700.</span></span>
+                </p>
             </div>
         </div>
+        // <div className='w-10/12 mt-5 rounded-lg flex flex-col justify-between mx-auto h-2/6 bg-custom'>
+        //     
+        //     <div className='h-1/6 flex border-b  items-center justify-start '>
+        //         <p  className='text-xs ml-5 text-yellow-400 kanit-light'>One Way Trip </p>
+        //         <p onClick={() => setSelected('round-way')} className='text-xs ml-5 text-yellow-400 kanit-light'>Round Trip </p>
+        //     </div>
+        //     <div className={`h-3/6 grid mt-2 ${selected === 'one-way' ? 'grid-cols-5' : 'grid-cols-6'} `}>
+        //         
+        //         
+        //        
+        //         
+
+        //         
+        //         
+
+
+        //     </div>
+        //     
+        // </div>
     )
 }
 

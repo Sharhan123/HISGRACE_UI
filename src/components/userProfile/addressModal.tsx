@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { IuserEdit, IuserRes } from '../../interfaces'
+import { Iaddress, IuserEdit, IuserRes } from '../../interfaces'
 import { error } from 'console'
 import { useDispatch } from 'react-redux'
 import { showAlert } from '../../redux/slices/alertSlice'
-import { updateProfile } from '../../services/userServices'
+import { updateAddress, updateProfile } from '../../services/userServices'
 import { statesInIndia } from '../../constants/states'
 interface props {
   open: boolean
@@ -14,26 +14,16 @@ interface props {
 
 const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
   const dispatch = useDispatch()
-  const [submitData, setSubmitData] = useState<IuserEdit>()
+  const [submitData, setSubmitData] = useState<Iaddress>()
   const [errors, setErrors] = useState<{
-    name: string,
-    email: string,
-    age: string,
-    mobile: string,
-    secondaryMobile: string
+    locality: string,
+    city: string,
+    house: string,
+    state: string,
+    pincode: string
   }>()
   useEffect(() => {
-    setSubmitData({
-      _id: data?._id,
-      name: data ? data.name : '',
-      email: data ? data.email : '',
-      mobile: data?.mobile,
-      secondaryMobile: data?.secondaryMobile,
-      age: data ? data.age : '',
-      gender: data?.gender,
-      language: data?.language,
-
-    });
+    setSubmitData(data?.address);
   }, [data])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -46,77 +36,65 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
 
   const handleSubmit = async () => {
 
-    if (!submitData?.name || submitData?.name.length < 4) {
-      setErrors({
-        name: 'Name should be at least 4 characters',
-        email: '',
-        age: ''
-        , mobile: '',
-        secondaryMobile: ''
-      })
-      return
-    }
+    // if (!submitData?.locality || submitData?.locality.length < 4) {
+    //   setErrors({
+    //     locality: 'Locality should be at least 4 characters',
+    //     city: '',
+    // house: '',
+    // state: '',
+    // pincode: ''
+    //   })
+    //   return
+    // }
 
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!submitData?.email || !emailPattern.test(submitData?.email)) {
-      setErrors({
-        name: '',
-        email: 'Invalid email address format provided',
-        age: ''
-        , mobile: '',
-        secondaryMobile: ''
-      })
-      return
-    }
-
-    if(submitData?.age){
-    const age = parseInt(submitData?.age as string);
-    console.log(age);
     
-      if (isNaN(age) || age <= 0) {
-        setErrors({
-          name: '',
-          email: '',
-          age: 'Age must be a valid number greater than 0'
-          , mobile: '',
-          secondaryMobile: ''
-        })
-        return;
-      }
-    }
+    // if (!submitData?.house || submitData?.house.length < 4) {
+    //   setErrors({
+    //     locality:'',
+    //     city: '',
+    // house: 'Please enter a house or appartment',
+    // state: '',
+    // pincode: ''
+    //   })
+    //   return
+    // }
 
-    const mobilePattern = /^[1-9]\d{9}$/;
-    if (submitData?.mobile && !mobilePattern.test(submitData?.mobile)) {
-      setErrors({
-        name: '',
-        email: '',
-        age: ''
-        , mobile: 'Mobile number must be 10 digits and not all zeros',
-        secondaryMobile: ''
-      })
-      return
-    }
-    if (submitData?.secondaryMobile && !mobilePattern.test(submitData?.secondaryMobile)) {
-      setErrors({
-        name: '',
-        email: '',
-        age: ''
-        , mobile: 'Mobile number must be 10 digits and not all zeros',
-        secondaryMobile: ''
-      })
-      return
-    }
+    // if(!submitData?.city || submitData.city.length <4){
+    //     setErrors({
+    //       locality:'',
+    //     city: 'city must be at least 4 characters',
+    // house: '',
+    // state: '',
+    // pincode: ''
+    //     })
+    //     return;
+      
+    // }
+
+    
+    // if (!submitData?.pincode || !parseInt(submitData.pincode) ) {
+    //   setErrors({
+    //     locality:'',
+    //     city: 'city must be at least 4 characters',
+    // house: '',
+    // state: '',
+    // pincode: 'Pincode must be at least 6 characters'
+    //   })
+    //   return
+    // }
+    
 
     try{
-      const res = await updateProfile(submitData)
+      const res = await updateAddress(submitData)
       reload()
       dispatch(showAlert({head:'Hisgrace Account updated',content:'Your account details had been updated successfully',color:'blue'}))
       close()
 
     }catch(err:any){
+      console.log(err);
       
-      dispatch(showAlert({head:'Hisgrace Profile Update Incompleted',content:err.response.data.message,color:'red'}))
+      // dispatch(showAlert({head:'Hisgrace Profile Update Incompleted',content:err.response.data.message,color:'red'}))
 
       close()
     }
@@ -146,8 +124,8 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
             </label>
             <input
               onChange={handleChange}
-              value={submitData?.name} className={` ${errors?.name ? 'border border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-red rounded py-3 px-4 mb-3`} id="grid-first-name" name='name' type="text" placeholder="Please enter your name" />
-            <p className="text-red-500 text-sm">{errors?.name}</p>
+              value={submitData?.locality} className={` ${errors?.locality ? 'border border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-red rounded py-3 px-4 mb-3`} id="grid-first-name" name='locality' type="text" placeholder="Please enter your name" />
+            <p className="text-red-500 text-sm">{errors?.locality}</p>
           </div>
 
         </div>
@@ -158,9 +136,9 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
             </label>
             <input
               onChange={handleChange}
-              name='email'
-              value={submitData?.email} className={` ${errors?.email ? 'border  border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-red rounded py-3 px-4 mb-3`} id="grid-password" type="text" placeholder='Enter your email address' />
-            <p className="text-red-500 text-sm  ">{errors?.email}</p>
+              name='house'
+              value={submitData?.house} className={` ${errors?.house ? 'border  border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-red rounded py-3 px-4 mb-3`} id="grid-password" type="text" placeholder='Enter your email address' />
+            <p className="text-red-500 text-sm  ">{errors?.house}</p>
 
           </div>
         </div>
@@ -172,9 +150,9 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
             </label>
             <input
               onChange={handleChange}
-              name='age'
-              value={submitData?.age} className={` ${errors?.age ? 'border border-red-600' : ''} block w-full bg-grey-lighter text-black   rounded py-3 px-4`} id="grid-city" type="text" placeholder="Provide your age" />
-            <p className="text-red-500 text-sm">{errors?.age}</p>
+              name='city'
+              value={submitData?.city} className={` ${errors?.city ? 'border border-red-600' : ''} block w-full bg-grey-lighter text-black   rounded py-3 px-4`} id="grid-city" type="text" placeholder="Provide your age" />
+            <p className="text-red-500 text-sm">{errors?.city}</p>
           </div>
           <div className="md:w-1/2 px-3">
             <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="grid-state">
@@ -182,9 +160,10 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
             </label>
             <div className="relative">
               <select
+              required
                 onChange={handleChange}
-                name='gender'
-                value={submitData?.gender} className="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-black py-3 px-4 pr-8 rounded" id="grid-state">
+                name='state'
+                value={submitData?.state} className="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-black py-3 px-4 pr-8 rounded" id="grid-state">
                 <option value={''}>Select State</option>
                 {
                     statesInIndia.map((item,index)=>(
@@ -207,9 +186,9 @@ const AddressModal: React.FC<props> = ({ open, close, data,reload }) => {
             </label>
             <input
               onChange={handleChange}
-              name='mobile'
-              value={submitData?.mobile} className={` ${errors?.mobile ? 'border border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-grey-lighter rounded py-3 px-4 mb-3`} id="grid-password" type="tel" placeholder='Enter your mobile number ' />
-            <p className="text-red-500 text-sm">{errors?.mobile}</p>
+              name='pincode'
+              value={submitData?.pincode} className={` ${errors?.pincode ? 'border border-red-600' : ''} appearance-none block w-full bg-grey-lighter text-black border border-grey-lighter rounded py-3 px-4 mb-3`} id="grid-password" type="tel" placeholder='Enter your mobile number ' />
+            <p className="text-red-500 text-sm">{errors?.pincode}</p>
 
           </div>
         </div>

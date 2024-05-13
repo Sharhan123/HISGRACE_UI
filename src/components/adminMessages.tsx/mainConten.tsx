@@ -7,16 +7,17 @@ import EmojiPicker from 'emoji-picker-react';
 import MessageItem from './TimeSelector';
 import VoiceRecorder from '../customUI/audio';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
-
-// import 'emoji-mart/css/emoji-mart.css';
-
+import { updateNewMessage, updateUnRead } from '../../services/userServices';
+import ImageIcon from '@mui/icons-material/Image';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 console.log('admin rendering..............');
 
 const AdminChat: React.FC = () => {
-    const [showMessages, setShowMessages] = useState<{ content: string, reciever: string, sender: string, time: string,contentType:string }[]>([])
+    const [count,setCount] = useState<{id:string,count:number}[]>([])
+    const [showMessages, setShowMessages] = useState<{ content: string, reciever: string, sender: string, time: string,contentType:string,isRead:boolean }[]>([])
     const [users, setUsers] = useState<IuserRes[] | null>([])
-    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: string,contentType:string }[]>([]);
+    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: string,contentType:string ,isRead:boolean}[]>([]);
     const [socket, setSocket] = useState<Socket | null>()
     const [show, setShow] = useState(false)
     const [text, setText] = useState('')
@@ -26,7 +27,7 @@ const AdminChat: React.FC = () => {
     const [showPicker, setShowPicker] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null);
     const [start, setStart] = useState(false)
-
+    const [toggle,setToggle] = useState(false)
     const scrollToBottom = () => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -36,8 +37,9 @@ const AdminChat: React.FC = () => {
     const fetch = async () => {
         try {
             const res = await getUsers()
+            const data = res.data.users.map((item:IuserRes)=>({id:item._id,count:item.unRead}))
             setUsers(res.data.users)
-
+            setCount(data)
         } catch (err) {
             console.log(err);
         }
@@ -61,19 +63,26 @@ const AdminChat: React.FC = () => {
                 console.log("received");
                 setMessages((prevMessages) => [...prevMessages, data]);
             });
-            newSocket.on('admin-recive', (data: { content: string, reciever: string, sender: string, time: string,contentType:string }) => {
+            newSocket.on('admin-recive', (data: { content: string, reciever: string, sender: string, time: string,contentType:string,isRead:boolean }) => {
                 console.log('recived');
                 setMessages((prev) => [...prev, data])
                 if (data.sender === selected?._id) {
-
+ 
                     setShowMessages((prev) => [...prev, data])
                 }
+            })
+            newSocket.on('update_count',(data:any)=>{
+                const updIndex = count.findIndex((item:any) => item.id === data.id);
+                const arr = [...count]
+                arr[updIndex].count+= 1
+                setCount(arr)
             })
             scrollToBottom()
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
+
     useEffect(() => {
         fetchData();
         document.body.style.overflowY = 'hidden'
@@ -110,6 +119,11 @@ const AdminChat: React.FC = () => {
         try {
             const res = await findChats(data._id)
             setSelected(data)
+            const arr = [...count]
+            const indx = arr.findIndex((item:any)=>item.id === data._id)
+            arr[indx].count = 0
+            setCount(arr)
+            await updateUnRead({id:data._id,count:'dec'})
             // const filtered = messages.filter((item) => item.sender === data._id && item.reciever === data._id )
             setShowMessages(res.data.data)
             setShow(true)
@@ -128,10 +142,12 @@ const AdminChat: React.FC = () => {
             sender: 'admin',
             reciever: selected?._id,
             time: Date.now(),
-            contentType:'string'
+            contentType:'string',
+            isRead:false
         }
         try {
             const res = await saveChat(data)
+            await updateNewMessage({id:selected?._id,count:'inc'})
         } catch (err) {
             console.log(err);
         }
@@ -145,15 +161,22 @@ const AdminChat: React.FC = () => {
 
         const base64Voice = await blobToBase64(voice);
         const data: any = {
-            content: base64Voice,
+            content: `data:audio/wav;base64,${base64Voice}`,
             sender: 'admin',
             reciever: selected?._id,
             time: Date.now(),
-            contentType:'voice'
-
+            contentType:'voice',
+            isRead:false
         }
         try {
-            const res = await saveChat(data)
+            const res = await saveChat({
+                content:`data:audio/wav;base64,${base64Voice}` ,
+                sender: 'admin',
+                reciever: selected?._id,
+                time: Date.now(),
+                contentType:'voice'
+    
+            })
         } catch (err) {
             console.log(err);
         }
@@ -161,6 +184,14 @@ const AdminChat: React.FC = () => {
         setMessages((prev) => [...prev, data])
         setShowMessages((prev) => [...prev, data])
         socket?.emit('admin_message', data)
+
+    }
+
+    const getCount = (id:string)=>{
+        const Count = count.findIndex((item:any)=>item.id === id);
+        // console.log(count,'counttttt');
+        
+        return Count;
 
     }
 
@@ -277,7 +308,7 @@ const AdminChat: React.FC = () => {
                                                 )
                                             }
 
-                                            <div className="ml-2 text-sm flex w-full items-center justify-between font-semibold">{item.name} <span className={` ${online.includes(item._id) ? 'block' : 'hidden'} w-2 h-2  inline-block rounded-full bg-green `}></span></div>
+                                            <div className="ml-2 text-sm flex w-full items-center justify-between font-semibold">{item.name} {count[getCount(item._id)].count >0 && selected?._id !== item._id  ?(<span className={`  w-5 h-5  justify-center items-center kanit-regular text-xs text-white rounded-full bg-green flex `}>{count[getCount(item._id)].count}</span>):('')} </div>
                                         </button>
                                     ))
 
@@ -327,7 +358,7 @@ const AdminChat: React.FC = () => {
                                                                 { item.contentType === 'voice'  ? (
 
                                                                     <audio controls color='' className='custom-audio-player'>
-                                                                            <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
+                                                                            <source src={item.content} type="audio/wav" />
 
                                                                             Your browser does not support the audio element.
                                                                         </audio>
@@ -363,7 +394,7 @@ const AdminChat: React.FC = () => {
                                                                     { item.contentType === 'voice' ? (
                                                                         
                                                                          <audio controls color='' className='custom-audio-player-1'>
-                                                                         <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
+                                                                         <source src={item.content} type="audio/wav" />
 
                                                                          Your browser does not support the audio element.
                                                                      </audio>
@@ -413,7 +444,7 @@ const AdminChat: React.FC = () => {
                                 <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
 
                                     <div>
-                                        <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
+                                        <button onClick={()=>setToggle(!toggle)} onMouseEnter={()=>setToggle(true)}  className="flex items-center justify-center text-gray-400 hover:text-gray-600">
                                             <svg
                                                 className="w-5 h-5"
                                                 fill="none"
@@ -424,6 +455,23 @@ const AdminChat: React.FC = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                             </svg>
                                         </button>
+                                        {
+                                            toggle && (
+                                        <div  className="fixed bottom-[calc(4rem+1.5rem)]   mr-4 p-6 rounded-lg  w-[200px] h-auto">
+                                            <div className='bg-white grid grid-rows-2 rounded-md border  h-28 drop-shadow-xl'>
+                                                <span className='border-b text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
+                                                    <ImageIcon className='text-red-500'/>
+                                                    Image
+                                                </span>
+                                                <span className=' text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
+                                                    <VideocamIcon className='text-blue-500'/>
+                                                    Video
+                                                </span>
+                                                
+                                            </div>
+                                            </div>
+                                            )
+}
                                     </div>
                                     <div className="flex-grow ml-4">
                                         <div className="relative w-full ">

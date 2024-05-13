@@ -32,11 +32,11 @@ const navigate = useNavigate()
   }, [currentIndex]);
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto ">
       <div className="relative" id="default-carousel">
-        <div className="overflow-hidden relative bg-custom h-56 rounded-lg sm:h-64 xl:h-80 2xl:h-96">
+        <div className="overflow-hidden   relative bg-custom h-56 rounded-lg sm:h-64 xl:h-80 2xl:h-96">
           {packages.map((item, index) => (
-            <div key={index} className={`duration-700 h-full ease-in-out ${currentIndex === index ? 'block' : 'hidden'}`} data-carousel-item>
+            <div key={index} className={`duration-500 h-full ease-in ${currentIndex === index ? 'block' : 'hidden'}`} data-carousel-item>
               {currentIndex === index && (
                 <div style={{ backgroundImage: `url(${item.image})` }} className="bg-no-repeat flex flex-col justify-end items-start p-10 h-full transform text-center text-white">
                   <div className='text-start   '>

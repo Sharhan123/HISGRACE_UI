@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from './redux/store'
 import UserRoutes from "./routers/userRouter";
 import AdminRoutes from "./routers/adminRouter";
+import DriverRoutes from "./routers/driverRouter";
 
 
 function Routers() {
@@ -17,6 +18,7 @@ function Routers() {
         <Router>
             <UserRoutes/>
             <AdminRoutes/>
+            <DriverRoutes/>
        </ Router>
     );
 }

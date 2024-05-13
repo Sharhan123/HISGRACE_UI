@@ -2,7 +2,7 @@ import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 
 import { Socket, io } from "socket.io-client"
-import { getUser, updateLastseen } from '../../services/userServices';
+import { getUser, updateLastseen, updateNewMessage, updateUnRead } from '../../services/userServices';
 import { IuserRes, Iuser } from '../../interfaces';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -10,9 +10,10 @@ import { jwtDecode } from 'jwt-decode';
 import { findChats, saveChat } from '../../services/chatService';
 import EmojiPicker from "emoji-picker-react"
 import VoiceRecorder from '../customUI/audio';
+import Navbar from '../homePage/navbar';
 
 const ChatbotComponent: React.FC = () => {
-    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: Date,contentType:string }[]>([])
+    const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: Date,contentType:string,isRead:boolean }[]>([])
     const [message, setMessage] = useState<string>('');
     const [socket, setSocket] = useState<Socket | null>()
     const [user, setUser] = useState<IuserRes>()
@@ -31,6 +32,7 @@ const ChatbotComponent: React.FC = () => {
 
     const fetch = async (id: any) => {
         try {
+            await updateNewMessage({id:id.id,count:'dec'})
             const res = await getUser()
             const mes = await findChats(id.id)
             setUser(res.data.data)
@@ -64,9 +66,8 @@ const ChatbotComponent: React.FC = () => {
                 console.error('Error fetching data:', error);
             }
         };
-
-        fetchData();
         document.body.style.overflowY = 'hidden'
+        fetchData();
         return () => {
             update()
             socket?.off('from_admin')
@@ -97,10 +98,13 @@ const ChatbotComponent: React.FC = () => {
             content: message,
             sender: user?._id,
             reciever: 'admin',
-            time: Date.now()
+            time: Date.now(),
+            contentType:'string',
+            isRead:false
         }
         try {
             const res = await saveChat(data)
+            await updateUnRead({id:user?._id,count:'inc'})
         } catch (err) {
             console.log(err);
 
@@ -115,24 +119,34 @@ const ChatbotComponent: React.FC = () => {
 
         const base64Voice = await blobToBase64(voice);
         const data: any = {
-            content: base64Voice,
+            content: `data:audio/wav;base64,${base64Voice}`,
             sender: user?._id,
             reciever: 'admin',
             time: Date.now(),
-            contentType: 'voice'
-
+            contentType: 'voice',
+            isRead:false
         }
+        setMessages((prev) => [...prev, data])
         try {
-            const res = await saveChat(data)
+            const res = await saveChat({
+                content: `data:audio/wav;base64,${base64Voice}`,
+                sender: user?._id,
+                reciever: 'admin',
+                time: Date.now(),
+                contentType: 'voice',
+                isRead:false
+            })
+            
+            await updateUnRead({id:user?._id,count:'inc'})
         } catch (err) {
             console.log(err);
         }
 
-        setMessages((prev) => [...prev, data])
 
         socket?.emit('admin_message', data)
 
     }
+    
 
     const blobToBase64 = (blob: Blob): Promise<string> => {
         return new Promise((resolve, reject) => {
@@ -157,14 +171,16 @@ const ChatbotComponent: React.FC = () => {
     return (
         <>
 
-            <div className="right-0 mr-4 bg-gradient-to-br from-black to-slate-600  w-full flex flex-col justify-between p-6     mx-auto h-[100dvh]  shadow-md" style={{ zIndex: '999' }}>
-                <div className="flex flex-col space-y-1.5 pb-6">
+                <Navbar/>
+            <div className="right-0 mr-4 bg-gradient-to-br   w-full flex flex-col justify-between p-6     mx-auto h-[90dvh]  shadow-md" style={{ zIndex: '999' }}>
+                {/* <div className="flex flex-col space-y-1.5 pb-6">
                     <h2 className="kanit-medium text-white text-lg tracking-tight">Connect With Admin</h2>
                     <p className="text-sm text-white kanit-regular">You can make enquiries on any trip details or every booking related queries</p>
-                </div>
+                </div> */}
 
 
                 <div ref={chatContainerRef} className=" no-scroll py-5  pr-4 h-fit overflow-y-auto">
+
                     {
                         messages.map((item, index) => (
                             item.sender !== user?._id ? (
@@ -173,7 +189,7 @@ const ChatbotComponent: React.FC = () => {
                                         <div className="flex items-center justify-center h-10 w-10 rounded-full text-white bg-red-500 flex-shrink-0">A</div>
                                         {item.contentType === 'voice' ? (
                                             <audio controls color='' className='custom-audio-player'>
-                                                <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
+                                                <source src={item.content} type="audio/wav" />
 
                                                 Your browser does not support the audio element.
                                             </audio>
@@ -187,7 +203,7 @@ const ChatbotComponent: React.FC = () => {
                                         }
 
                                     </div>
-                                    <p className='kanit-light ml-14 text-xs text-white'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                                    <p className='kanit-light ml-14 text-xs text-black'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
 
                                 </div>
 
@@ -203,7 +219,7 @@ const ChatbotComponent: React.FC = () => {
                                         </div>
                                         {item.contentType === 'voice' ? (
                                             <audio controls color='' className='custom-audio-player'>
-                                                <source src={`data:audio/wav;base64,${item.content}`} type="audio/wav" />
+                                                <source src={item.content} type="audio/wav" />
 
                                                 Your browser does not support the audio element.
                                             </audio>
@@ -217,7 +233,7 @@ const ChatbotComponent: React.FC = () => {
                                     </div>
                                     <div className=' flex justify-end '>
 
-                                        <p className='kanit-light mr-12 text-xs text-white'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
+                                        <p className='kanit-light mr-12 text-xs text-black'>{new Date(item.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</p>
                                     </div>
                                 </div>
                             )
@@ -234,7 +250,7 @@ const ChatbotComponent: React.FC = () => {
                 <div className="flex flex-row items-center h-16 rounded-xl w-full px-4">
 
                     <div>
-                        <button className="flex items-center justify-center text-white hover:text-gray-300">
+                        <button className="flex items-center justify-center text-custom hover:text-gray-300">
                             <svg
                                 className="w-5 h-5"
                                 fill="none"
@@ -247,42 +263,42 @@ const ChatbotComponent: React.FC = () => {
                         </button>
                     </div>
                     <div className="flex-grow ml-4">
-                        <div className="relative w-full ">
-                            {
-                                start ? (
-                                    <VoiceRecorder storeAndEmitRecording={(voice: Blob) => sendVoice(voice)} stop={() => setStart(false)} start={start} />
-                                ) : (
-                                    <>
-                                        <input ref={inputRef} onKeyDown={handleKeyPress} type="text" onChange={(e) => setMessage(e.target.value)} value={message} className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+                                        <div className="relative w-full ">
+                                            {
+                                                start ? (
+                                                    <VoiceRecorder storeAndEmitRecording={(voice: Blob) => sendVoice(voice)} stop={() => setStart(false)} start={start} />
+                                                ) : (
+                                                    <>
+                                                        <input ref={inputRef} onKeyDown={handleKeyPress} type="text" onChange={(e) => setMessage(e.target.value)} value={message} className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
 
-                                        <button onClick={() => {
-                                            inputRef?.current?.focus()
-                                            setShowPicker(!showPicker)
+                                                        <button onClick={() => {
+                                                            inputRef?.current?.focus()
+                                                            setShowPicker(!showPicker)
 
-                                        }
-                                        }
-                                            className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
-                                            <svg
-                                                className="w-6 h-6"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </button>
-                                    </>
-                                )
-                            }
-
-
-
-                        </div>
+                                                        }
+                                                        }
+                                                            className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
+                                                            <svg
+                                                                className="w-6 h-6"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </button>
+                                                    </>
+                                                )
+                                            }
 
 
 
-                    </div>
+                                        </div>
+
+
+
+                                    </div>
                     <div className="ml-4">
                         {
                             message ? (
@@ -303,27 +319,13 @@ const ChatbotComponent: React.FC = () => {
                             ) : (
                                 <>
                                     {
-                                        start ? (
-                                            <button onClick={() => setStart(true)} className="flex py-2 items-center justify-center bg-gradient-to-br from-custom to-slate-800 hover:bg-indigo-600 rounded-full text-white px-4 flex-shrink-0">
-                                                <span className="">
-                                                    <svg
-                                                        className="w-4 h-4 transform rotate-45 -mt-px"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                                    </svg>
-                                                </span>
-
-                                            </button>
-                                        ) : (
+                                        !start ? (
+                                            
                                             <button onClick={() => setStart(true)} className="flex py-2 items-center justify-center bg-gradient-to-br from-custom to-slate-800 hover:bg-indigo-600 rounded-full text-white px-4 flex-shrink-0">
                                                 <KeyboardVoiceIcon />
 
                                             </button>
-                                        )
+                                        ) :('')
                                     }
 
 

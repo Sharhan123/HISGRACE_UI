@@ -39,6 +39,10 @@ export interface Ivehicle {
   price: number,
   startingPrice: number
   images: string
+  bookings?:{
+    startingDate:Date,
+    endingDate:Date
+  }
 }
 
 
@@ -63,13 +67,7 @@ export interface Iuser {
   email: string,
   image: string,
 }
-export interface IuserAddres {
-  country: String
-  state: String
-  city: String
-  landmark: String
-  pincode: Number
-}
+
 export interface IuserRes {
 
   _id: any
@@ -84,9 +82,10 @@ export interface IuserRes {
   language?: string
   profile?: string
   isBlocked: boolean
-  address?: IuserAddres
+  address?: Iaddress
   lastseen?:Date
-
+  unRead:number,
+  newMessage:number
 }
 
 export interface IuserEdit {
@@ -99,6 +98,16 @@ export interface IuserEdit {
   gender?: string
   language?: string
 }
+
+export interface Iaddress{
+  locality:string,
+  house:string,
+  city:string,
+  state:string,
+  pincode:string
+}
+
+
 export interface Ipackage {
   title: string,
   car: string,
@@ -186,7 +195,9 @@ export interface IbookingAuth {
   person:{
     adult:number,
     child:number
-  }
+  },
+  returnDate?:Date
+  type:string
 }
 
 export interface IbookingOver extends IbookingAuth{

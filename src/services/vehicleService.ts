@@ -65,3 +65,12 @@ export const blockVehicle = async (id:any)=>{
         throw err
     }
 }
+
+export const getBookingVehicles = async (data:any)=>{
+    try{
+        const response = await axiosWithAuth.post('/vehicle/getBookingVehicles',data)
+        return response
+    }catch(err){
+        throw err
+    }
+}

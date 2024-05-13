@@ -63,9 +63,11 @@ useEffect(()=>{
 <div className="w-4/5 mt-5">
       {loading ? (
         <Slider {...settings}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <VehicleCardPlaceholder key={index} />
-          ))}
+          {Array.from({ length: 3 }).map((item, index) => (
+            <div className='bg-red-400 h-full w-full' >
+
+            </div>
+            ))}
         </Slider>
       ) : (
         vehicles && vehicles.length > 0 ? (

@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import {  IvehicleRes } from '../../interfaces'
 import CustomsButtons from '../customUI/customsButtons'
 interface props{
-    vehicle:IvehicleRes
-    
+    vehicle:IvehicleRes 
     handleClick:(id:number)=>void
 }
 const VehicleCard:React.FC<props> = ({vehicle,handleClick})=> {

@@ -35,7 +35,7 @@ const ListingCard: React.FC<{datas:IvehicleRes}> = ({datas}) => {
                         </p>
                         </div>
                     <div className='w-full flex justify-between items-center'>
-                    <h1 className='text-yellow-400 kanit-medium text-sm uppercase '>Premium {datas.seat} seater {datas.type}</h1>
+                    <h1 className='text-yellow-400 kanit-medium  text-sm uppercase '>Premium {datas.seat} seater {datas.type}</h1>
                     <h1 className='text-yellow-400 kanit-medium text-sm uppercase '>₹ {datas.price} /-</h1>
                     
                         </div>
