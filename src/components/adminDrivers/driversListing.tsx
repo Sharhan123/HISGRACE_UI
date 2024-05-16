@@ -10,7 +10,7 @@ import BlockModalItem from '../customUI/blockCard';
 import mongoose from 'mongoose';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
-import { blockAndUnblock, deleteDriver, getDrivers } from '../../services/driverService';
+import { blockAndUnblock, deleteDriver, getDrivers, updateRequest } from '../../services/driverService';
 
 
 
@@ -18,7 +18,7 @@ const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IdriverRes[] | null>([])
     const [showData, setShowData] = useState<IdriverRes[] | null>([])
     const [showLoading, setShowLoading] = useState(false)
-
+    const [selected,setSelected] = useState('active')
 
     const naviagate = useNavigate()
     const fetch = async () => {
@@ -26,7 +26,8 @@ const RecordTable: React.FC = () => {
             setShowLoading(true)
             const res = await getDrivers()
             setdata(res.data.data)
-            setShowData(res.data.data)
+            const filtered = res.data.data.filter((item:IdriverRes)=>item.status === selected)
+            setShowData(filtered)
             setShowLoading(false)
         } catch (er) {
             console.log(er)
@@ -40,6 +41,13 @@ const RecordTable: React.FC = () => {
 
 
     }, [])
+
+    useEffect(()=>{
+        let filtered:any = []
+         filtered = data?.filter((item)=>item.status === selected)
+        setShowData(filtered)
+        
+    },[selected])
     const onDelete = async (id: any) => {
         try {
             await deleteDriver(id)
@@ -55,6 +63,8 @@ const RecordTable: React.FC = () => {
     const hideLoader = () => {
         setShowLoading(false)
     }
+
+
 
     const handleFilter = (value: string) => {
 
@@ -98,6 +108,17 @@ const RecordTable: React.FC = () => {
         }
     }
 
+    const handleRequest = async (id:any,status:string)=>{
+        try{
+            const res = await updateRequest({id,status})
+            setSelected('active')
+        }catch(err){
+            console.log(err);
+            
+        }
+    }
+
+
 
     return (
         <>
@@ -121,12 +142,12 @@ const RecordTable: React.FC = () => {
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <div>
                         <div className="flex mt-5 items-center gap-x-3">
-                            <h2 className="text-2xl font-medium text-gray-800 ">Vehicles</h2>
+                            <h2 className="text-2xl font-medium text-gray-800 ">Drivers</h2>
                             <span className="px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-full ">Active</span>
                         </div>
-                        <h3 className="mt-10 text-md text-black text-xl kanit-regular">Filter vehicles</h3>
+                        <h3 className="mt-10 text-md text-black text-xl kanit-regular">Filter Drivers</h3>
                     </div>
-                    <div className="flex items-center mt-4 gap-x-3 ">
+                    {/* <div className="flex items-center mt-4 gap-x-3 ">
 
 
                         <button className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-orange-500 rounded-lg shrink-0 sm:w-auto gap-x-2">
@@ -137,40 +158,29 @@ const RecordTable: React.FC = () => {
 
                         </button>
 
-                    </div>
+                    </div> */}
 
                 </div>
-                <div className="mt-6 md:flex md:items-center md:justify-between">
-                    <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
+                <div className="mt-6  md:flex md:items-center md:justify-between">
+                    <div className="grid grid-cols-2 w-full overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
 
 
-                        <button onClick={() => handleFilter('SUV')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            SUV
+                        <button onClick={() => setSelected('active')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'active' ? 'bg-custom text-white' : ''} text-blue-600 transition-colors duration-200 sm:text-sm `}>
+                            ACTIVE
                         </button>
-                        <button onClick={() => handleFilter('SEDAN')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            SEDAN
+                        <button onClick={() => setSelected('verified')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'verified' ? 'bg-red-600 text-white' : ''} text-red-500 transition-colors duration-200 sm:text-sm `}>
+                            REGISTRATION REQUESTS
                         </button>
-                        <button onClick={() => handleFilter('VAN')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            VAN
-                        </button>
-                        <button onClick={() => handleFilter('HATCHBACK')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            HATCHBACK
-                        </button>
-                        <button onClick={() => handleFilter('BUS')} className="px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm ">
-                            BUS
-                        </button>
-                        <button onClick={() => setShowData(data)} className="px-5 py-2  bg-red-700 text-xs font-medium text-white transition-colors duration-200 sm:text-sm ">
-                            Clear Filters
-                        </button>
+                       
                     </div>
 
-                    <div className="relative flex items-center mt-4 md:mt-0">
+                    {/* <div className="relative flex items-center mt-4 md:mt-0">
 
                         <div className="relative w-full min-w-[300px] h-10">
-                            <input onChange={handleSearch} className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
+                            <input  className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
                             <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal peer-placeholder-shown:text-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-blue-500 before:border-blue-gray-200 peer-focus:before:border-blue-500 after:border-blue-gray-200 peer-focus:after:border-blue-500">Search here</label>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex flex-col mt-6">
                     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -196,9 +206,9 @@ const RecordTable: React.FC = () => {
                                             Experiance
                                             </th>
 
-                                            <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Edit</th>
-                                            <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Delete</th>
-                                            <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Status</th>
+                                            {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Edit</th> */}
+                                            <th scope="col" colSpan={2} className="px-4 text-center py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Actions</th>
+                                            {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Status</th> */}
 
 
 
@@ -240,14 +250,26 @@ const RecordTable: React.FC = () => {
                                                             <h2 className="text-xl kanit-regular text-green-600">{item.exp} /yr</h2>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
+                                                   
+                                                    {
+                                                        item.status === 'verified'?(
+                                                            <>
+                                                            <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
-                                                            <button className="text-md w-full h-8 rounded-md bg-yellow-600 kanit-regular text-white">
-                                                                <EditVehicle loader={showLoader} hide={hideLoader} reload={fetch} data={item} />
+                                                            <button onClick={()=>handleRequest(item._id,'rejected')} className="text-md w-20 h-8 rounded-md bg-red-800 kanit-regular text-white">
+                                                                Reject
                                                             </button>
                                                         </div>
                                                     </td>
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
+                                                        <div>
+                                                            <button onClick={()=>handleRequest(item._id,'active')} className="text-md w-full h-8 rounded-md bg-blue-800 kanit-regular text-white">Approve</button>
+                                                        </div>
+                                                    </td>
+                                                    </>
+                                                        ):(
+                                                            <>
+                                                            <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
                                                             <button className="text-md w-20 h-8 rounded-md bg-red-800 kanit-regular text-white">
                                                                 <DeleteItemModal onDelete={() => onDelete(item._id)} itemName='Driver' />
@@ -259,6 +281,10 @@ const RecordTable: React.FC = () => {
                                                             <button className="text-md w-full h-8 rounded-md bg-blue-800 kanit-regular text-white"><BlockModalItem itemName='Driver' onDelete={() => onBlock(item._id)} blocked={item.isAvailable} /></button>
                                                         </div>
                                                     </td>
+                                                    </>
+                                                        )
+                                                    }
+                                                    
                                                 </tr>
                                             ))
                                         ) : (

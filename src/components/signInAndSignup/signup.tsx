@@ -33,6 +33,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return pattern.test(email);
     }
+    
     if (!name) {
       setNameErr('Please provide a user name')
 

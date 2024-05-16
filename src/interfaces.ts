@@ -145,9 +145,11 @@ export interface IAlertState {
 
 export interface Idriver {
   name: string
+  email:string
   vehicles: string[]
   age: string
   gender: string
+  password:string
   exp: string
   driverBata: string
   mobile: string
@@ -157,13 +159,16 @@ export interface Idriver {
 export interface IdriverRes {
   _id: any
   driverName: string
+  email:string
   vehicles: string[]
   age: string
   gender: string
+  password:string
   exp: number
   driverBata: number
   mobile: string
   image: string
+  status:string | number
   isAvailable: boolean
 }
 

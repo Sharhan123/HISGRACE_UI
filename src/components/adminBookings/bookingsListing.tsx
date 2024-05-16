@@ -11,15 +11,15 @@ import { useDispatch } from 'react-redux';
 import { blockAndUnblock, deleteDriver, getDrivers } from '../../services/driverService';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ReactDatePicker from 'react-datepicker';
-import { getBookings } from '../../services/bookingsServices';
+import { bookingStatus, getBookings } from '../../services/bookingsServices';
 
 
 
 const RecordTable: React.FC = () => {
-    const [data, setdata] = useState<IbookingRes[] | null>([])
-    const [showData, setShowData] = useState<IbookingRes[] | null>([])
+    const [data, setdata] = useState<IbookingRes[]>([])
+    const [showData, setShowData] = useState<IbookingRes[]>([])
     const [showLoading, setShowLoading] = useState(false)
-    const [selected,setSelected] = useState('')
+    const [selected, setSelected] = useState('Active')
 
     const naviagate = useNavigate()
     const fetch = async () => {
@@ -27,7 +27,9 @@ const RecordTable: React.FC = () => {
             setShowLoading(true)
             const res = await getBookings()
             setdata(res.data.data)
-            setShowData(res.data.data)
+            const filtered = res.data.data.filter((item: IbookingRes) => (item.status === selected))
+            setShowData(filtered)
+            // setShowData(res.data.data)
             setShowLoading(false)
         } catch (er) {
             console.log(er)
@@ -41,14 +43,14 @@ const RecordTable: React.FC = () => {
 
 
     }, [])
-    const onDelete = async (id: any) => {
-        try {
-            await deleteDriver(id)
-            fetch()
-        } catch (err) {
-            console.log(err)
-        }
-    }
+    // const onDelete = async (id: any) => {
+    //     try {
+    //         await deleteDriver(id)
+    //         fetch()
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 
     const showLoader = () => {
         setShowLoading(true)
@@ -57,48 +59,32 @@ const RecordTable: React.FC = () => {
         setShowLoading(false)
     }
 
-    // const handleFilter = (value: string) => {
 
-    //     const arr = data?.filter((item) => item.vehicles.includes(value))
-    //     if (arr) {
 
-    //         setShowData(arr);
-    //     }
-    //     else {
-    //         setShowData([])
-    //     }
-    // }
-    // const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    //     const value = e.target.value
+    // const onBlock = async (id: any) => {
+    //     try {
+    //         await blockAndUnblock(id)
+    //         fetch()
+    //     } catch (err) {
+    //         console.log(err);
 
-    //     const arr = data?.filter((item) => {
-
-    //         const res = item.driverName.toLowerCase().split(' ')
-    //         for(let i=0;i<res.length;i++){
-    //             if (res[i].startsWith(value.toLowerCase())) {
-    //                 return true; 
-    //               }
-    //         }
-    //         return false
-    //     })
-    //     if (arr) {
-
-    //         setShowData(arr)
-    //     } else {
-    //         setShowData([])
     //     }
     // }
-
-    const onBlock = async (id: any) => {
-        try {
-            await blockAndUnblock(id)
-            fetch()
-        } catch (err) {
+    const handleCancel = async (id:any)=>{
+        try{
+             await bookingStatus({id:id,status:'Cancelled'})
+             fetch()
+             setSelected('Cancelled')
+        }catch(err){
             console.log(err);
-
+            
         }
     }
 
+    useEffect(() => {
+        const filtered = data.filter((item: IbookingRes) => (item.status === selected))
+        setShowData(filtered)
+    }, [selected])
 
     return (
         <>
@@ -134,18 +120,18 @@ const RecordTable: React.FC = () => {
                     <div className="grid grid-cols-4 w-full overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
 
 
-                        <button onClick={()=>setSelected('ACTIVE')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'ACTIVE'?'bg-custom text-white':''} text-blue-600 transition-colors duration-200 sm:text-sm `}>
+                        <button onClick={() => setSelected('Active')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'Active' ? 'bg-custom text-white' : ''} text-blue-600 transition-colors duration-200 sm:text-sm `}>
                             ACTIVE
                         </button>
-                        <button     onClick={()=>setSelected('CANCELLED')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'CANCELLED'?'bg-red-600 text-white':''} text-red-500 transition-colors duration-200 sm:text-sm `}>
+                        <button onClick={() => setSelected('Cancelled')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'Cancelled' ? 'bg-red-600 text-white' : ''} text-red-500 transition-colors duration-200 sm:text-sm `}>
                             CANCELLED
                         </button>
-                        <button onClick={()=>setSelected('COMPLETED')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'COMPLETED'?'bg-green text-white':''} text-green transition-colors duration-200 sm:text-sm `}>
+                        <button onClick={() => setSelected('Completed')} className={`px-5  py-2 text-xs kanit-regular ${selected === 'Completed' ? 'bg-green text-white' : ''} text-green transition-colors duration-200 sm:text-sm `}>
                             COMPLETED
                         </button>
 
-                        <button onClick={()=>setSelected('REQUESTS')} className={`px-5  py-2 text-xs uppercase kanit-regular ${selected === 'REQUESTS'?'bg-blue-600 text-white':''} text-blue-500 transition-colors duration-200 sm:text-sm `}>
-                            Cancellation Request
+                        <button onClick={() => setSelected('pending')} className={`px-5  py-2 text-xs uppercase kanit-regular ${selected === 'pending' ? 'bg-blue-600 text-white' : ''} text-blue-500 transition-colors duration-200 sm:text-sm `}>
+                            CANCELLATION REQUESTS
                         </button>
                     </div>
 
@@ -182,9 +168,9 @@ const RecordTable: React.FC = () => {
                                                 Amount
                                             </th>
 
-                                            <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">View Details</th>
+                                            <th scope="col" colSpan={2} className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Actions</th>
                                             {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Delete</th> */}
-                                            <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Status</th>
+                                            {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Status</th> */}
 
 
 
@@ -233,14 +219,25 @@ const RecordTable: React.FC = () => {
                                                             <h2 className="text-xl kanit-regular text-black">₹ {item.totalPrice}</h2>
                                                         </div>
                                                     </td>
+                                                    {
+                                                        selected === 'pending'?(
+                                                            <td className=" text-sm font-medium whitespace-nowrap text-center">
+                                                        <div>
+                                                            <button onClick={()=>handleCancel(item._id)} className={`text-md px-2 w-full h-8 rounded-md text-white bg-red-600 kanit-regular `}>Confirm Cancel</button>
+                                                        </div>
+                                                    </td>
+                                                        ):(
+
+                                                    <td className=" text-sm font-medium whitespace-nowrap text-center">
+                                                        <div>
+                                                            <button className={`text-md px-2 w-full h-8 rounded-md  kanit-regular  ${selected === 'Cancelled' ?'text-red-600 border border-red-600':''} ${selected === 'Completed' ?'text-green border border-green':''} ${selected === 'Active' ?'text-blue-500 border border-blue-500':''}  `}>{item.status}</button>
+                                                        </div>
+                                                    </td>
+                                                        )
+                                                    }
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
                                                             <button className="text-md w-full h-8 px-2 rounded-md bg-orange-600 kanit-regular text-white">View details</button>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
-                                                        <div>
-                                                            <button className="text-md w-full h-8 rounded-md bg-blue-800 kanit-regular text-white">{item.status}</button>
                                                         </div>
                                                     </td>
                                                 </tr>

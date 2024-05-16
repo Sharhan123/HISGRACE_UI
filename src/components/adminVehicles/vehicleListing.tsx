@@ -15,7 +15,7 @@ const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IvehicleRes[] | null>([])
     const [showData, setShowData] = useState<IvehicleRes[] | null>([])
     const [showLoading, setShowLoading] = useState(false)
-
+    const navigate = useNavigate()
 
     const naviagate = useNavigate()
     const fetch = async () => {
@@ -116,12 +116,15 @@ const RecordTable: React.FC = () => {
                     <div className="flex items-center mt-4 gap-x-3 ">
 
 
-                        <button className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-orange-500 rounded-lg shrink-0 sm:w-auto gap-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                        <button onClick={()=>{
+                            localStorage.removeItem('driver')
+                            navigate('/driver')
+                        }} className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-600 rounded-lg shrink-0 sm:w-auto gap-x-2">
+                            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <AddRecord reload={fetch} loader={showLoader} hide={hideLoader} />
-
+                            </svg> */}
+                            {/* <AddRecord reload={fetch} loader={showLoader} hide={hideLoader} /> */}
+                            Logout 
                         </button>
 
                     </div>
