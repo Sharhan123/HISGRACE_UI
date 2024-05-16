@@ -25,8 +25,8 @@ const RecordTable: React.FC = () => {
             setdata(res.data.data)
             setShowData(res.data.data)
             setShowLoading(false)
-        } catch (er) {
-            console.log(er)
+        } catch (err) {
+            console.log(err);
         }
     }
 
