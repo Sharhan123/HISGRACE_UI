@@ -1,9 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 
-export const verifyUser = (navigate:any) => {
+export const verifyUserToken = (navigate:any) => {
     
     const token = localStorage.getItem('token');
-
+ 
     if (token) {
         const tokenDecoded = jwtDecode(token)
         if (tokenDecoded?.exp) {
@@ -12,7 +12,7 @@ export const verifyUser = (navigate:any) => {
             
             if (tokenDecoded.exp < currentTime) {
                 localStorage.removeItem('token');
-                navigate('/signin-signup');
+                // navigate('/signin-signup');
             }
         } else {
             console.error("Invalid token payload: 'exp' property is missing or undefined");

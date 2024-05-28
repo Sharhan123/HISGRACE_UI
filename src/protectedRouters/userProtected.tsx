@@ -2,8 +2,9 @@ import React, { Children } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { Navigate, Route } from 'react-router-dom';
-import { verifyUser } from '../middleWares/userTokenVerify';
+import { verifyUserToken } from '../middleWares/userTokenVerify';
 import { selectBookingData } from '../redux/slices/bookingSice';
+import { selectPackageData } from '../redux/slices/packageBookingSlice';
 
 const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -18,7 +19,7 @@ const authRouterWrapper = ({ children }: { children: React.ReactNode }) => {
   const token = useSelector((state: RootState) => state.auth.token);
   
   if (token) {
-    verifyUser(token)
+    verifyUserToken(token)
     return <>{children}</>; 
   } else {
     return <Navigate to="/" replace />;
@@ -54,4 +55,12 @@ const bookingWrapper = ({children}:{children:React.ReactNode})=>{
   return <Navigate to={'/'} replace />
 }
 
-export default {ProtectedRouteWrapper,authRouterWrapper,forgetPasswordWrapper,forgetOtpWrapper,bookingWrapper};
+const packageWrapper = ({children}:{children:React.ReactNode})=>{
+  const booking = useSelector(selectPackageData)
+  if(booking){
+    return <>{children}</>
+  }
+  return <Navigate to={'/'} replace />
+}
+
+export default {ProtectedRouteWrapper,packageWrapper,authRouterWrapper,forgetPasswordWrapper,forgetOtpWrapper,bookingWrapper};

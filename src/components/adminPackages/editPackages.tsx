@@ -3,6 +3,8 @@ import { getVehicles } from '../../services/vehicleService';
 import { useNavigate } from 'react-router-dom';
 import { addPackage, editPackage } from '../../services/packageService';
 import { IpackageRes, Ivehicle } from '../../interfaces';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../redux/slices/alertSlice';
 
 interface ModalProps {
     reload: () => void
@@ -35,7 +37,7 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
     const [typeErr, setTypeErr] = useState('')
 
     // const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -43,8 +45,10 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
                 console.log(res.data.vehicles);
 
                 setVehicles(res.data.data)
-            } catch (err) {
+            } catch (err:any) {
                 console.log(err);
+                dispatch(showAlert({color:"red",content:err.message}))
+
             }
         }
         fetch()
@@ -112,8 +116,9 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
             const res = await editPackage(sendingData)
             hide()
             reload()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err)
+            dispatch(showAlert({color:"red",content:err.message}))
 
         }
 

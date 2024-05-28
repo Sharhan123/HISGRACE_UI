@@ -19,12 +19,9 @@ function App(): JSX.Element {
   
   return (
     <>
-      {/* {isInitialLoading ? (
-        <MainLoader open={isInitialLoading} />
-      ) : ( */}
     <Alert/>
         <Routers />
-      {/* )} */}
+     
     </>
   );
 }

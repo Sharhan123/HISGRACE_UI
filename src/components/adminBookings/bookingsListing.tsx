@@ -20,7 +20,6 @@ const RecordTable: React.FC = () => {
     const [showData, setShowData] = useState<IbookingRes[]>([])
     const [showLoading, setShowLoading] = useState(false)
     const [selected, setSelected] = useState('Active')
-
     const naviagate = useNavigate()
     const fetch = async () => {
         try {
@@ -31,8 +30,9 @@ const RecordTable: React.FC = () => {
             setShowData(filtered)
             // setShowData(res.data.data)
             setShowLoading(false)
-        } catch (er) {
-            console.log(er)
+        } catch (err:any) {
+            dispatch(showAlert({color:"red",content:err.message}))
+            console.log(err)
         }
     }
     const dispatch = useDispatch()
@@ -75,9 +75,10 @@ const RecordTable: React.FC = () => {
              await bookingStatus({id:id,status:'Cancelled'})
              fetch()
              setSelected('Cancelled')
-        }catch(err){
+        }catch(err:any){
             console.log(err);
-            
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
     }
 

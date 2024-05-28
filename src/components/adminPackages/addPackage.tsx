@@ -3,6 +3,8 @@ import {  getVehicles } from '../../services/vehicleService';
 import { useNavigate } from 'react-router-dom';
 import { addPackage } from '../../services/packageService';
 import { Ivehicle } from '../../interfaces';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 interface ModalProps {
     reload: () => void; 
@@ -33,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
     const [typeErr, setTypeErr] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     useEffect(()=>{
         const fetch = async ()=>{
             try{
@@ -43,9 +45,10 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
                 console.log(res.data.vehicles);
                 hide()
                 setVehicles(res.data.data) 
-            }catch(err){
+            }catch(err:any){
                 console.log(err);
-                
+                dispatch(showAlert({color:"red",content:err.message}))
+
             }
         }
         fetch()
@@ -104,9 +107,10 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
             
             hide()
             reload()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err)
-            
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
 
 

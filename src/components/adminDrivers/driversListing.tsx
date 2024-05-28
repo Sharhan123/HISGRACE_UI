@@ -29,8 +29,9 @@ const RecordTable: React.FC = () => {
             const filtered = res.data.data.filter((item:IdriverRes)=>item.status === selected)
             setShowData(filtered)
             setShowLoading(false)
-        } catch (er) {
-            console.log(er)
+        } catch (err:any) {
+            console.log(err)
+            dispatch(showAlert({color:"red",content:err.message}))
         }
     }
     const dispatch = useDispatch()
@@ -52,8 +53,9 @@ const RecordTable: React.FC = () => {
         try {
             await deleteDriver(id)
             fetch()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err)
+            dispatch(showAlert({color:"red",content:err.message}))
         }
     }
 

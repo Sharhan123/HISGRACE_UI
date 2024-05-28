@@ -7,6 +7,8 @@ import { blockPackage, deletePackage, getPackages } from '../../services/package
 import Edit from './editPackages';
 import DeleteItemModal from '../customUI/deleteModal';
 import BlockModalItem from '../customUI/blockCard';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -15,6 +17,7 @@ const RecordTable: React.FC = () => {
     const [showLoading,setShowLoading] = useState(false)
     const [showData,setShowData] = useState<IpackageRes[] | null>([])
     const naviagate = useNavigate()
+    const dispatch = useDispatch()
     const fetch = async()=>{
         try{
             setShowLoading(true)
@@ -24,8 +27,10 @@ const RecordTable: React.FC = () => {
             setdata(res.data.data)
             setShowData(res.data.data)    
             setShowLoading(false)
-        }catch(er){
-            console.log(er)
+        }catch(err:any){
+            console.log(err)
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
     }
     
@@ -74,9 +79,10 @@ const RecordTable: React.FC = () => {
         try{
             await blockPackage(id)
             fetch()
-        }catch(err){
+        }catch(err:any){
             console.log(err);
-            
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
     }
 

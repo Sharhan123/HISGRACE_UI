@@ -53,18 +53,18 @@ const Home: React.FC = () => {
       <div className='h-screen  lg:w-full md:w-full  ' >
 
         <Alert />
-        <div className="w-screen h-4/6 overflow-hidden relative before:block before:absolute before:bg-black/80 before:h-full before:w-full before:top-0 before:opacity-35 before:z-10 before:left-0 ">
-          <img src={banner} className="absolute top-0 left-0 min-h-full w-full ob" alt="" />
-          <div className="relative  z-20 container  mx-auto grid grid-cols-12 h-full items-center">
-            <div className="col-span-6">
-              <span className="uppercase text-white  text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span>
-              <h1 className="text-white   kanit-bold text-4xl mb-8">Make Your journey extra ordinary and valuable</h1>
-              <p className="text-white kanit-regular text-md">
-                Hisgrace cabs is providing exiting tour packages to enjoy with with family, friend, Any ones dear to you .
-              </p>
-              <button className="mt-8 text-white uppercase py-4 kanit-regular text-base  px-10 bg-blue-600 rounded  hover:bg-white hover:bg-opacity-10">Get started</button>
+        <div className="w-screen lg:h-4/6 md:h-4/6 h-2/6 overflow-hidden relative before:block before:absolute before:bg-black/100 before:h-full before:w-full before:top-0 before:opacity-35 before:z-10 before:left-0 ">
+          <img src={banner} className="absolute top-0 left-0 min-h-full w-full o" alt="" />
+          <div className="relative  z-20 container items-center mx-auto grid grid-cols-12 h-full ">
+            <div className="col-span-12  ml-2 lg:col-span-6  md:col-span-6">
+              {/* <span className="uppercase text-white  text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span> */}
+              <h1  className="text-white oswald  leading-loose mb-5  text-xl lg:text-4xl ">Hisgrace make your journey extra ordinary and valuable Book your slot now.</h1>
+              <button className="mt-5 text-white uppercase lg:py-2 py-2 kanit-regular text-xs lg:text-lg  lg:px-5 px-3 bg-blue-600 rounded  hover:bg-white hover:bg-opacity-10">Get started</button>
+              {/* <p className="text-white kanit-medium text-md">
+                
+              </p> */}
             </div>
-            <div className='col-span-6'>
+            <div className='col-span-6 lg:block md:block hidden'>
 
             {packages && packages.length > 0 && <ImageSlider packages={packages} />}
               

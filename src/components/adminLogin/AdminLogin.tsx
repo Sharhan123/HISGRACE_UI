@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { adminSignin } from '../../services/adminService';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../redux/slices/alertSlice';
 
 const Login: React.FC = () => {
 
@@ -9,13 +11,15 @@ const Login: React.FC = () => {
     const [emailErr,setEmailErr] = useState('')
     const [passErr,setPassErr] = useState('')
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     const handleSubmit = async ()=>{
         if(!email){
             setEmailErr('Please provide a email for admin login');
+
         }
         if(!pass){
             setPassErr('please provide a password for admin login')
+            return
         }
 
         const data = {
@@ -30,9 +34,19 @@ const Login: React.FC = () => {
             
             localStorage.setItem('admin',res.data.token)
             navigate('/admin/dashboard')
-        }catch(err){
-            console.log(err);
-            // setEmailErr(`internal error : ${err?err.message:err}`)
+        }catch(err:any){
+            if(err){
+                if(err.email){
+                    setEmailErr(err.email)
+                    return
+                }
+                else if(err.password){
+                    setPassErr(err.password)
+                    return
+                }else{
+                    dispatch(showAlert({color:'red',content:err.message}))
+                }
+            }
         }
 
 

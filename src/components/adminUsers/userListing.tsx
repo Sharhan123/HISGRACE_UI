@@ -4,21 +4,25 @@ import { useNavigate } from 'react-router-dom';
 import { Iuser, IuserRes } from '../../interfaces';
 import { blockUser, getUsers } from '../../services/adminService';
 import BlockModalItem from '../customUI/blockCard';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 
 
 const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IuserRes[] | null>([])
 
-
+    const dispatch = useDispatch()
     const naviagate = useNavigate()
     const fetch = async () => {
         try {
 
             const res = await getUsers()
             setdata(res.data.users)
-        } catch (er) {
-            console.log(er)
+        } catch (err: any) {
+            console.log(err)
+            dispatch(showAlert({ color: "red", content: err.message }))
+
         }
     }
 
@@ -30,17 +34,18 @@ const RecordTable: React.FC = () => {
 
     const handleBlock = async (id: any) => {
         try {
-            
 
 
-           
-                const res = await blockUser(id)
-                if (res) {
-                    fetch()                    
-                }
-           
 
-        } catch (err) {
+
+            const res = await blockUser(id)
+            if (res) {
+                fetch()
+            }
+
+
+        } catch (err:any) {
+            dispatch(showAlert({color:"red",content:err.message}))
             console.log(err);
         }
     }
@@ -125,7 +130,7 @@ const RecordTable: React.FC = () => {
 
                                             <td className="px-4 py-4 text-sm   font-medium whitespace-nowrap text-center ">
                                                 <div>
-                                                    <button  className={`text-md w-full h-8 rounded-md ${item.isBlocked ? 'bg-red-800' : 'bg-blue-800'} kanit-regular text-white`}>
+                                                    <button className={`text-md w-full h-8 rounded-md ${item.isBlocked ? 'bg-red-800' : 'bg-blue-800'} kanit-regular text-white`}>
                                                         <BlockModalItem itemName='User' blocked={item.isBlocked} onDelete={() => handleBlock(item._id)} />
                                                     </button>
                                                 </div>

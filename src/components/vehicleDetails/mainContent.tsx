@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css'
 import VehiclesSection from '../customUI/vehicle';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getVehicles } from '../../services/vehicleService';
 import { IvehicleRes } from '../../interfaces';
 import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
@@ -12,6 +12,7 @@ const MainContent: React.FC = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id')
+    const navigate = useNavigate()
     useEffect(() => {
         const fetch = async () => {
 
@@ -62,7 +63,7 @@ const MainContent: React.FC = () => {
 
                             </p>
                             <div className="mt-5 ">
-                                <CustomsButtons image={data ? data.images : ''} secondFunction={() => ''} first='View Image' second='Book now' />
+                                <CustomsButtons image={data ? data.images : ''} secondFunction={() => navigate('/services')} first='View Image' second='Book now' />
                             </div>
 
                             <div className=" mt-5 flex flex-col justify-between">

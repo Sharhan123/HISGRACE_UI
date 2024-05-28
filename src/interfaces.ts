@@ -241,7 +241,18 @@ export interface Ipickup {
   postCode:string
 }
 
-
+export interface IpackageBooking{
+  period:{
+    time:string,
+    date:Date
+    meridian:string
+  },
+  persons:{
+    adult:number,
+    child:number
+  },
+  package:string
+}
 
 
 

@@ -243,8 +243,8 @@ const OnewayCard: React.FC = () => {
                     <div className='flex items-center justify-center '>
 
                         <DatePicker
-                            selected={selectedDate}
-                            onChange={handleDateChange}
+                            selected={returnDate}
+                            onChange={(date:Date)=>setReturnDate(date)}
                             dateFormat="dd MMM yy"
                             className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
                             popperPlacement="bottom-start"

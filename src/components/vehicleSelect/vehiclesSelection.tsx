@@ -36,24 +36,30 @@ const VehicleSelection: React.FC = () => {
         fetch()
 
     }, [])
+    const getDays = (startingDate:any,returnDate:any)=>{
+        const timeDifference = returnDate - startingDate
+            
+        return  timeDifference / (1000 * 60 * 60 * 24); 
+    }
 
     const handleSubmit = (item:IvehicleRes)=>{
         let price = 0
-        if((booking.distance/1000) < 100){
-            const temp = (Math.floor(booking.distance /1000))  * item.price + 100
-            if(temp <500){
-                price = 500
-            }else{
-                price = temp
-            }
-        }else{
-            price = item.startingPrice + ((Math.floor(booking.distance /1000))-100 )  * item.price + 100
+        if(booking.type === 'round-way' && booking.returnDate){
+           const days =  getDays(booking.period.date,booking.returnDate)
+           if((booking.distance/1000) < 100){
+            price = ((Math.floor(booking.distance /1000))  * item.price + 100) * days 
+           }else{
+            price = Math.round((item.startingPrice + ((Math.floor(booking.distance /1000) )-100 )  * item.price + 100) * days )
+           }
+            price = (booking.distance/1000) < 100 ? ((Math.floor(booking.distance /1000))  * item.price + 100) * days : (item.startingPrice + ((Math.floor(booking.distance /1000) )-100 )  * item.price + 100) * days      
+         }else{
+            price = (booking.distance/1000) < 100 ? ((Math.floor(booking.distance /1000))  * item.price + 100)  : (item.startingPrice + ((Math.floor(booking.distance /1000) )-100 )  * item.price + 100)   
         }
         const data = {
             ...booking,
             vehicle:item._id,
             totalKm:Math.floor(booking.distance/1000) <100 ?Math.floor(booking.distance/1000):Math.floor(booking.distance/1000) *2,
-            totalPrice:(booking.distance/1000) < 100 ? (Math.floor(booking.distance /1000))  * item.price + 100 : item.startingPrice + ((Math.floor(booking.distance /1000) )-100 )  * item.price + 100
+            totalPrice:price
         }
         localStorage.setItem('booking',JSON.stringify(data))
         dispatch(setBookingData(data))

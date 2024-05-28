@@ -1,6 +1,8 @@
 import React, { ChangeEvent,  useState } from 'react';
 import { addVehicle, updateVehicle } from '../../services/vehicleService';
 import { Ivehicle } from '../../interfaces';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../redux/slices/alertSlice';
 interface ModalProps {
     reload: () => void; 
     loader:()=>void
@@ -30,7 +32,7 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
     const [descErr, setDescErr] = useState('')
     const [fileErr, setFileErr] = useState('')
 
-    
+    const dispatch = useDispatch()
 
 
     const handleSubmit = async () => {
@@ -85,8 +87,9 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
          await updateVehicle(datas)
             hide()
             reload()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
 
         }
 

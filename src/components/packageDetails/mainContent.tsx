@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getVehicles } from '../../services/vehicleService';
 import { IpackageRes } from '../../interfaces';
 import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
 import { getPackages } from '../../services/packageService';
 import CustomsButtons from '../customUI/customsButtons';
+import { setPackage } from '../../redux/slices/packageBookingSlice';
+import { useDispatch } from 'react-redux';
+import DateSelection from '../packageBooking/DateSelection';
 
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IpackageRes>()
+    const [selectDate,setSelectDate] = useState(false)
     //     const location = useLocation();
     //   const searchParams = new URLSearchParams(location.search);
     //   const id = searchParams.get('id')
@@ -39,8 +43,23 @@ const MainContent: React.FC = () => {
 
 
     }, [id])
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const handlePackage = ()=>{
+        setSelectDate(true)
+        }
+        const confirmBooking = (date:any)=>{
+            const changeData = {
+                ...date,
+                package:data?._id
+            }
+            localStorage.setItem('package',JSON.stringify(changeData))
+            dispatch(setPackage(changeData))
+            navigate('/packageBooking')
+        }
     return (
         <div >
+            <DateSelection confirm={(data:any)=>confirmBooking(data)} close={()=>setSelectDate(false)} open={selectDate}/>
             <div className="w-full max-w-5xl mt-10 rounded-3xl  bg-custom \ shadow-2xl   p-10 lg:p-20 mx-auto text-gray-800 relative md:text-left">
                 <div className="md:flex items-center -mx-10">
                     <div className="w-full  md:w-1/2 px-10 mb-10 md:mb-0">
@@ -61,7 +80,7 @@ const MainContent: React.FC = () => {
 
                             </p>
                             <div className="mt-5  flex justify-start items-start">
-                                <CustomsButtons first='View Image' secondFunction={() => ''} second='Book Now' image={data ? data.image : ''} />
+                                <CustomsButtons first='View Image' secondFunction={() => handlePackage()} second='Book Now' image={data ? data.image : ''} />
                             </div>
 
                             <div className=" mt-5 flex flex-col justify-between">

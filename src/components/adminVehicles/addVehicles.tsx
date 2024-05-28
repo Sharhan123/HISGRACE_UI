@@ -3,6 +3,8 @@ import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 import { addVehicle } from '../../services/vehicleService';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../redux/slices/alertSlice';
 interface ModalProps {
     reload: () => void;
     loader: () => void
@@ -36,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
     const [gErr, setGErr] = useState('')
 
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
 
     const handleSubmit = async () => {
         console.log(selectedFiles)
@@ -83,8 +85,9 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
             const res = await addVehicle(data)
             hide()
             reload()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
 
         }
 

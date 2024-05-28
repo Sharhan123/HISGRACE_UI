@@ -10,7 +10,7 @@ loading:boolean
 const PackagesCard:React.FC<props>  = ({packages,loading})=> {
   return (
     <div className="container-fluid  mx-auto py-4 px-6 flex   justify-center">
-      <div className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-10 mt-4 ">
+      <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-10 mt-4 ">
       {loading ? (
                         // Placeholder or loading indicator while fetching data
                         Array.from({ length: 2 }).map((_, index) => (

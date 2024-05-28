@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react';
-import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, BrowserRouter as Router, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { jwtDecode } from 'jwt-decode';
@@ -7,6 +7,8 @@ import { Itoken } from '../interfaces';
 import { handleLogout, verifyUser } from '../services/userServices';
 import auth from '../protectedRouters/userProtected';
 import Loader from '../components/customUI/loader';
+import PackageBooking from '../components/packageBooking/bookingConfirm';
+import { verifyUserToken } from '../middleWares/userTokenVerify';
 
 // Lazy-loaded route components
 const HomePage = React.lazy(() => import('../pages/userPages/homePage'));
@@ -29,8 +31,9 @@ const ChatingPage = React.lazy(() => import('../pages/userPages/chatingPage'));
 
 const UserRoutes = () => {
   const token = useSelector((state: RootState) => state.auth.token);
-
+const navigate = useNavigate()
   useEffect(() => {
+    verifyUserToken(navigate)
     const check = async () => {
       try {
         if (token) {
@@ -71,6 +74,7 @@ const UserRoutes = () => {
           <Route path="/success" element={<PaymentConfirmation />} />
           <Route path="/failure" element={<PaymentFailure />} />
           <Route path="/chat" element={<auth.authRouterWrapper><ChatingPage /></auth.authRouterWrapper>} />
+          <Route path='/packageBooking' element={<auth.packageWrapper><PackageBooking/></auth.packageWrapper>} />
         </Routes>
       </Suspense>
     

@@ -8,6 +8,8 @@ import DeleteItemModal from '../customUI/deleteModal';
 import EditVehicle from './editVehicle';
 import BlockModalItem from '../customUI/blockCard';
 import mongoose from 'mongoose';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -16,7 +18,7 @@ const RecordTable: React.FC = () => {
     const [showData, setShowData] = useState<IvehicleRes[] | null>([])
     const [showLoading, setShowLoading] = useState(false)
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
     const naviagate = useNavigate()
     const fetch = async () => {
         try {
@@ -25,8 +27,10 @@ const RecordTable: React.FC = () => {
             setdata(res.data.data)
             setShowData(res.data.data)
             setShowLoading(false)
-        } catch (err) {
+        } catch (err: any) {
             console.log(err);
+            dispatch(showAlert({ color: "red", content: err.message }))
+
         }
     }
 
@@ -41,8 +45,10 @@ const RecordTable: React.FC = () => {
         try {
             await deleteVehicle(id)
             fetch()
-        } catch (err) {
+        } catch (err:any) {
             console.log(err)
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
     }
 
@@ -63,25 +69,25 @@ const RecordTable: React.FC = () => {
             setShowData([])
         }
     }
-    const handleSearch = (e:ChangeEvent<HTMLInputElement>)=>{
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
-       
-        const arr = data?.filter((item)=>item.vehicleName.toLowerCase().startsWith(value.toLowerCase()))
-        if(arr){
+
+        const arr = data?.filter((item) => item.vehicleName.toLowerCase().includes(value.toLowerCase()))
+        if (arr) {
 
             setShowData(arr)
-        }else{
+        } else {
             setShowData([])
         }
     }
 
-    const onBlock = async (id:any)=>{
-        try{
-         await blockVehicle(id)
-         fetch()
-        }catch(err){
+    const onBlock = async (id: any) => {
+        try {
+            await blockVehicle(id)
+            fetch()
+        } catch (err:any) {
             console.log(err);
-            
+            dispatch(showAlert({color:"red",content:err.message}))
         }
     }
 
@@ -116,15 +122,13 @@ const RecordTable: React.FC = () => {
                     <div className="flex items-center mt-4 gap-x-3 ">
 
 
-                        <button onClick={()=>{
-                            localStorage.removeItem('driver')
-                            navigate('/driver')
-                        }} className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-600 rounded-lg shrink-0 sm:w-auto gap-x-2">
-                            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                        <button 
+                         className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-red-600 rounded-lg shrink-0 sm:w-auto gap-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg> */}
-                            {/* <AddRecord reload={fetch} loader={showLoader} hide={hideLoader} /> */}
-                            Logout 
+                            </svg>
+                            <AddRecord reload={fetch} loader={showLoader} hide={hideLoader} />
+                            {/* Logout */}
                         </button>
 
                     </div>
@@ -159,8 +163,8 @@ const RecordTable: React.FC = () => {
                         <div className="relative w-full min-w-[300px] h-10">
                             <input onChange={handleSearch} className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
                             <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal peer-placeholder-shown:text-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-blue-500 before:border-blue-gray-200 peer-focus:before:border-blue-500 after:border-blue-gray-200 peer-focus:after:border-blue-500">Search here</label>
-                        </div>                
                         </div>
+                    </div>
                 </div>
                 <div className="flex flex-col mt-6">
                     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -239,7 +243,7 @@ const RecordTable: React.FC = () => {
                                                     </td>
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
-                                                            <button className="text-md w-full h-8 rounded-md  kanit-regular text-white"><BlockModalItem itemName='vehicle' onDelete={()=>onBlock(item._id)} blocked={item.isBlocked} /></button>
+                                                            <button className="text-md w-full h-8 rounded-md  kanit-regular text-white"><BlockModalItem itemName='vehicle' onDelete={() => onBlock(item._id)} blocked={item.isBlocked} /></button>
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -123,3 +123,12 @@ body::-webkit-scrollbar {
     font-weight: 900;
     font-style: italic;
   }
+
+  
+
+.oswald{
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight:700 ;
+  font-style: normal;
+}

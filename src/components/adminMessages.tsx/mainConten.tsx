@@ -10,6 +10,8 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import { updateNewMessage, updateUnRead } from '../../services/userServices';
 import ImageIcon from '@mui/icons-material/Image';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 console.log('admin rendering..............');
 
@@ -33,6 +35,7 @@ const AdminChat: React.FC = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     };
+    const dispatch = useDispatch()
 
     const fetch = async () => {
         try {
@@ -40,8 +43,10 @@ const AdminChat: React.FC = () => {
             const data = res.data.users.map((item:IuserRes)=>({id:item._id,count:item.unRead}))
             setUsers(res.data.users)
             setCount(data)
-        } catch (err) {
+        } catch (err:any) {
             console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
     }
 
@@ -78,8 +83,9 @@ const AdminChat: React.FC = () => {
                 setCount(arr)
             })
             scrollToBottom()
-        } catch (error) {
-            console.error('Error fetching data:', error);
+        } catch (err:any) {
+            dispatch(showAlert({color:"red",content:err.message}))
+            console.error('Error fetching data:', err);
         }
     };
 
@@ -128,8 +134,9 @@ const AdminChat: React.FC = () => {
             setShowMessages(res.data.data)
             setShow(true)
             scrollToBottom()
-        } catch (err) {
-
+        } catch (err:any) {
+            console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
         }
 
     }
@@ -148,8 +155,10 @@ const AdminChat: React.FC = () => {
         try {
             const res = await saveChat(data)
             await updateNewMessage({id:selected?._id,count:'inc'})
-        } catch (err) {
+        } catch (err:any) {
             console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
         setText('')
         setMessages((prev) => [...prev, data])
@@ -177,8 +186,10 @@ const AdminChat: React.FC = () => {
                 contentType:'voice'
     
             })
-        } catch (err) {
+        } catch (err:any) {
             console.log(err);
+            dispatch(showAlert({color:"red",content:err.message}))
+
         }
 
         setMessages((prev) => [...prev, data])

@@ -33,7 +33,7 @@ const Alert: React.FC = () => {
 
   return (
     <div className={`modal fixed bottom-3 right-0 z-50 w-auto h-auto  flex-col justify-end p-6 fade ${show ? 'flex' : 'hidden'}`}>
-      <div className="rounded-lg bg-white py-3 px-3 text-start leading-5 text-black">
+      <div className="rounded-lg shadow border drop-shadow-sm bg-white py-3 px-3 text-start leading-5 text-black">
         <div className="flex items-center justify-between">
           <WarningIcon className={`text-${color}-600 text-${color}`} />
           <p className="text-md ml-5 kanit-regular text-start">{content}</p>

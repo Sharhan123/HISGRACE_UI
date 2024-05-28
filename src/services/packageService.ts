@@ -50,3 +50,12 @@ export const blockPackage = async (id:any)=>{
         throw err
     }
 }
+
+export const findById = async (id:any)=>{
+    try{
+        const response = await axiosWithAuth.get(`/package/findById/${id}`)
+        return response
+    }catch(err){
+        throw err
+    }
+}

@@ -77,21 +77,21 @@ const Navbar: React.FC = () => {
                                 <div className=" lg:pr-4">
                                     <ul className="  lg:text-sm lg:flex lg:space-y-0">
                                         <li>
-                                            <a href="/" className="text-white text-md kanit-medium flex  justify-between items-center bg-gradient-to-r from-red-600 to-red-900 rounded-md px-5 py-2 transition ">
+                                            <a href="/" className="text-white ml-5 mt-1 lg:mt-0 text-md kanit-medium flex  justify-between items-center bg-gradient-to-r from-red-600 to-red-900 rounded-md px-5 py-2 transition ">
                                                 <HomeIcon fontSize= {'small'} className='text-white text-xs'/>
                                                 <span className='kanit-regular ml-1 text-md'>Home</span>
                                             </a>
                                         </li>
                                         <li>
                                         <li>
-                                            <a href="/vehicles" className="ml-5 text-md text-black kanit-medium flex  justify-between items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                            <a href="/vehicles" className="ml-5 text-md mt-1 lg:mt-0 text-black kanit-medium flex  justify-between items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                             <LocalTaxiIcon fontSize= {'small'} className='text-black text-xs'/>
                                                 <span className='kanit-regular ml-1 text-md'>Vehicles</span>
                                             </a>
                                         </li>
                                         </li>
                                         <li>
-                                        <a href="/services" className="ml-5 text-md text-black kanit-medium flex  bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                        <a href="/services" className="ml-5 text-md mt-1 lg:mt-0 text-black kanit-medium flex justify-between items-center  bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                         <RouteIcon fontSize= {'small'} className='text-black text-xs'/>
                                                 <span className='kanit-regular ml-1 text-md'>Services</span>
                                             </a>
@@ -99,17 +99,17 @@ const Navbar: React.FC = () => {
 
                                         </li>
                                         <li>
-                                        <a href="/packages" className=" ml-5 text-md text-black kanit-medium flex justify-between items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                        <a href="/packages" className=" ml-5 text-md mt-1 lg:mt-0 text-black kanit-medium flex justify-between items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                         <TourIcon fontSize= {'small'} className='text-black text-xs'/>
                                                 <span className='kanit-regular ml-1 text-md'>Packages</span>
                                             </a>
 
                                         </li>
                                         <li>
-                                            <a href="/chat" className=" ml-5 text-md text-black gap-2 kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
+                                            <a href="/chat" className=" ml-5 text-md mt-1 lg:mt-0 text-black gap-2 kanit-medium flex justify-between   items-center bg-gradient-to-r from-white to-slate-200 rounded-md px-5 py-2 transition hover:text-primary dark:hover:text-primaryLight">
                                             <MessageIcon fontSize= {'small'} className='text-black text-xs'/>
 
-                                                <span className='kanit-regular ml-1 text-md'>Chat </span>
+                                                <span className='kanit-regular ml-1  text-md'>Chat </span>
                                                 {count>0 && <span className='h-4 w-4  bg-red-600 rounded-full flex justify-center items-center text-white kanit-light text-xs'>{count}</span>}
                                             </a>
 
