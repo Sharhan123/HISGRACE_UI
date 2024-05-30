@@ -5,6 +5,7 @@ import { Navigate, Route } from 'react-router-dom';
 import { verifyUserToken } from '../middleWares/userTokenVerify';
 import { selectBookingData } from '../redux/slices/bookingSice';
 import { selectPackageData } from '../redux/slices/packageBookingSlice';
+import { IbookingAuth } from '../interfaces';
 
 const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -46,10 +47,10 @@ const forgetOtpWrapper = ({children}:{children:React.ReactNode})=>{
 }
 
 const bookingWrapper = ({children}:{children:React.ReactNode})=>{
-  const booking = useSelector(selectBookingData)
+  const booking:IbookingAuth = useSelector(selectBookingData)
   console.log('booking data :');
   
-  if(booking){
+  if(booking.show){
     return <>{children}</>
   }
   return <Navigate to={'/'} replace />

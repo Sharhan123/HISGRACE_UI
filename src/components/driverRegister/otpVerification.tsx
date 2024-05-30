@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../redux/slices/authSlice';
 import { resendOtp } from '../../services/driverService';
 import { verifyOtp } from '../../services/driverService';
+import { showAlert } from '../../redux/slices/alertSlice';
 
 const DriverOtp: React.FC = () => {
   const navigate = useNavigate();
@@ -48,15 +49,16 @@ const DriverOtp: React.FC = () => {
       const rToken = res.data.token;
       localStorage.setItem('driver', rToken);
       navigate('/driver/dashboard');
-    } catch (err: any) {
-      if (err.response && err.response.data) {
-        setErr(err.response.data.message);
-      } else {
-        console.log(err);
+    } catch (err:any) { 
+      console.error('Error fetching data:', err);
+      if(err.response.data){ 
+          dispatch(showAlert({content:err.response.data.message,color:'red'}))
+          return 
       }
-    }
-  };
+      dispatch(showAlert({content:err.message,color:'red'}))
 
+  }
+  }
   const handleResendOtp = async () => {
     try {
       const email = localStorage.getItem('driver')
@@ -111,4 +113,6 @@ const DriverOtp: React.FC = () => {
   );
 };
 
-export default DriverOtp;
+
+
+export default DriverOtp

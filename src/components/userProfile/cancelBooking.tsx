@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { bookingStatus } from '../../services/bookingsServices';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 interface props {
     open:boolean
     close:()=>void
@@ -9,6 +11,7 @@ interface props {
 }
 const CancelBooking:React.FC<props> = ({open,close,item,reload}) =>{
     const [selected,setSelected] = useState('')
+    const dispatch = useDispatch()
     const handleSubmit = async (id:any)=>{
         try{
             if(!selected){
@@ -17,9 +20,14 @@ const CancelBooking:React.FC<props> = ({open,close,item,reload}) =>{
             const res = await bookingStatus({id:item,status:'pending'})
             close()
             reload()
-        }catch(err){
-            console.log(err);
-            
+        } catch (err:any) { 
+            console.error('Error fetching data:', err);
+            if(err.response.data){ 
+                dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                 return 
+            }
+            dispatch(showAlert({content:err.message,color:'red'}))
+
         }
     }
   return (

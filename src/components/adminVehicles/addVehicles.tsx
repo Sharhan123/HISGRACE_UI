@@ -43,28 +43,28 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
     const handleSubmit = async () => {
         console.log(selectedFiles)
 
-        if (!name.trim()) {
-            setNameErr('Please provide a vehicle name')
+        if (!name.trim() || name.length < 4 || !/^[A-Za-z\s]+$/.test(name)) {
+        setNameErr('Name should be at least 4 characters long and contain only letters')
             return
         }
-        if (!fuel.trim()) {
-            setFuelErr('Please provide a fuel type')
+        if (!fuel.trim() || fuel.length < 4 || !/^[A-Za-z\s]+$/.test(fuel)) {
+            setFuelErr('Please provide a fuel type and it should be more than 4 letters')
             return
         }
-        if (seat === 0) {
-            setSeatErr('Please provide your vehicle seat capacity')
+        if (seat < 3) {
+            setSeatErr('Please provide your vehicle seat capacity greater than 3')
             return
         }
-        if (!sprice || parseInt(sprice) < 0) {
-            setSpriceErr('Please provide your vehicle charge')
+        if (!sprice || parseInt(sprice) < 100) {
+            setSpriceErr('Please provide your vehicle charge above 100')
             return
         }
-        if (!price || parseInt(price) < 0) {
-            setPriceErr('Please provide your vehicle charge')
+        if (!price || parseInt(price) < 10) {
+            setPriceErr('Please provide your vehicle charge above 10')
             return
         }
-        if (!desc.trim()) {
-            setSeatErr('Please provide your vehicle description')
+        if (!desc.trim() || desc.length < 15) {
+            setSeatErr('Please provide your vehicle description more than 5 words')
             return
         }
 

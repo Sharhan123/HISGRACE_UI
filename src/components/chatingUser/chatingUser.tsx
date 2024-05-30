@@ -11,6 +11,8 @@ import { findChats, saveChat } from '../../services/chatService';
 import EmojiPicker from "emoji-picker-react"
 import VoiceRecorder from '../customUI/audio';
 import Navbar from '../homePage/navbar';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 const ChatbotComponent: React.FC = () => {
     const [messages, setMessages] = useState<{ content: string, reciever: string, sender: string, time: Date,contentType:string,isRead:boolean }[]>([])
@@ -29,7 +31,7 @@ const ChatbotComponent: React.FC = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     };
-
+    const dispatch = useDispatch()
     const fetch = async (id: any) => {
         try {
             await updateNewMessage({id:id.id,count:'dec'})
@@ -61,9 +63,15 @@ const ChatbotComponent: React.FC = () => {
                     setMessages((prevMessages) => [...prevMessages, data]);
                 });
 
-                setSocket(newSocket); // If you need to set the socket in state
-            } catch (error) {
-                console.error('Error fetching data:', error);
+                setSocket(newSocket); 
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
+
             }
         };
         document.body.style.overflowY = 'hidden'
@@ -105,8 +113,13 @@ const ChatbotComponent: React.FC = () => {
         try {
             const res = await saveChat(data)
             await updateUnRead({id:user?._id,count:'inc'})
-        } catch (err) {
-            console.log(err);
+        } catch (err:any) { 
+            console.error('Error fetching data:', err);
+            if(err.response.data){ 
+                dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                return 
+            }
+            dispatch(showAlert({content:err.message,color:'red'}))
 
         }
         setMessage('')
@@ -138,8 +151,14 @@ const ChatbotComponent: React.FC = () => {
             })
             
             await updateUnRead({id:user?._id,count:'inc'})
-        } catch (err) {
-            console.log(err);
+        } catch (err:any) { 
+            console.error('Error fetching data:', err);
+            if(err.response.data){ 
+                dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                return 
+            }
+            dispatch(showAlert({content:err.message,color:'red'}))
+
         }
 
 

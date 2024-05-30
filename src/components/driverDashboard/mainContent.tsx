@@ -7,9 +7,12 @@ import Rejected from '../driverRegister/rejected'
 import { Navigate, useNavigate } from 'react-router-dom'
 import MainContent from './dashboard'
 import Dashboard from './dashboard'
+import { showAlert } from '../../redux/slices/alertSlice'
+import { useDispatch } from 'react-redux'
 const Aprooval:React.FC = ()=> {
     const [driver,setDriver] = useState<IdriverRes>()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
   const fetch = async ()=>{
     try{
         const token = localStorage.getItem('driver')
@@ -22,9 +25,14 @@ const Aprooval:React.FC = ()=> {
                 console.log(res.data.data,'driver');
                  
         }
-    }catch(err){
-        console.log(err);
-        
+    } catch (err:any) { 
+        console.error('Error fetching data:', err);
+        if(err.response.data){ 
+            dispatch(showAlert({content:err.response.data.message,color:'red'}))
+            return 
+        }
+        dispatch(showAlert({content:err.message,color:'red'}))
+
     }
   }
     useEffect(()=>{

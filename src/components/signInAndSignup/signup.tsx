@@ -34,9 +34,9 @@ const SignUp: React.FC<SignUpProps> = () => {
       return pattern.test(email);
     }
     
-    if (!name) {
+    if (!name.trim()) {
       setNameErr('Please provide a user name')
-
+      return
     }
     if (/\d/.test(name)) {
       setNameErr('Name cannot contain numbers')
@@ -49,12 +49,14 @@ const SignUp: React.FC<SignUpProps> = () => {
     }
     if (!email || !isValidEmail(email)) {
       setEmailErr('Please enter a valid email address')
+    return
     }
-    if (!pass) {
+    if (!pass.trim()) {
       setPassErr('Please provide a password')
+    return
     }
     if(pass.length < 4 ){
-      setPassErr('Password should atleast 4')
+      setPassErr('Password should be atleast 4')
       return
     }
     if (!cpass) {
@@ -83,7 +85,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           setPassErr(err.response.data.message)
         }
       } else {
-        console.log(err);
+        dispatch(showAlert({content:err.response.data.message,color:"red"}))
       }
     }
   }
@@ -123,7 +125,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           setPassErr(err.response.data.authData.message)
         }
       } else {
-        console.log(err);
+        dispatch(showAlert({content:err.response.data.message,color:"red"}))
       }
     }
 
@@ -222,9 +224,9 @@ const SignUp: React.FC<SignUpProps> = () => {
             </button>
             <p onClick={handleSignin} className="social-text" style={{ color: 'blue', cursor: 'pointer' }}>Already signed in ? Login</p>
 
-            <button className="" style={{}} id="sign-up-btn">
+            {/* <button className="" style={{}} id="sign-up-btn">
               <i className="fab fa-google" style={{ color: 'red' }}></i>
-            </button>
+            </button> */}
 
           </form>
         </div>
@@ -243,8 +245,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           <div className="content">
             <h3>One of us ?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-              laboriosam ad deleniti.
+              Please login if you have already logged into Hisgrace Cabs
             </p>
             <button
               onClick={handleSignin}

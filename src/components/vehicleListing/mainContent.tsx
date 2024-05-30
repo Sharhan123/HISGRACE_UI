@@ -5,6 +5,8 @@ import {  Ivehicle, IvehicleRes } from '../../interfaces'
 import { getVehicles } from '../../services/vehicleService'
 import SidebarMenu from './filter'
 import Footer from '../customUI/Footer'
+import { showAlert } from '../../redux/slices/alertSlice'
+import { useDispatch } from 'react-redux'
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IvehicleRes[]>([]);
     const [showData, setShowData] = useState<IvehicleRes[]>([]);
@@ -13,15 +15,21 @@ const MainContent: React.FC = () => {
     const [search,setSearch] = useState('')
     const [available,setAvailable] = useState<boolean | string>('')
     const itemsPerPage = 4; // Number of items per page
-
+    const dispatch = useDispatch()
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
                 const res = await getVehicles();
                 setData(res.data.data);
                 setShowData(res.data.data);
-            } catch (err) {
-                console.log(err);
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
+
             }
         };
 

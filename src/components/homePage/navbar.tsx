@@ -14,21 +14,29 @@ import MessageIcon from '@mui/icons-material/Message';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import OnewayCard from '../customUI/onewayCard';
 import { getUser } from '../../services/userServices';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 const Navbar: React.FC = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
     const state = useSelector((state: RootState) => state.auth.token ?? null);
     const [data,setData] = useState<Itoken>()
     const [user,setUser] = useState<IuserRes>()
     const [isOpen, setIsOpen] = useState(false);
     const [count ,setCount] = useState(0)
+    const dispatch = useDispatch()
     const fetch = async ()=>{
         try{
             const res = await getUser()
             setUser(res.data.data) 
             setCount(res.data.data.newMessage)
-        }catch(err){
-            console.log(err);
-            
+        } catch (err:any) { 
+            console.error('Error fetching data:', err);
+            if(err.response.data){ 
+                 dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                return  
+            }
+             dispatch(showAlert({content:err.message,color:'red'}))
+
         }
     }
     useEffect(()=>{

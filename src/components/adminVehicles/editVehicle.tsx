@@ -38,30 +38,30 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
     const handleSubmit = async () => {
         console.log(selectedFiles)
 
-        if (!name.trim()) {
-            setNameErr('Please provide a vehicle name')
-            return
-        }
-        if (!fuel.trim()) {
-            setFuelErr('Please provide a fuel type')
-            return
-        }
-        if (seat === 0) {
-            setSeatErr('Please provide your vehicle seat capacity')
-            return
-        }
-        if (!sprice || sprice < 0) {
-            setSpriceErr('Please provide your vehicle charge')
-            return
-        }
-        if (!price || price < 0) {
-            setPriceErr('Please provide your vehicle charge')
-            return
-        }
-        if (!desc.trim()) {
-            setDescErr('Please provide your vehicle description')
-            return
-        }
+        if (!name.trim() || name.length < 4 || !/^[A-Za-z\s]+$/.test(name)) {
+            setNameErr('Name should be at least 4 characters long and contain only letters')
+                return
+            }
+            if (!fuel.trim() || fuel.length < 4 || !/^[A-Za-z\s]+$/.test(fuel)) {
+                setFuelErr('Please provide a fuel type and it should be more than 4 letters')
+                return
+            }
+            if (seat < 3) {
+                setSeatErr('Please provide your vehicle seat capacity greater than 3')
+                return
+            }
+            if (!sprice || sprice < 100 ) {
+                setSpriceErr('Please provide your vehicle charge above 100')
+                return
+            } 
+            if (!price || price < 10 ) {
+                setPriceErr('Please provide your vehicle charge above 10')
+                return
+            }
+            if (!desc.trim() || desc.length < 15) {
+                setSeatErr('Please provide your vehicle description more than 5 words')
+                return
+            }
         if(!selectedFiles){
             setFileErr('Please select a image file')
             return

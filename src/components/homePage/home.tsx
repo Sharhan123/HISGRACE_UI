@@ -12,10 +12,13 @@ import { getVehicles } from '../../services/vehicleService';
 import MainLoader from '../customUI/mainLoader';
 import ImageSlider from './carousal';
 import ChatbotComponent from '../chatingUser/chatingUser';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 const Home: React.FC = () => {
   const [packages, setPackages] = useState<IpackageRes[]>([])
   const [vehicles, setVehicles] = useState<IvehicleRes[] | null>([])
   const [loader, setLoader] = useState(true)
+  const dispatch = useDispatch()
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -23,10 +26,15 @@ const Home: React.FC = () => {
         const response = await getVehicles()
         setPackages(res.data.data)
         setVehicles(response.data.data)
-      } catch (err) {
-        console.log(err);
+      } catch (err:any) { 
+        console.error('Error fetching data:', err);
+        if(err.response.data){ 
+            dispatch(showAlert({content:err.response.data.message,color:'red'}))
+            return 
+        }
+        dispatch(showAlert({content:err.message,color:'red'}))
 
-      }
+    }
       finally {
         setTimeout(() => {
 

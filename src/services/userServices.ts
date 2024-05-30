@@ -3,6 +3,7 @@ import { Idata } from "../interfaces";
 import { logout } from "../redux/slices/authSlice";
 import { jwtDecode } from "jwt-decode";
 import { showAlert } from "../redux/slices/alertSlice";
+import { verifyUserToken } from "../middleWares/userTokenVerify";
 
 
 export const register = async (data: Idata) => {
@@ -101,11 +102,10 @@ export const getUser = async ()=>{
     }
 }
 
-export const handleLogout = () => {
+export const handleLogout = (dispatch:any) => {
     localStorage.removeItem('token')
-    logout()
-    showAlert({head:'Hisgrace Account Logout',content:'You have logged out from your hisgrace account , Please login to for booking .',color:"blue"})
-    
+    dispatch(logout())
+    dispatch(showAlert({head:'Hisgrace Account Logout',content:'You have logged out from your hisgrace account , Please login to for booking .',color:"blue"}))
 } 
 
 export const updateProfile = async(data:any)=>{

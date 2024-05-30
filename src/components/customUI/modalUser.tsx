@@ -45,9 +45,9 @@ const UserModal: React.FC<props> = ({ open, close, data,reload }) => {
 
   const handleSubmit = async () => {
 
-    if (!submitData?.name || submitData?.name.length < 4) {
+    if (!submitData?.name || submitData?.name.length < 4 || !/^[A-Za-z\s]+$/.test(submitData?.name)) {
       setErrors({
-        name: 'Name should be at least 4 characters',
+        name: 'Name should be at least 4 characters and it should not be Numbers or special characters',
         email: '',
         age: ''
         , mobile: '',
@@ -110,6 +110,7 @@ const UserModal: React.FC<props> = ({ open, close, data,reload }) => {
     try{
       const res = await updateProfile(submitData)
       reload()
+      setErrors({name:'',email:'',mobile:'',secondaryMobile:'',age:''})
       dispatch(showAlert({head:'Hisgrace Account updated',content:'Your account details had been updated successfully',color:'blue'}))
       close()
 

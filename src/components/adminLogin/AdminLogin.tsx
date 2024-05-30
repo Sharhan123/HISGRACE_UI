@@ -35,16 +35,16 @@ const Login: React.FC = () => {
             localStorage.setItem('admin',res.data.token)
             navigate('/admin/dashboard')
         }catch(err:any){
-            if(err){
-                if(err.email){
-                    setEmailErr(err.email)
+            if(err.response.data){
+                if(err.response.data.email){
+                    setEmailErr(err.response.data.email)
                     return
                 }
-                else if(err.password){
-                    setPassErr(err.password)
+                else if(err.response.data.password){
+                    setPassErr(err.response.data.password)
                     return
                 }else{
-                    dispatch(showAlert({color:'red',content:err.message}))
+                    dispatch(showAlert({color:'red',content:err.response.data.message}))
                 }
             }
         }

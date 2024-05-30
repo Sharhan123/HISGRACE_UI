@@ -132,7 +132,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-green-500">+55%</strong>&nbsp;than last week
+                <strong className="text-blue-600">78%</strong>&nbsp;of Bookings
               </p>
             </div>
           </div>
@@ -146,7 +146,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-green-500">+55%</strong>&nbsp;than last week
+                <strong className="text-orange-600">12%</strong>&nbsp; of Bookings
               </p>
             </div>
           </div>
@@ -162,7 +162,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-green-500">+55%</strong>&nbsp;than last week
+                <strong className="text-green">100%</strong>&nbsp;this month
               </p>
             </div>
           </div>
@@ -178,7 +178,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-green-500 ">+55%</strong>&nbsp;than last week
+                <strong className="text-red-600 ">30%</strong>&nbsp;of users this month
               </p>
             </div>
           </div>

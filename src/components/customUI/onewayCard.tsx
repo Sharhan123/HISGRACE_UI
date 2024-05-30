@@ -50,8 +50,30 @@ const OnewayCard: React.FC = () => {
     };
 
 
-    const handleDateChange = (date: Date) => {
-        setSelectedDate(date);
+    const handleDateChange = (date:any) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+if(type === 'round-way'){
+
+    if (returnDate && date > returnDate) {
+        dispatch(showAlert({color:'red',content:'Return date should be after the selected date.'}));
+        return
+    }
+}
+        if (date < today) {
+            dispatch(showAlert({content:'You can\'t select a date before today.',color:'red'}));
+        } else {
+            setSelectedDate(date);
+        }
+
+    };
+
+    const handleReturnDate = (date:any) => {
+        if (selectedDate && date < selectedDate) {
+            dispatch(showAlert({color:'red',content:'Return date should be after the selected date.'}));
+        } else {
+            setReturnDate(date);
+        }
     };
     const getTimePeriod = (time: any) => {
         const hour = parseInt(time.split(':')[0], 10);
@@ -107,7 +129,8 @@ const OnewayCard: React.FC = () => {
             distance: response[0][0].distance,
             person: count,
             type: selected,
-            returnDate:returnDate
+            returnDate:returnDate,
+            show:true
         }
         }else{
             data = {
@@ -120,6 +143,7 @@ const OnewayCard: React.FC = () => {
             distance: response[0][0].distance,
             person: count,
             type: selected,
+            show:true
         }
         }
         setData(data)
@@ -244,7 +268,7 @@ const OnewayCard: React.FC = () => {
 
                         <DatePicker
                             selected={returnDate}
-                            onChange={(date:Date)=>setReturnDate(date)}
+                            onChange={handleReturnDate}
                             dateFormat="dd MMM yy"
                             className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
                             popperPlacement="bottom-start"
@@ -264,7 +288,7 @@ const OnewayCard: React.FC = () => {
                     </div>
                     <div className="flex">
                         <span className="text-black kanit-regular text-md">
-                            {selectedDate ? selectedDate.toLocaleDateString('en-GB', { weekday: 'long' }) : ''}
+                            {returnDate ? returnDate.toLocaleDateString('en-GB', { weekday: 'long' }) : ''}
                         </span>
                     </div>
                 </div>
@@ -278,6 +302,7 @@ const OnewayCard: React.FC = () => {
                     </div>
                      {isTimePickerOpen ? (
                         <TextField
+                       
                             id="time"
                             label="Time"
                             type="time"
@@ -297,7 +322,7 @@ const OnewayCard: React.FC = () => {
                             }}
                         />
                     ) : (
-                        <div className="flex">
+                        <div  onClick={handleTextClick} className="flex">
                             <span className="text-black kanit-regular text-lg">{
                                 selectedTime
 

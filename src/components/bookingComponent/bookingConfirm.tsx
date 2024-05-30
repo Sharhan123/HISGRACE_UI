@@ -13,6 +13,7 @@ import { getUser } from '../../services/userServices';
 import { loadStripe } from '@stripe/stripe-js';
 import { useDispatch } from 'react-redux';
 import { sendPayment } from '../../services/bookingsServices';
+import { showAlert } from '../../redux/slices/alertSlice';
 
 
 const BookingConfirm: React.FC = () => {
@@ -72,13 +73,11 @@ const BookingConfirm: React.FC = () => {
             state: '',
             city: ''
         })
-        if (!pickup.bookingName || pickup.bookingName.length < 4) {
+        if (!pickup.bookingName || pickup.bookingName.trim().length < 4 || !/^[A-Za-z\s]+$/.test(pickup.bookingName)) {
             setErrors(prev => ({
                 ...prev,
-                name: 'Booking name should be at least 4 characters',
-
-            }))
-
+                name: 'Booking name should be at least 4 characters and contain only letters',
+            }));
         }
 
         if (!pickup.state) {
@@ -116,26 +115,22 @@ const BookingConfirm: React.FC = () => {
             }))
 
         }
-        if (!pickup.city) {
+        if (!pickup.city || !/^[A-Za-z\s]+$/.test(pickup.city)) {
             setErrors(prev => ({
                 ...prev,
-                city: 'City number is required'
+                city: 'City is required only should be letters'
             }))
         }
-        if (!pickup.mobile) {
+        if (!pickup.mobile || pickup.mobile.length<10 || /^0+$/.test(pickup.mobile)) {
             setErrors(prev => ({
                 ...prev,
-                mobile: 'Mobile number is required',
-
-            }))
-
-
+                mobile: 'Mobile number should be at least 10 digits long and cannot be all zeros',
+            }));
         }
 
         if (
-            pickup.postCode &&
-            !/^\d+$/.test(pickup.postCode)
-        ) {
+            !pickup.postCode &&
+            !/^\d+$/.test(pickup.postCode)) {
             setErrors(prev => ({
                 ...prev,
                 postcode: 'Postcode must contain only numbers',
@@ -156,13 +151,14 @@ const BookingConfirm: React.FC = () => {
         }
 
 
-        const data = {
-            ...booking,
-            pickupDetails:pickup
-        }
-        localStorage.setItem('booking',JSON.stringify(data))
-        dispatch(setBookingData(data))
+        
         try{
+            const data = {
+                ...booking,
+                show:false,
+                pickupDetails:pickup,
+                
+            }
         const stripe = await loadStripe("pk_test_51PArKOSD9IJSI7QIT2swcNPhcepglgkr4iOH6LiSnTaLmjCY1RomN6uHA7djWeOAWfhzIzkWyyglyEP8jknh4fRU00rGATCGQL")
 
         const res = await sendPayment(data)
@@ -171,15 +167,24 @@ const BookingConfirm: React.FC = () => {
         const result = stripe?.redirectToCheckout({
             sessionId:session
         })
-        localStorage.removeItem('booking')
-        dispatch(setBookingData(null))
+        
+        localStorage.setItem('booking',JSON.stringify(data))
+        dispatch(setBookingData(data))
+        // localStorage.removeItem('booking')
+        // dispatch(setBookingData(null))
 
         
         
         
-    }catch(err){
+    }catch(err:any){
         console.log(err);
-        
+        if(err.response.data.message){
+
+            dispatch(showAlert({content:err.response.data.message,color:'red'}))
+            return 
+        }
+        dispatch(showAlert({content:err.message,color:'red'}))
+
     }
 
     }
@@ -367,13 +372,13 @@ const BookingConfirm: React.FC = () => {
                             Estimate Amount  : <span className='kanit-medium text-yellow-400 px-1 rounded-md text-lg'>₹ {booking.totalPrice} /- </span> <span className='text-sm kanit-light'>(Price given is an estimate according to trip you can get exact price from admin <span className='text-red-400'>+91 9847109700 </span>) </span>
                         </span>
                         <span className='kanit-regular text-md text-white text-start '>
-                            Advance For Booking  : <span className='kanit-medium text-yellow-400 px-1 rounded-md text-lg'>₹ {Math.max(500,0.3 * booking.totalPrice)} /- </span>
+                            Advance For Booking  : <span className='kanit-medium text-yellow-400 px-1 rounded-md text-lg'>₹ {Math.round(Math.max(500,0.3 * booking.totalPrice))} /- </span>
                         </span>
                     </div>
 
 
 
-                    <div onClick={makePayment} className='h-10 text-center flex items-center justify-center kanit-medium text-lg   w-full col-span-2 rounded text-white bg-blue-600'>
+                    <div onClick={makePayment} className='h-10 text-center cursor-pointer flex items-center justify-center kanit-medium text-lg   w-full col-span-2 rounded text-white bg-blue-600'>
                         Make Advance Payment
                     </div>
                 </div>

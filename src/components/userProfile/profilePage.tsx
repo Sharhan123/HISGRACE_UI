@@ -15,17 +15,20 @@ const ProfilePage:React.FC<props> = ({user,setEdit,setAddress})=> {
             <QuoteComponent name={user?.name} />
             <section className="component h-auto w-11/12 gap-5 grid grid-cols-2 rounded-md p-2  ">
 
-              <div style={{boxShadow:""}} className='bg-white shadow shadow-white  rounded-md'>
+              <div style={{boxShadow:""}} className='bg-white shadow col-span-2  shadow-white  rounded-md'>
                 <h1 className='kanit-regular  text-custom text-xl mt-3 '>User Details</h1>
-                <div className=' p-5 mx-1 mb-2 flex flex-col justify-between items-start md:mx-10'>
+                <div className=' p-5 mx-1 mb-2 flex  justify-between items-start md:mx-10'>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Full Name : {user?.name}</h1>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Email : {user?.email}</h1>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Mobile Number : {user?.mobile ? user.mobile : 'Nill'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Alternative Mobile Number : {user?.secondaryMobile ? user.secondaryMobile : 'NILL'}</h1>
-                  <h1 className='text-xl mt-3 kanit-light text-custom'>Age : {user?.age ? user.age : 'Nill'}</h1>
+                  
+                </div>
+                <div className=' p-5 mx-1 mb-2 flex  justify-between items-start md:mx-10'>
+                  <h1 className='text-xl mt-3 kanit-light text-custom'>secondary Number : {user?.secondaryMobile ? user.secondaryMobile : 'NILL'}</h1>
+                <h1 className='text-xl mt-3 kanit-light text-custom'>Age : {user?.age ? user.age : 'Nill'}</h1>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Gender : {user?.gender ? user.gender : 'NILL'}</h1>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Language : {user?.language ? user.language : 'NILL'}</h1>
-
+                  
                 </div>
                 <button onClick={() => {
                   setEdit()
@@ -34,10 +37,9 @@ const ProfilePage:React.FC<props> = ({user,setEdit,setAddress})=> {
                 </button>
               </div>
 
-              <div className='bg-white rounded-md'>
+              {/* <div className='bg-white rounded-md'>
                 <h1 className='kanit-regular text-xl mt-3 text-custom'>Address Details</h1>
                 <div className=' p-5 mx-1 mb-2 flex flex-col justify-between items-center md:mx-10'>
-                  {/* <p className='kanit-light text-md text-custom'>You didn't yet have a address please setup a address. </p> */}
                   <div className=' p-5 mx-1 mb-2 flex flex-col justify-between items-start md:mx-10'>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Locality : {user?.address?.locality}</h1>
                   <h1 className='text-xl mt-3 kanit-light text-custom'>Houser/Appartment  : {user?.address?.house}</h1>
@@ -53,7 +55,7 @@ const ProfilePage:React.FC<props> = ({user,setEdit,setAddress})=> {
                     Setup address
                   </button>
                 </div>
-              </div>
+              </div> */}
             </section>
           </div>
   )

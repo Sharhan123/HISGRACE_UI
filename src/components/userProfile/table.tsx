@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IbookingRes } from '../../interfaces';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import CancelBooking from './cancelBooking';
+import BookingDetails from '../customUI/bookingDetails';
 
 interface row {
     cancel:()=>void
@@ -17,7 +18,11 @@ interface props {
 
 
 const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
-    return (
+  const [open,setOpen] = useState(false)  
+  
+  return (
+      <>
+      <BookingDetails booking={data} showModal={open} close={()=>setOpen(false)}/>
       <tr className="hover:bg-gray-50 text-black kanit-regular">
         
 
@@ -35,7 +40,7 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
         <td className="px-6 py-4">{data.type}</td>
         
         <td className="px-6 py-4"> 
-          <button className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
+          <button onClick={()=>setOpen(true)} className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
             View Details
           </button>
         </td>
@@ -59,6 +64,7 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
         }
         
       </tr>
+      </>
     );
   };
 

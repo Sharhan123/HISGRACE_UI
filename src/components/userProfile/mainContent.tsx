@@ -14,7 +14,8 @@ import { selectBookingData } from '../../redux/slices/bookingSice';
 import AddressModal from './addressModal';
 import ProfilePage from './profilePage';
 import BookingsPage from './bookingsPage';
-
+import { useNavigate } from 'react-router-dom';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 
 
@@ -28,6 +29,7 @@ const Profile: React.FC = () => {
   const [user, setUser] = useState<IuserRes>()
   const [address,setAddress] = useState(false)
   let image = ''
+  const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token);
   const fetch = async () => {
     if (token) {
@@ -50,8 +52,13 @@ const Profile: React.FC = () => {
   const booking =  useSelector(selectBookingData)
   useEffect(() => {
     
-    console.log(booking); 
+    console.log(booking);
+
     fetch()
+    document.body.style.overflowY = 'hidden'
+    return ()=>{
+      document.body.style.overflowY = ''
+    }
   }, [])
 
   const handleButtonClick = () => {
@@ -93,9 +100,15 @@ const Profile: React.FC = () => {
       setProfile(res.data.data.profile)
       dispatch(showAlert({ head: 'Profile Image Updated successfuly', content: 'Your profile picture has been updated successfuly', color: 'green' }))
       setOpen(false)
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err:any) { 
+      console.error('Error fetching data:', err);
+      if(err.response.data){ 
+          dispatch(showAlert({content:err.response.data.message,color:'red'}))
+          return 
+      }
+      dispatch(showAlert({content:err.message,color:'red'}))
+
+  }
   }
 
   return (
@@ -200,25 +213,31 @@ const Profile: React.FC = () => {
                 <span>Recompensas</span>
             </a> */}
 
-            <span  className="px-4 cursor-pointer py-3 flex items-center kanit-regular space-x-4 rounded-md text-white group">
-              <i className="fas fa-store"></i>
-              <span>Packages</span>
-            </span>
-
-            <span  className="px-4 py-3 cursor-pointer flex items-center kanit-regular space-x-4 rounded-md text-white group">
-              <i className="fas fa-wallet"></i>
-              <span>Saved</span>
-            </span>
             <span onClick={()=>setSelected('bookings')} className={`px-4 py-3  cursor-pointer kanit-regular flex items-center space-x-4 rounded-md  ${selected ==='bookings'?'bg-white text-black':'' } group`}>
               <i className="fas fa-exchange-alt"></i>
               <span>Bookings</span>
             </span>
-            <span className="px-4 py-3 flex items-center cursor-pointer kanit-regular space-x-4 rounded-md text-white group">
-              <i className="fas fa-user"></i>
-              <span>Address</span>
+            <span onClick={()=>setSelected('packages')}  className={`px-4 cursor-pointer py-3 flex items-center kanit-regular space-x-4 rounded-md ${selected ==='packages'?'bg-white text-black':'' } group`}>
+              <i className="fas fa-store"></i>
+              <span>Packages</span>
+            </span>
+
+            {/* <span  className="px-4 py-3 cursor-pointer flex items-center kanit-regular space-x-4 rounded-md text-white group">
+              <i className="fas fa-wallet"></i>
+              <span>Saved</span>
+            </span> */}
+            <span onClick={()=>navigate('/')} className="px-4 py-3 flex items-center cursor-pointer kanit-regular space-x-4 rounded-md text-white group">
+              <KeyboardReturnIcon/>
+              <span> Home</span>
             </span>
           </div>
-          <a onClick={handleLogout} className="px-4 py-3 flex cursor-pointer kanit-regular items-center space-x-4 rounded-md bg-gradient-to-r from-red-700 to-red-500 text-white group">
+          <a onClick={()=>{
+
+            handleLogout(dispatch)
+            // navigate('/')
+            // dispatch(showAlert({content:"You have been logged out",color:"red"})  )
+          }
+            } className="px-4 py-3 flex cursor-pointer kanit-regular items-center space-x-4 rounded-md bg-gradient-to-r from-red-700 to-red-500 text-white group">
             <i className="fas fa-sign-out-alt"></i>
             <span>Logout</span>
           </a>
@@ -241,6 +260,11 @@ const Profile: React.FC = () => {
             selected === 'bookings'&&(
               <BookingsPage/>
             ) 
+          }
+          {
+            selected === 'packages'&&(
+              <BookingsPage/>
+            )
           }
         </main>
       </div>

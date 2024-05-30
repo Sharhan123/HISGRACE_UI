@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
 import DriverSelection from './driverSelection'
 import { useDispatch } from 'react-redux'
+import { showAlert } from '../../redux/slices/alertSlice'
 
 const VehicleSelection: React.FC = () => {
     const [vehicles, setVehicles] = useState<IvehicleRes[]>([])
@@ -28,8 +29,14 @@ const VehicleSelection: React.FC = () => {
                 const res = await getBookingVehicles(dates)
                 const arr: [] = res.data.data
                 setVehicles(res.data.data)
-            } catch (err) {
-                console.log(err);
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
+
             }
 
         }

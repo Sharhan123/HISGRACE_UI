@@ -9,6 +9,7 @@ import auth from '../protectedRouters/userProtected';
 import Loader from '../components/customUI/loader';
 import PackageBooking from '../components/packageBooking/bookingConfirm';
 import { verifyUserToken } from '../middleWares/userTokenVerify';
+import { useDispatch } from 'react-redux';
 
 // Lazy-loaded route components
 const HomePage = React.lazy(() => import('../pages/userPages/homePage'));
@@ -32,6 +33,7 @@ const ChatingPage = React.lazy(() => import('../pages/userPages/chatingPage'));
 const UserRoutes = () => {
   const token = useSelector((state: RootState) => state.auth.token);
 const navigate = useNavigate()
+const dispatch = useDispatch()
   useEffect(() => {
     verifyUserToken(navigate)
     const check = async () => {
@@ -42,7 +44,7 @@ const navigate = useNavigate()
 
           if (res.status === 200) {
             if (res.data.blocked === true) {
-              handleLogout();
+              handleLogout(dispatch);
             }
           }
         }

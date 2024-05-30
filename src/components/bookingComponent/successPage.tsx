@@ -10,24 +10,23 @@ interface BoardingPassProps {
 
 import Barcode from 'react-barcode';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { clearBookingData, selectBookingData, setBookingData } from '../../redux/slices/bookingSice';
+import { IbookingRes } from '../../interfaces';
+import { useDispatch } from 'react-redux';
 
 interface props{
   value:any
 }
 
-const BarcodeComponent :React.FC<props> = ({ value }) => {
 
-  return (
-    <div>
-      <Barcode fontSize={12} height={30} value={value} />
-    </div>
-  );
-};
 
 
 
 const BoardingPass: React.FC<BoardingPassProps> = () => {
   const navigate = useNavigate()
+  const booking:IbookingRes = useSelector(selectBookingData)
+  const dispatch = useDispatch()
   return (
    
         <div className="flex flex-col container  items-center justify-center">
@@ -53,7 +52,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                     <div className="flex-auto text-xs text-gray-400 my-1">
                       <span className="mr-1">From</span>
                     </div>
-                    <div className="w-full flex-none text-xl  kanit-medium leading-none">Kottakkal</div>
+                    <div className="w-full flex-none text-xl  kanit-medium leading-none">{booking.from.name || booking.from.city}</div>
                     {/* <div className="text-xs">Cochin</div> */}
                   </div>
                   <div className="flex flex-col mx-auto">
@@ -63,7 +62,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                     <div className="flex-auto text-xs text-gray-400 my-1">
                       <span className="mr-1">TO</span>
                     </div>
-                    <div className="w-full flex-none text-xl kanit-medium leading-none">Calicut Internation Airport</div>
+                    <div className="w-full flex-none text-xl kanit-medium leading-none">{booking.to.name || booking.to.city}</div>
                   </div>
                 </div>
                 <div className="border-b border-dashed mb-5 border-b-2 my-2 pt-5">
@@ -72,11 +71,11 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                 <div className="flex items-center mb-5  text-sm">
                   <div className="flex flex-col">
                     <span className="text-sm">Vehicle</span>
-                    <div className="kanit-regular">Toyota Innova Hycross</div>
+                    <div className="kanit-regular">{booking.vehicle.vehicleName}</div>
                   </div>
                   <div className="flex flex-col ml-auto">
                     <span className="text-sm">Total Km</span>
-                    <div className="font-semibold">283 KM</div>
+                    <div className="font-semibold">{booking.totalKm} KM</div>
                   </div>
                 </div>
                 <div className="flex items-center mb-4 ">
@@ -90,7 +89,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                   </div>
                   <div className="flex flex-col text-sm">
                     <span>Total Amount</span>
-                    <div className="font-semibold">₹ 2600 /-</div>
+                    <div className="font-semibold">₹ {booking.totalPrice} /-</div>
                   </div>
                 </div>
                 <div className="border-b border-dashed border-b-2 my-2 pt-5">
@@ -99,18 +98,22 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                 <div className="flex items-center justify-between  pt-3 text-sm">
                   <div className="flex flex-col">
                     <span>Passenger</span>
-                    <div className="font-semibold">Mohammed Sharhan</div>
+                    <div className="font-semibold">{booking.pickupDetails.bookingName}</div>
                   </div>
                   
                   <div className="flex flex-col">
                     <span>Type</span>
-                    <div className="font-semibold">SUV</div>
+                    <div className="font-semibold">{booking.type}</div>
                   </div>
                 </div>
                 <div className="flex flex-col py-5 justify-center text-sm">
                   <h6 className="kanit-regular  text-center">Please show the QR CODE to driver Thankyou !</h6>
                   <div className="justify-center flex w-full mt-4 ">
-                    <button onClick={()=>navigate('/')} className='px-3 py-2 bg-blue-600 kanit-regular rounded text-white mt-2'>Back to Home</button>
+                    <button onClick={()=>{
+                      localStorage.removeItem('booking')
+                      dispatch(setBookingData(null)) 
+                      navigate('/')
+                      }} className='px-3 py-2 bg-blue-600 kanit-regular rounded text-white mt-2'>Back to Home</button>
                 {/* <BarcodeComponent  value={'#6746788'} /> */}
                   </div>
                 </div>
@@ -131,7 +134,7 @@ useEffect(()=>{
   setPopUp(true)
 },[])
   return (
-    <div style={{backgroundImage:`url(https://images.vexels.com/media/users/3/157944/isolated/lists/b6a72d46f16e457ccfacf410edc462a6-dots-grid-design.png)`}} className={`h-[100vh] bg-black/20  flex items-center`}>
+    <div  className={` h-[100vh] bg-black/20  flex items-center`}>
 {/* <div className='h-4/5 py-10  w-2/6 rounded-md container mx-auto flex items-center'> */}
 
 <div className={`mx-auto ${popUp ? 'block' : 'hidden mb-5'}  relative flex justify-center h-[650px] w-[310px] border border-[6px]  border-custom bg-white ${popUp ? 'jump-animation' : 'hidden'}`}

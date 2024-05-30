@@ -8,6 +8,7 @@ import CustomsButtons from '../customUI/customsButtons';
 import { setPackage } from '../../redux/slices/packageBookingSlice';
 import { useDispatch } from 'react-redux';
 import DateSelection from '../packageBooking/DateSelection';
+import { showAlert } from '../../redux/slices/alertSlice';
 
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IpackageRes>()
@@ -16,6 +17,8 @@ const MainContent: React.FC = () => {
     //   const searchParams = new URLSearchParams(location.search);
     //   const id = searchParams.get('id')
     const { id } = useParams()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
 
@@ -34,8 +37,13 @@ const MainContent: React.FC = () => {
                     setData(unique[0])
                 }
 
-            } catch (err) {
-                console.log(err);
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
 
             }
         }
@@ -43,8 +51,6 @@ const MainContent: React.FC = () => {
 
 
     }, [id])
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
     const handlePackage = ()=>{
         setSelectDate(true)
         }

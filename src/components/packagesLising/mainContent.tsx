@@ -4,6 +4,8 @@ import {  IpackageRes, Ivehicle } from '../../interfaces'
 import SidebarMenu from '../vehicleListing/filter'
 import Footer from '../customUI/Footer'
 import { getPackages } from '../../services/packageService'
+import { showAlert } from '../../redux/slices/alertSlice'
+import { useDispatch } from 'react-redux'
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IpackageRes[]>([]);
     const [showData, setShowData] = useState<IpackageRes[]>([]);
@@ -12,6 +14,7 @@ const MainContent: React.FC = () => {
     const [search,setSearch] = useState('')
     const [available,setAvailable] = useState<boolean | string>('')
     const itemsPerPage = 4; 
+const dispatch = useDispatch()
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -19,8 +22,14 @@ const MainContent: React.FC = () => {
                 const res = await getPackages();
                 setData(res.data.data);
                 setShowData(res.data.data);
-            } catch (err) {
-                console.log(err);
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
+
             }
         };
 

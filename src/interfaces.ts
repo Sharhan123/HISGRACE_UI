@@ -203,6 +203,7 @@ export interface IbookingAuth {
   },
   returnDate?:Date
   type:string
+  show:boolean
 }
 
 export interface IbookingOver extends IbookingAuth{

@@ -4,6 +4,8 @@ import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import { IdriverRes } from '../../interfaces';
 import { removeDriverById } from '../../services/driverService';
 import { useNavigate } from 'react-router-dom';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 interface props{
     driver:IdriverRes | null
 }
@@ -15,18 +17,22 @@ const Rejected:React.FC<props> = ({driver})=> {
         return ()=>{document.body.style.overflowY = ''}
     },[])
     const navigate = useNavigate()
+    const dispatch = useDispatch() 
   const removeDriver = async ()=>{
     try{
         const res = await removeDriverById(driver?._id)
         localStorage.removeItem('driver')
         navigate('/driver')
-    }catch(err)
-    {
-        console.log(err);
-        
+    } catch (err:any) { 
+        console.error('Error fetching data:', err);
+        if(err.response.data){ 
+             dispatch(showAlert({content:err.response.data.message,color:'red'}))
+            return 
+        }
+        dispatch(showAlert({content:err.message,color:'red'}))
+
     }
   }
-
     return (
 
     <div className='h-screen flex justify-center items-center'>

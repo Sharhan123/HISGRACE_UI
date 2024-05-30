@@ -57,35 +57,33 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
     const handleSubmit = async () => {
         console.log(selectedFiles)
 
-        if (!name.trim()) {
-            setNameErr('Please provide a vehicle name')
+        if (!name.trim() || name.length < 4 || !/^[A-Za-z\s]+$/.test(name) ) {
+            setNameErr('Name should be at least 4 characters long and contain only letters')
             return
         }
-        if (!location.trim()) {
-            setLocationErr('Please provide locations')
+        if (!location.trim() || location.length < 4 || !/^[A-Za-z\s]+$/.test(location) ) {
+            setLocationErr('Name should be at least 4 characters long and contain only letters')
             return
         }
-
-        if (days === 0) {
-            setDaysErr('Please provide your days count ')
+        
+        if (days <1) {
+            setDaysErr('Please provide count of days and it should be greater than 0 ')
             return
         }
-        if (!dayPrice || parseInt(dayPrice) < 0) {
-            setSpriceErr('Please provide your vehicle charge')
+        if (!dayPrice || parseInt(dayPrice) < 100) {
+            setSpriceErr('Please provide your vehicle charge above 100')
             return
         }
-        console.log(car + '.....');
+        if (!price || parseInt(price) < 100) {
+            setPriceErr('Please provide your vehicle charge above 100')
+            return
+        }
         if(!car){
-            
-            setTypeErr('Please select a vehicle')
+            setTypeErr('Please select your vehicle ')
             return 
         }
-        if (!price || parseInt(price) < 0) {
-            setPriceErr('Please provide your vehicle charge')
-            return
-        }
-        if (!desc.trim()) {
-            setDescErr('Please provide your vehicle description')
+        if (!desc.trim() || desc.length < 15) {
+            setDescErr('Please provide your vehicle description above 5 words')
             return
         }
 

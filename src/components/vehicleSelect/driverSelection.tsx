@@ -22,8 +22,19 @@ const DriverSelection: React.FC<props> = ({ open, close }) => {
     const navigate = useNavigate()
     useEffect(() => {
         const fetch = async () => {
-            const res = await getDrivers()
-            setData(res.data.data)
+            try{
+
+                const res = await getDrivers()
+                setData(res.data.data)
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
+
+            }
         }
         fetch()
     }, [])

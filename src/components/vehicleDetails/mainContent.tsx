@@ -6,6 +6,8 @@ import { getVehicles } from '../../services/vehicleService';
 import { IvehicleRes } from '../../interfaces';
 import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
 import CustomsButtons from '../customUI/customsButtons';
+import { showAlert } from '../../redux/slices/alertSlice';
+import { useDispatch } from 'react-redux';
 
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IvehicleRes>()
@@ -13,6 +15,7 @@ const MainContent: React.FC = () => {
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id')
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
 
@@ -27,8 +30,13 @@ const MainContent: React.FC = () => {
                     setData(unique[0])
                 }
 
-            } catch (err) {
-                console.log(err);
+            } catch (err:any) { 
+                console.error('Error fetching data:', err);
+                if(err.response.data){ 
+                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                    return 
+                }
+                dispatch(showAlert({content:err.message,color:'red'}))
 
             }
         }

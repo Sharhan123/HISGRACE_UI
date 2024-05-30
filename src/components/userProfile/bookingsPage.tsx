@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import EmployeeTable from './table'
 import { getBookings, getBookingsByuser } from '../../services/bookingsServices'
 import { IbookingRes } from '../../interfaces'
+import { showAlert } from '../../redux/slices/alertSlice'
+import { useDispatch } from 'react-redux'
 
 const BookingsPage: React.FC = () => {
     const [selected,setSelected] = useState('Active')
     const [data,setData] = useState<IbookingRes[]>([])
     const [showData,setShowData] = useState<IbookingRes[]>([])
+    const dispatch = useDispatch()
     const fetch = async ()=>{
         try{
             const res = await getBookingsByuser()
@@ -16,9 +19,14 @@ const BookingsPage: React.FC = () => {
                 item.status === 'Active'
             ))
             setShowData(filtered)
-        }catch(err){
-            console.log(err);
-            
+        } catch (err:any) { 
+            console.error('Error fetching data:', err);
+            if(err.response.data){ 
+                dispatch(showAlert({content:err.response.data.message,color:'red'}))
+                return 
+            }
+            dispatch(showAlert({content:err.message,color:'red'}))
+
         }
     }
     useEffect(()=>{
@@ -28,6 +36,8 @@ const BookingsPage: React.FC = () => {
     useEffect(()=>{
         const filtered = data.filter((item:IbookingRes)=>(item.status === selected))
         setShowData(filtered)
+        
+        
     },[selected])
     return (
 

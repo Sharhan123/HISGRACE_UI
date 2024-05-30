@@ -12,6 +12,7 @@ import { blockAndUnblock, deleteDriver, getDrivers } from '../../services/driver
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ReactDatePicker from 'react-datepicker';
 import { bookingStatus, getBookings } from '../../services/bookingsServices';
+import BookingDetails from '../customUI/bookingDetails';
 
 
 
@@ -20,6 +21,7 @@ const RecordTable: React.FC = () => {
     const [showData, setShowData] = useState<IbookingRes[]>([])
     const [showLoading, setShowLoading] = useState(false)
     const [selected, setSelected] = useState('Active')
+    const [open,setOpen] = useState(false)
     const naviagate = useNavigate()
     const fetch = async () => {
         try {
@@ -180,6 +182,8 @@ const RecordTable: React.FC = () => {
                                     <tbody className="bg-white divide-y divide-gray-500 ">
                                         {showData && showData.length > 0 ? (
                                             showData.map((item, index) => (
+                                                <>
+                                                <BookingDetails showModal={open} booking={item} close={()=>setOpen(false)}/>
                                                 <tr key={index}>
 
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
@@ -238,11 +242,13 @@ const RecordTable: React.FC = () => {
                                                     }
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
-                                                            <button className="text-md w-full h-8 px-2 rounded-md bg-orange-600 kanit-regular text-white">View details</button>
+                                                            <button onClick={()=>setOpen(true)} className="text-md w-full h-8 px-2 rounded-md bg-orange-600 kanit-regular text-white">View details</button>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                </>
                                             ))
+
                                         ) : (
                                             <tr>
                                                 <td colSpan={8} className="px-4 py-4 text-sm font-medium text-center">
