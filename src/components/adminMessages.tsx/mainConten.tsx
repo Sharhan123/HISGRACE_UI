@@ -56,7 +56,7 @@ const AdminChat: React.FC = () => {
             await fetch();
 
 
-            const newSocket = io('http://localhost:3000');
+            const newSocket = io('https://hisgrace-ui.vercel.app');
             newSocket.emit('user_connect', 'admin')
             setSocket(newSocket)
             newSocket.on('admin-onlines', (data: any) => {
