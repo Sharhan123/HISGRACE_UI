@@ -55,7 +55,7 @@ const ChatbotComponent: React.FC = () => {
                 const decoded: any = jwtDecode(token as string);
                 await fetch(decoded);
 
-                const newSocket = io('https://hisgrace-ui.vercel.app');
+                const newSocket = io('https://higraceapi.electromania.tech');
                 newSocket.emit('user_connect', decoded.id);
 
                 newSocket.on('from_admin', (data) => {
