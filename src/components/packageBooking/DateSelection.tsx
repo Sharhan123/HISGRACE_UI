@@ -34,10 +34,11 @@ const DateSelection: React.FC<Props> = ({ open, close ,confirm}) => {
         time:selectedTime,
         meridian:meridian
       },
-      persons:{
+      person:{
         adult:adultCount,
         child:childCount
       }
+
     }
     confirm(data)
   }

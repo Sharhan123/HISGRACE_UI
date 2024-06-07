@@ -8,6 +8,7 @@ import AdminPackagesPage from "../pages/adminPages/adminPackagesPage"
 import AdminDriverPage from "../pages/adminPages/adminDrivers"
 import AdminBookingsPage from "../pages/adminPages/adminBookingPage"
 import AdminMessagesPage from "../pages/adminPages/adminMessagesPage"
+import AdminPackageBookings from "../pages/adminPages/adminPackageBookings"
 
 const AdminRoutes: React.FC = () => {
 
@@ -21,6 +22,7 @@ return (
                 <Route path="/admin/packages" element={<adminProtected.ProtectedRouteWrapper><AdminPackagesPage/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/drivers" element={<adminProtected.ProtectedRouteWrapper><AdminDriverPage/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/bookings" element={<adminProtected.ProtectedRouteWrapper><AdminBookingsPage/></adminProtected.ProtectedRouteWrapper>} />
+                <Route path="/admin/packageBookings" element={<adminProtected.ProtectedRouteWrapper><AdminPackageBookings/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/chats" element={<adminProtected.ProtectedRouteWrapper><AdminMessagesPage /></adminProtected.ProtectedRouteWrapper>} />
             </Routes>
        

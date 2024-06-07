@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { statesInIndia } from '../../constants/states';
 import { useSelector } from 'react-redux';
 import { selectBookingData, setBookingData } from '../../redux/slices/bookingSice';
-import { IbookingOver, IdriverRes, IpackageBooking, IpackageRes, Ipickup, IuserRes, IvehicleRes } from '../../interfaces';
+import { IbookingOver, IdriverRes, IpackageBookingStart, IpackageRes, Ipickup, IuserRes, IvehicleRes } from '../../interfaces';
 import { getVehicles } from '../../services/vehicleService';
 import { getDrivers } from '../../services/driverService';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { sendPayment } from '../../services/bookingsServices';
 import { findById } from '../../services/packageService';
 import { showAlert } from '../../redux/slices/alertSlice';
+import { savePackageBooking } from '../../services/packageBooking';
 
 
 const PackageBooking: React.FC = () => {
@@ -41,7 +42,7 @@ const PackageBooking: React.FC = () => {
         postcode: '',
         state: ''
     })
-    const booking: IpackageBooking = useSelector(selectPackageData)
+    const booking: IpackageBookingStart = useSelector(selectPackageData)
     const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
@@ -62,7 +63,7 @@ const PackageBooking: React.FC = () => {
         fetch()
     }, [])
 
-    const makePayment = async () => {
+    const saveBooking = async () => {
         setErrors({
             name: '',
             email: '',
@@ -160,23 +161,11 @@ const PackageBooking: React.FC = () => {
             ...booking,
             pickupDetails:pickup
         }
-        localStorage.setItem('booking',JSON.stringify(data))
+        localStorage.setItem('package',JSON.stringify(data))
         dispatch(setBookingData(data))
         try{
-        const stripe = await loadStripe("pk_test_51PArKOSD9IJSI7QIT2swcNPhcepglgkr4iOH6LiSnTaLmjCY1RomN6uHA7djWeOAWfhzIzkWyyglyEP8jknh4fRU00rGATCGQL")
-
-        const res = await sendPayment(data)
-        const session = res.data.session
-        
-        const result = stripe?.redirectToCheckout({
-            sessionId:session
-        })
-        localStorage.removeItem('booking')
-        dispatch(setBookingData(null))
-
-        
-        
-        
+        const res = await savePackageBooking(data)
+        navigate('/packageSuccess')    
     } catch (err:any) { 
         console.error('Error fetching data:', err);
         if(err.response.data){ 
@@ -360,16 +349,16 @@ const PackageBooking: React.FC = () => {
                         <span className='kanit-light text-md text-white text-start '>
                             Estimate Price : ₹ {packages?.total}  + <span className='kanit-light text-yellow-400'> the charge of distance from your location to vehicle's location</span>
                         </span>
-                        <span className='kanit-light text-md text-white text-start '>
+                        {/* <span className='kanit-light text-md text-white text-start '>
                             Advance For Booking  : <span className='kanit-regular text-yellow-400 px-1 rounded-md text-lg'>₹ {Math.max(500,0.3 * (packages?.total?packages?.total:1))} /- </span>
-                        </span>
+                        </span> */}
                     </div>
 
 
 
-                    <div onClick={makePayment} className='h-10 text-center flex items-center justify-center kanit-medium text-lg   w-full col-span-2 rounded text-white bg-blue-600'>
-                        Make Advance Payment
-                    </div>
+                    <div onClick={saveBooking} className='h-10 cursor-pointer text-center flex items-center justify-center kanit-medium text-lg   w-full col-span-2 rounded text-white bg-blue-600'>
+                        Send Booking Request
+                                            </div>
                 </div>
 
 

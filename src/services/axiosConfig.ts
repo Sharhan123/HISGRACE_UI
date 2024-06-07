@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+
 const axiosWithAuth = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: "http://localhost:3000/api",
 });
 
 axiosWithAuth.interceptors.request.use(
@@ -10,7 +11,7 @@ axiosWithAuth.interceptors.request.use(
     const token = localStorage.getItem('token');
     
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; 
     }
     
     return config;

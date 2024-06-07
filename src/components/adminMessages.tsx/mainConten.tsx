@@ -12,6 +12,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 console.log('admin rendering..............');
 
@@ -30,13 +31,14 @@ const AdminChat: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [start, setStart] = useState(false)
     const [toggle,setToggle] = useState(false)
+
     const scrollToBottom = () => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     };
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     const fetch = async () => {
         try {
             const res = await getUsers()
@@ -274,7 +276,9 @@ const AdminChat: React.FC = () => {
             <div className="flex flex-row h-full w-full overflow-x-hidden">
                 {/* Sidebar */}
                 <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-                    <div className="flex flex-row items-center justify-center h-12 w-full">
+                    
+                <button onClick={()=>navigate('/admin/dashboard')} className=' w-fit mx-auto px-2 py-1 rounded text-white kanit-regular bg-red-500'>Back to Dashboard</button>
+<div className="flex mt-5 flex-row items-center justify-center h-12 w-full">
                         <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
                             <svg
                                 className="w-6 h-6"
@@ -455,7 +459,7 @@ const AdminChat: React.FC = () => {
                                 <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
 
                                     <div>
-                                        <button onClick={()=>setToggle(!toggle)} onMouseEnter={()=>setToggle(true)}  className="flex items-center justify-center text-gray-400 hover:text-gray-600">
+                                        {/* <button onClick={()=>setToggle(!toggle)} onMouseEnter={()=>setToggle(true)}  className="flex items-center justify-center text-gray-400 hover:text-gray-600">
                                             <svg
                                                 className="w-5 h-5"
                                                 fill="none"
@@ -465,23 +469,23 @@ const AdminChat: React.FC = () => {
                                             >
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                             </svg>
-                                        </button>
+                                        </button> */}
                                         {
-                                            toggle && (
-                                        <div  className="fixed bottom-[calc(4rem+1.5rem)]   mr-4 p-6 rounded-lg  w-[200px] h-auto">
-                                            <div className='bg-white grid grid-rows-2 rounded-md border  h-28 drop-shadow-xl'>
-                                                <span className='border-b text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
-                                                    <ImageIcon className='text-red-500'/>
-                                                    Image
-                                                </span>
-                                                <span className=' text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
-                                                    <VideocamIcon className='text-blue-500'/>
-                                                    Video
-                                                </span>
+                                        //     toggle && (
+                                        // <div  className="fixed bottom-[calc(4rem+1.5rem)]   mr-4 p-6 rounded-lg  w-[200px] h-auto">
+                                        //     <div className='bg-white grid grid-rows-2 rounded-md border  h-28 drop-shadow-xl'>
+                                        //         <span className='border-b text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
+                                        //             <ImageIcon className='text-red-500'/>
+                                        //             Image
+                                        //         </span>
+                                        //         <span className=' text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
+                                        //             <VideocamIcon className='text-blue-500'/>
+                                        //             Video
+                                        //         </span>
                                                 
-                                            </div>
-                                            </div>
-                                            )
+                                        //     </div>
+                                        //     </div>
+                                        //     )
 }
                                     </div>
                                     <div className="flex-grow ml-4">

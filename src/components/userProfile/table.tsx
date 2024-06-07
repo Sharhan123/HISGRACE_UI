@@ -3,7 +3,10 @@ import { IbookingRes } from '../../interfaces';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import CancelBooking from './cancelBooking';
 import BookingDetails from '../customUI/bookingDetails';
-
+import ReviewModal from '../customUI/reviewModal';
+import { useDispatch } from 'react-redux';
+import { showAlert } from '../../redux/slices/alertSlice';
+import {setVehicleReview} from '../../services/vehicleService'
 interface row {
     cancel:()=>void
  data:IbookingRes
@@ -19,10 +22,42 @@ interface props {
 
 const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
   const [open,setOpen] = useState(false)  
-  
+  const [review,setReview] = useState(false)
+  const [reviewData,setReviewData] = useState<{
+    user:any,
+    vehicle:any,
+    review:number
+  }>({
+    user:'',
+    vehicle:'',
+    review:0
+  })
+  const dispatch = useDispatch()
+  const handleReviewSubmit = async (review:number)=>{
+    setReviewData(prev=>({...prev,review:review}))  
+    const data = {user:reviewData.user,vehicle:reviewData.vehicle,review:review}
+    try{
+      const res = await setVehicleReview(data)   
+      setReview(false)
+      setReviewData({user:'',vehicle:'',review:0})
+    }catch(err:any){
+      if(err.response.data.message){
+        dispatch(showAlert({content:err.response.data.message,color:'red'}))
+        return
+      }
+      dispatch(showAlert({content:err.message,color:'red'}))
+
+    }
+  }
   return (
       <>
       <BookingDetails booking={data} showModal={open} close={()=>setOpen(false)}/>
+      <ReviewModal submit={(review:number)=>handleReviewSubmit(review)
+
+      } showModal={review} close={()=>{
+        setReview(false)
+        setReviewData({user:'',vehicle:'',review:0})
+        } } />
       <tr className="hover:bg-gray-50 text-black kanit-regular">
         
 
@@ -55,11 +90,23 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
           </button>
         </td>
             ):(
+              
+              data.status === 'Completed'?(
+                <td className="px-6 py-4"> 
+                <button onClick={()=>{
+                  setReview(true)
+                  setReviewData(prev=>({...prev,user:data.userId,vehicle:data.vehicle._id}))
+                  }}  className={` px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-green to-emerald-600 `}>
+                  Write Review
+                </button>
+              </td> 
+              ):(
                 <td className="px-6 py-4"> 
                 <button  className={` px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br ${data.status==='Completed'?'from-green to-emerald-500':''} ${data.status==='Cancelled'?'from-red-800 to-red-500':''} ${data.status==='pending'?'from-yellow-600 to-yellow-400':''} `}>
                   {data.status}
                 </button>
               </td> 
+              )
             )
         }
         

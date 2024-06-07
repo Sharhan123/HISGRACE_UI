@@ -43,6 +43,7 @@ export interface Ivehicle {
     startingDate:Date,
     endingDate:Date
   }
+  reviews:{user:any,review:number}[]
 }
 
 
@@ -242,17 +243,33 @@ export interface Ipickup {
   postCode:string
 }
 
-export interface IpackageBooking{
+export interface IpackageBookingStart{
   period:{
     time:string,
     date:Date
     meridian:string
   },
-  persons:{
+  person:{
     adult:number,
     child:number
   },
-  package:string
+  package:any
+} 
+
+export interface IpackageBookingAuth extends IpackageBookingStart{
+  pickupDetails:Ipickup
+}
+export interface IpackageBookingRes extends IpackageBookingAuth{
+  _id:any,
+  userId:any,
+  status:string
+  package:IpackageRes
+}
+
+export interface IreviewData {
+  user:any,
+  vehicle:any,
+  review:number
 }
 
 

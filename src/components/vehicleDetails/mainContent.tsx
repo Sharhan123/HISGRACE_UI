@@ -8,6 +8,7 @@ import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
 import CustomsButtons from '../customUI/customsButtons';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
+import Review from '../customUI/reviewShow';
 
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IvehicleRes>()
@@ -44,6 +45,18 @@ const MainContent: React.FC = () => {
 
 
     }, [id])
+    const getRate = ()=>{
+        const reviews = data?.reviews
+        if(reviews){
+            if(reviews.length === 0){
+                return 0
+            }
+            const total = reviews.reduce((acc, review) => acc + review.review, 0);
+            return Math.round(total/reviews.length)
+        }
+        return 0
+
+    }
     return (
         <div >
             <div className="w-full max-w-5xl mt-10 rounded-3xl  bg-custom \ shadow-2xl   p-10 lg:p-20 mx-auto text-gray-800 relative md:text-left">
@@ -82,6 +95,7 @@ const MainContent: React.FC = () => {
                                 <p className='text-md mt-5 kanit-regular text-orange-500'>Please Note  : <span className='text-white opacity-100'>  For the First 100 km the price will be  <span className='text-yellow-400 opacity-100'>₹ {data?.startingPrice} /-</span> and for additional each km it will be charged <span className='text-yellow-400 opacity-100'>₹ {data?.price} /-</span> .</span></p>
 
                             </div>
+                            <Review rate={getRate()} totalStars={5} />
                         </div>
 
                         <div className='mt-10 flex justify-evenly'>

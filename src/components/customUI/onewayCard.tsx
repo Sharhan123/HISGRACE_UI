@@ -53,9 +53,9 @@ const OnewayCard: React.FC = () => {
     const handleDateChange = (date:any) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0); 
-if(type === 'round-way'){
+if(selected ==='round-way'){
 
-    if (returnDate && date > returnDate) {
+    if (returnDate < date) {
         dispatch(showAlert({color:'red',content:'Return date should be after the selected date.'}));
         return
     }
@@ -75,6 +75,7 @@ if(type === 'round-way'){
             setReturnDate(date);
         }
     };
+
     const getTimePeriod = (time: any) => {
         const hour = parseInt(time.split(':')[0], 10);
         return hour >= 12 ? 'PM' : 'AM';
@@ -152,6 +153,16 @@ if(type === 'round-way'){
         dispatch(setBookingData(data))
         navigate('/choosevehicle')
     }
+    const handleSelectCurrentLocation = () => {
+        if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+           (item)=>console.log(item.coords)
+           
+        );
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+};
 
     return (
         <div className='h-full py-5 px-5 w-full mx-auto'>
@@ -189,7 +200,7 @@ if(type === 'round-way'){
                                     setType('from')
                                     setOpen(true)
                                 }} className='text-black kanit-regular text-lg'>{selectedFrom ? selectedFrom.name || selectedFrom.city : 'Select From Location'}</span>
-                                <MyLocation className='text-green ml-8' />
+                                {/* <MyLocation onClick={handleSelectCurrentLocation} className='text-green ml-8' /> */}
                             </div>
                             <div className='flex '>
                                 <span className='text-black kanit-light text-sm '>

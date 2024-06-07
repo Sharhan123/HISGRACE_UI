@@ -16,9 +16,12 @@ const bookingSlice = createSlice({
     clearBookingData: (state) => {
       state.bookingData = null;
     },
+    backBookingData:(state)=>{
+      state.bookingData.show = false
+    }
   },
 });
 
-export const { setBookingData, clearBookingData } = bookingSlice.actions;
+export const { setBookingData, clearBookingData,backBookingData } = bookingSlice.actions;
 export const selectBookingData = (state:any) => state.booking.bookingData;
 export default bookingSlice.reducer;

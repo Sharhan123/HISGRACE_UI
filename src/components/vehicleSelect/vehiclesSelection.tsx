@@ -4,10 +4,11 @@ import { IbookingAuth, IvehicleRes } from '../../interfaces'
 import { getBookingVehicles, getVehicles } from '../../services/vehicleService'
 import ModalImage from '../customUI/imageModal'
 import { useSelector } from 'react-redux'
-import { selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
+import { backBookingData, selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
 import DriverSelection from './driverSelection'
 import { useDispatch } from 'react-redux'
 import { showAlert } from '../../redux/slices/alertSlice'
+import Review from '../customUI/reviewShow'
 
 const VehicleSelection: React.FC = () => {
     const [vehicles, setVehicles] = useState<IvehicleRes[]>([])
@@ -27,7 +28,8 @@ const VehicleSelection: React.FC = () => {
                     dates = {startingDate:booking.period.date,endingDate:booking.returnDate,type:booking.type}
                 }
                 const res = await getBookingVehicles(dates)
-                const arr: [] = res.data.data
+                const arr: [] = res.data.data.filter((item:IvehicleRes)=>item.seat >= (booking.person.adult + booking.person.child))
+                
                 setVehicles(res.data.data)
             } catch (err:any) { 
                 console.error('Error fetching data:', err);
@@ -73,14 +75,26 @@ const VehicleSelection: React.FC = () => {
         
         setDriver(true)
     }
+    const getRate = (data:IvehicleRes)=>{
+        const reviews = data.reviews
+        if(reviews){
+            if(reviews.length === 0){
+                return 0
+            }
+            const total = reviews.reduce((acc, review) => acc + review.review, 0);
+            return Math.round(total/reviews.length)
+        }
+        return 0
+
+    }
     return (
         <div className='bg-white h-auto  flex flex-col justify-center items-center'>
             <ModalImage closeModal={() => setShow(false)} open={show} image={image} />
             <DriverSelection open={driver} close={()=>setDriver(false)} /> 
             <div className='flex container mt-5 mb-5'>
                 <button onClick={() => {
-                    localStorage.removeItem('booking')
-                    dispatch(setBookingData(null))
+                    // localStorage.removeItem('booking')
+                    dispatch(backBookingData())
                     
                 }} className="  bg-red-500 kanit-regular w-fit  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md px-10 py-2 ">
                     Back
@@ -119,8 +133,8 @@ const VehicleSelection: React.FC = () => {
                                     <div className='col-span-1 flex flex-col justify-evenly  items-center'>
 
                                         <p className='kanit-regular text-xl '>{item.vehicleName}</p>
-                                        <p className='kanit-regular text-red-600 underline text-md '>View Details</p>
-                                        
+                                        {/* <p className='kanit-regular text-red-600 underline text-md '>View Details</p> */}
+                                        <Review rate={getRate(item)} totalStars={5} />
                                     </div>
                                     <div className='col-span-1 flex flex-col justify-evenly  items-start'>
 

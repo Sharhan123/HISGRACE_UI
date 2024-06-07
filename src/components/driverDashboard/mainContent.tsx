@@ -5,10 +5,9 @@ import { findDriver } from '../../services/driverService'
 import PendingPage from '../driverRegister/pendingPage'
 import Rejected from '../driverRegister/rejected'
 import { Navigate, useNavigate } from 'react-router-dom'
-import MainContent from './dashboard'
-import Dashboard from './dashboard'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
+import Dashboard from './dashboard'
 const Aprooval:React.FC = ()=> {
     const [driver,setDriver] = useState<IdriverRes>()
     const navigate = useNavigate()
@@ -55,7 +54,7 @@ const Aprooval:React.FC = ()=> {
     }
     {
         driver?.status === 'active' && (
-            <Dashboard/>
+            <Dashboard driver={driver}/>
            
         )
     }

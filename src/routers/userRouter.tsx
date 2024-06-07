@@ -10,6 +10,7 @@ import Loader from '../components/customUI/loader';
 import PackageBooking from '../components/packageBooking/bookingConfirm';
 import { verifyUserToken } from '../middleWares/userTokenVerify';
 import { useDispatch } from 'react-redux';
+import PackageSuccess from '../components/packageBooking/packageSuccess';
 
 // Lazy-loaded route components
 const HomePage = React.lazy(() => import('../pages/userPages/homePage'));
@@ -77,6 +78,7 @@ const dispatch = useDispatch()
           <Route path="/failure" element={<PaymentFailure />} />
           <Route path="/chat" element={<auth.authRouterWrapper><ChatingPage /></auth.authRouterWrapper>} />
           <Route path='/packageBooking' element={<auth.packageWrapper><PackageBooking/></auth.packageWrapper>} />
+          <Route path='/packageSuccess' element={<PackageSuccess/>} />
         </Routes>
       </Suspense>
     

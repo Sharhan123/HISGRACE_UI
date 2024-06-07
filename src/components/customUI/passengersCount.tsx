@@ -34,7 +34,12 @@ const PassengersCount: React.FC<props> = ({ open, close,count }) => {
                         }
                     }} className='text-white cursor-pointer kanit-regular text-lg rounded-md w-16 text-center bg-red-600 px-3 '>-</p>
                     <p className='text-black kanit-light text-xl  px-3  '>{adult} </p>
-                    <p onClick={() => setAdult(adult + 1)} className='text-white cursor-pointer kanit-light rounded-md bg-custom w-16 text-center text-xl  px-3 '>+</p>
+                    <p onClick={() =>{
+                        if(adult + child < 17){
+
+                            setAdult(adult + 1)
+                        }
+                     }} className='text-white cursor-pointer kanit-light rounded-md bg-custom w-16 text-center text-xl  px-3 '>+</p>
                 </div>
                 <h1 className='text-start kanit-light mt-5'>Child (Below 7 yr old)</h1>
                 <div className='mt-5 flex items-center  justify-evenly mb-4'>
@@ -46,7 +51,11 @@ const PassengersCount: React.FC<props> = ({ open, close,count }) => {
                     }} className='text-white cursor-pointer rounded-md kanit-regular text-lg w-16 text-center bg-red-600 px-3 '>-</p>
 
                     <p className='text-black kanit-light text-xl  px-3  '>{child}</p>
-                    <p onClick={() => setChild(child + 1)} className='text-white cursor-pointer kanit-light rounded-md bg-custom w-16 text-center text-xl  px-3 '>+</p>
+                    <p onClick={() =>{ 
+                        if(adult + child < 17){
+                        setChild(child + 1)
+                        }
+                        }} className='text-white cursor-pointer kanit-light rounded-md bg-custom w-16 text-center text-xl  px-3 '>+</p>
                 </div>
                 <div className="relative flex items-center justify-center mt-10  ">
 

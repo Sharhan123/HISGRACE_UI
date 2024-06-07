@@ -14,13 +14,13 @@ const Footer: React.FC = () => {
               </span>
               <div className="flex flex-col items-center gap-6 mb-8">
                 <div className="flex flex-wrap items-center justify-center gap-5 lg:gap-12 gap-y-3 lg:flex-nowrap text-dark-grey-900">
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">About</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Features</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Blog</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Resources</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Partners</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Help</a>
-                  <a href="javascript:void(0)" className="text-gray-200 hover:text-gray-900">Terms</a>
+                  <a href="/vehicles" className="text-gray-200">Vehicles</a>
+                  <a href="/packages" className="text-gray-200">Packages</a>
+                  <a href="/services" className="text-gray-200">Service</a>
+                  <a href="/chat" className="text-gray-200">Contact Admin</a>
+                  {/* <a href="javascript:void(0)" className="text-gray-200">Partners</a>
+                  <a href="javascript:void(0)" className="text-gray-200">Help</a>
+                  <a href="javascript:void(0)" className="text-gray-200">Terms</a> */}
                 </div>
                 <div className="social-icons w-2/6 flex justify-between">
         <a href="https://wa.me/your-whatsapp-number" target="_blank" rel="noopener noreferrer">

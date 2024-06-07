@@ -11,7 +11,7 @@ interface props {
 const ProfilePage:React.FC<props> = ({user,setEdit,setAddress})=> {
     
   return (
-    <div className="flex flex-col h-full items-center justify-evenly bg-custom text-center text-md overflow-auto shadow-md">
+    <div className="flex flex-col h-full items-center justify-evenly bg-custom text-center text-md overflow-y-auto shadow-md">
             <QuoteComponent name={user?.name} />
             <section className="component h-auto w-11/12 gap-5 grid grid-cols-2 rounded-md p-2  ">
 

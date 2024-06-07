@@ -51,7 +51,7 @@ const bookingWrapper = ({children}:{children:React.ReactNode})=>{
   console.log('booking data :');
   
   if(booking.show){
-    return <>{children}</>
+    return <>{children}</> 
   }
   return <Navigate to={'/'} replace />
 }

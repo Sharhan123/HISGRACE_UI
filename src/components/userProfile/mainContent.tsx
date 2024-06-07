@@ -16,6 +16,7 @@ import ProfilePage from './profilePage';
 import BookingsPage from './bookingsPage';
 import { useNavigate } from 'react-router-dom';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import PackageBookingsPage from './packageBookings';
 
 
 
@@ -186,7 +187,14 @@ const Profile: React.FC = () => {
           <div className="my-4 w-full border-b-1 border-indigo-100 text-center">
             <span className="font-mono text-xl font-bold tracking-widest">
               <li className="flex items-center flex-col">
-                <img src={profile} alt="" className="rounded-full w-52 h-52 object-cover" />
+                {
+                  profile?(
+
+                    <img src={profile} alt="" className="rounded-full w-52 h-52 object-cover" />
+                  ):(
+                    <div className='rounded-full w-52 h-52 flex justify-center items-center bg-gray-400 text-'>No Image</div>
+                  )
+                }
                 <button onClick={handleButtonClick} className=" mt-5 text-sm w-auto px-2 h-8 rounded-md bg-orange-600 kanit-light text-white">update Image</button>
                 <input
                   ref={fileInputRef}
@@ -263,7 +271,7 @@ const Profile: React.FC = () => {
           }
           {
             selected === 'packages'&&(
-              <BookingsPage/>
+              <PackageBookingsPage/>
             )
           }
         </main>

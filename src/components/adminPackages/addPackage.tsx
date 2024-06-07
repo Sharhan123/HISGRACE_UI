@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
             return
         }
         
-        if (days <1)
+        if (days <1){
             setDaysErr('Please provide count of days and it should be greater than 0 ')
             return
         }
@@ -105,10 +105,10 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
         try {
             const res = await addPackage(data)
             
-            hide()
+            hide() 
             reload()
         } catch (err:any) {
-            console.log(err)
+            console.log(err) 
             dispatch(showAlert({color:"red",content:err.message}))
 
         }
@@ -118,15 +118,15 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
 
     }
 
-
+ 
     const closeModal = () => {
-        setShowModal(false);
+        setShowModal(false);  
         document.body.style.overflow = '';
         document.body.classList.remove('astroui-modal-open');
     };
 
     const openModal = () => {
-        setShowModal(true);
+        setShowModal(true); 
         document.body.style.overflow = 'hidden';
         document.body.classList.add('astroui-modal-open');
     };
@@ -148,7 +148,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
 
             reader.readAsDataURL(file)
         }
-    };
+    }; 
     const handleRemoveImage = () => {
         if (selectedFiles) {
           
@@ -333,7 +333,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
 
 
         </>
-    );
+    )      
 };
 
 export default Modal;

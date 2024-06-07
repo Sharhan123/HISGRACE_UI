@@ -13,9 +13,10 @@ interface props {
     drivers?:any
     bookings?:any
     chat?:any
+    packageBookings?:any
 }
 
-const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=null,chat=null, packages=null,bookings=null}) => {
+const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=null,chat=null, packages=null,bookings=null,packageBookings=null}) => {
     const navigate = useNavigate()
     return (
         <aside className="bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
@@ -66,6 +67,14 @@ const Sidebar: React.FC<props> = ({dash=null,vehicles=null,users=null,drivers=nu
                             <button className={`middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg ${packages?'bg-blue-600':'bg-dark'}  text-white hover:bg-slate-600  active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize`} type="button">
                                <Packages/>
                                 <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Packages</p>
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-current="page" className="active" href="/admin/packageBookings">
+                            <button className={`middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg ${packageBookings?'bg-blue-600':'bg-dark'}  text-white hover:bg-slate-600  active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize`} type="button">
+                               <BookmarkAddedIcon/>
+                                <p className="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Package Bookings</p>
                             </button>
                         </a>
                     </li>
