@@ -60,7 +60,7 @@ const dispatch = useDispatch()
     
       <Suspense fallback={<Loader open/>}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/*" element={<HomePage />} />
           <Route path="/packages" element={<PackagesListing />} />
           <Route path="/signin-signup" element={<auth.ProtectedRouteWrapper children={<Authentication />} />} />
           <Route path="/otp" element={<auth.ProtectedRouteWrapper children={<Otp />} />} />

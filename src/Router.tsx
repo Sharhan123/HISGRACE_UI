@@ -10,11 +10,11 @@ const Routers:React.FC = ()=> {
 
     return (
         
-        <Router>
+        <>
             <UserRoutes/>
             <AdminRoutes/>
             <DriverRoutes/>
-       </ Router>
+       </>
     );
 }
 
