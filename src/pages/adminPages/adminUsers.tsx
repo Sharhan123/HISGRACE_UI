@@ -1,7 +1,7 @@
 import React from 'react'
 import MainContent from '../../components/adminUsers/mainContent'
 
-function AdminUsers() {
+const AdminUsers:React.FC = ()=> {
   return (
     <>
       <MainContent/>

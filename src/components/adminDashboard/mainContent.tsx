@@ -15,7 +15,6 @@ import { Chart } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { getBookings } from '../../services/bookingsServices'
 import { IbookingRes } from '../../interfaces'
-import FlightLandIcon from '@mui/icons-material/FlightLand';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 import { useDispatch } from 'react-redux'
@@ -111,10 +110,7 @@ const bookingsToday = bookingsData.filter(booking => {
     fetch()
   },[])
  
-  const formatDate = () => {
-    const options:any = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date().toLocaleDateString(undefined, options);
-  };
+  
   return (
     <>
       <Sidebar dash={'true'} />
@@ -230,18 +226,18 @@ const bookingsToday = bookingsData.filter(booking => {
         
       </div>
 
-      <div className='h-auto  grid grid-cols-2  '>
+      <div className='h-auto  grid grid-cols-1  '>
       <span className='col-span-1'>
       <div className='w-full' style={{ position: 'relative', height: '100%' }}>
           {/* <Bar data={data} options={options} /> */}
         <Chart data={data}  type='line' options={options} />
         </div>
       </span> 
-      <span className='col-span-1 p-5'> 
+      {/* <span className='col-span-1 p-5'> 
       <div className='h-full w-full shadow border rounded drop-shadow-sm'>
 
       </div>
-       </span>
+       </span> */}
       </div>
       {/* <h1 className='text-center kanit-bold text-4xl'> Remaining are coming soon</h1> */}
       </div>

@@ -4,7 +4,7 @@ import AdminNavbar from '../customUI/adminNavbar'
 import RecordTable from './bookingsListing'
 import Alert from '../customUI/alert'
 
-function MainContent() {
+const MainContent:React.FC = ()=> {
   useEffect(()=>{
 
   },[])

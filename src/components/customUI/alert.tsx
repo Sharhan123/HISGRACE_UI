@@ -1,4 +1,3 @@
-// Alert.tsx
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -6,17 +5,15 @@ import WarningIcon from '@mui/icons-material/Report';
 import { RootState } from '../../redux/store';
 import { hideAlert } from '../../redux/slices/alertSlice';
 import not from '../../assets/notification.mp3'
-interface Props {
-  close: () => void;
-}
+
 
 const Alert: React.FC = () => {
-  const { show, head, content, color } = useSelector((state: RootState) => state.alert);
+  const { show, content, color } = useSelector((state: RootState) => state.alert);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if(show){
-
+ 
         const audio = new Audio(not); 
         audio.play();
     }

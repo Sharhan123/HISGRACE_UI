@@ -3,7 +3,7 @@ import MainContent from '../../components/vehicleDetails/mainContent'
 import Navbar from '../../components/homePage/navbar'
 
 const VehicleDetailsPage:React.FC = ()=> {
-  return (
+  return ( 
     <>
     <Navbar/>
     <MainContent/>

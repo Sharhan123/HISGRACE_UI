@@ -1,4 +1,4 @@
-import { Ipackage, IpackageEdit, IpackageRes } from "../interfaces"
+import { Ipackage, IpackageEdit } from "../interfaces"
 import axiosWithAuth from "./axiosConfig"
 
 export const addPackage = async (data:Ipackage)=>{

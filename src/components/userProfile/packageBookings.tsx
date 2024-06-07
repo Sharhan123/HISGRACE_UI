@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import EmployeeTable from './table'
-import { getBookings, getBookingsByuser } from '../../services/bookingsServices'
-import { IbookingRes, IpackageBookingRes } from '../../interfaces'
+import {  IpackageBookingRes } from '../../interfaces'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
-import { getPackageBookings, getPackageBookingsByuser } from '../../services/packageBooking'
+import { getPackageBookingsByuser } from '../../services/packageBooking'
 import PackageTable from './packageTable'
 
 const PackageBookingsPage: React.FC = () => {

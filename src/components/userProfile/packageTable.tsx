@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { IbookingRes, IpackageBookingRes } from '../../interfaces';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import {  IpackageBookingRes } from '../../interfaces';
 import CancelBooking from './cancelBooking';
-import BookingDetails from '../customUI/bookingDetails';
 import CancelModal from '../customUI/cancelModal';
 import { PackagebookingStatus } from '../../services/packageBooking';
 
@@ -20,11 +18,10 @@ interface props {
 
 
 
-const PackageTableRow: React.FC<row> = ({data,cancel,id,reload}) => {
-  const [open,setOpen] = useState(false)  
+const PackageTableRow: React.FC<row> = ({data,reload}) => {
   const handleCancel = async (id:any)=>{
     try{
-        const res = await PackagebookingStatus({id,status:'Cancelled'})
+         await PackagebookingStatus({id,status:'Cancelled'})
         reload()
     }catch(err){
         console.log(err);
@@ -51,7 +48,7 @@ const PackageTableRow: React.FC<row> = ({data,cancel,id,reload}) => {
         <td className="px-6 py-4">{`${data.period.time} - ${data.period.meridian}`}</td>
         
         <td className="px-6 py-4"> 
-          <button onClick={()=>setOpen(true)} className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
+          <button  className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
             View Details
           </button>
         </td>

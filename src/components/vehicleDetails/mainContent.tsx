@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './style.css'
-import VehiclesSection from '../customUI/vehicle';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getVehicles } from '../../services/vehicleService';
 import { IvehicleRes } from '../../interfaces';
@@ -45,7 +44,7 @@ const MainContent: React.FC = () => {
 
 
     }, [id])
-    const getRate = ()=>{
+    const getRate = ()=>{ 
         const reviews = data?.reviews
         if(reviews){
             if(reviews.length === 0){

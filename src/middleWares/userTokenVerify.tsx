@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 export const verifyUserToken = (navigate:any) => {
     
     const token = localStorage.getItem('token');
- 
+ console.log(typeof navigate)
     if (token) {
         const tokenDecoded = jwtDecode(token)
         if (tokenDecoded?.exp) {

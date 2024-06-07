@@ -1,6 +1,5 @@
 import React, { ChangeEvent,  useEffect, useRef, useState } from 'react';
 import {  getVehicles } from '../../services/vehicleService';
-import { useNavigate } from 'react-router-dom';
 import { addPackage } from '../../services/packageService';
 import { Ivehicle } from '../../interfaces';
 import { showAlert } from '../../redux/slices/alertSlice';
@@ -24,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
     const [desc, setDesc] = useState('')
     const [selectedFiles, setSelectedFiles] = useState('');
     const [imagePreviews, setImagePreviews] = useState<string[]>([]); 
-    const [file,setFile] = useState('')
+    // const [file,setFile] = useState('')
 
     const [nameErr, setNameErr] = useState('')
     const [daysErr, setDaysErr] = useState('')
@@ -34,7 +33,6 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
     const [locationErr,setLocationErr] = useState('')
     const [typeErr, setTypeErr] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     useEffect(()=>{
         const fetch = async ()=>{
@@ -103,7 +101,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
         setShowModal(false)
         loader()
         try {
-            const res = await addPackage(data)
+            await addPackage(data)
             
             hide() 
             reload()
@@ -138,7 +136,7 @@ const Modal: React.FC<ModalProps> = ({  reload ,loader,hide }) => {
             const previews = files.map((file) => URL.createObjectURL(file));
             setImagePreviews(previews)
             const file = e.target.files[0];
-            setFile(file.name) 
+            // setFile(file.name) 
             const reader = new FileReader();
 
             reader.onload = (event) => {

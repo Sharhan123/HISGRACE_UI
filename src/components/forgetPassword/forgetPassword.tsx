@@ -1,10 +1,8 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
-import { addVehicle } from '../../services/vehicleService';
+import React, {  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendForgetOtp } from '../../services/userServices';
 
 const Forget: React.FC = () => {
-    const [showModal, setShowModal] = useState<boolean>(false);
     const [email, setEmail] = useState('')
 
     const [emailErr, setEmailErr] = useState('')
@@ -46,17 +44,7 @@ const Forget: React.FC = () => {
     }
 
 
-    const closeModal = () => {
-        setShowModal(false);
-        document.body.style.overflow = '';
-        document.body.classList.remove('astroui-modal-open');
-    };
-
-    const openModal = () => {
-        setShowModal(true);
-        document.body.style.overflow = 'hidden';
-        document.body.classList.add('astroui-modal-open');
-    };
+    
 
 
 
@@ -125,7 +113,7 @@ const Forget: React.FC = () => {
 
                             onClick={handleSubmit}
                             type="button"
-                            className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md rounded md hover:bg-violet-800 transition-all duration-300"
+                            className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md  hover:bg-violet-800 transition-all duration-300"
                         >
                             <span className="flex items-center justify-center space-x-2">Submit</span>
                         </button>

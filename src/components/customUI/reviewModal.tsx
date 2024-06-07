@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { IbookingRes } from '../../interfaces'
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import StarRating from '../userProfile/reviewStar';
 interface props{
 showModal:boolean
@@ -10,18 +8,7 @@ submit:(review:number)=>void
 }
 
 const ReviewModal:React.FC<props> = ({showModal,close,submit})=>{
-    // const [showModal,setShowModal] = useState(false)
     const [rate,setRate] = useState(0)
-    const formatDate = (dateString:any, timeString:any) => {
-        const date = new Date(dateString);
-        const timeParts = timeString.split(':');
-        let hours = parseInt(timeParts[0], 10);
-        const minutes = timeParts[1];
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12; // Convert to 12-hour format
-        const formattedTime = `${hours}:${minutes} ${ampm}`;
-        return `${date.toISOString().split('T')[0]} - ${formattedTime}`;
-      };
       const handleRatingChange = (rating:number)=>{
         console.log(rating);
         setRate(rating)

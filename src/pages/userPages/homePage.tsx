@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react'
+import React, {  useEffect} from 'react'
 import Navbar from '../../components/homePage/navbar'
 import Home from '../../components/homePage/home'
 import { useSelector } from 'react-redux'

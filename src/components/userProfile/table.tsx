@@ -37,7 +37,7 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
     setReviewData(prev=>({...prev,review:review}))  
     const data = {user:reviewData.user,vehicle:reviewData.vehicle,review:review}
     try{
-      const res = await setVehicleReview(data)   
+       await setVehicleReview(data)   
       setReview(false)
       setReviewData({user:'',vehicle:'',review:0})
     }catch(err:any){
@@ -48,7 +48,7 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
       dispatch(showAlert({content:err.message,color:'red'}))
 
     }
-  }
+  } 
   return (
       <>
       <BookingDetails booking={data} showModal={open} close={()=>setOpen(false)}/>

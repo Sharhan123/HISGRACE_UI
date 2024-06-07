@@ -7,7 +7,7 @@ export const sendPayment = async(data:any)=>{
     }catch(err){
         throw err
     }
-}
+} 
 
 
 export const getBookings = async ()=>{

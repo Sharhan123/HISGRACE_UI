@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IpackageRes } from '../../interfaces';
 import CustomsButtons from '../customUI/customsButtons';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   packages: IpackageRes[];
@@ -10,7 +10,6 @@ interface Props {
 const ImageSlider: React.FC<Props> = ({ packages }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 const navigate = useNavigate()
-  // Render nothing if packages array is empty or null
   if (!packages || packages.length === 0) {
     return null;
   }

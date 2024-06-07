@@ -5,13 +5,10 @@ import banner from '../../assets/banner.jpg'
 import Footer from '../customUI/Footer';
 import { getPackages } from '../../services/packageService';
 import { IpackageRes, IvehicleRes } from '../../interfaces';
-import OnewayCard from '../customUI/onewayCard';
 import Alert from '../customUI/alert';
 import PackagesCard from './packagesCard';
 import { getVehicles } from '../../services/vehicleService';
-import MainLoader from '../customUI/mainLoader';
 import ImageSlider from './carousal';
-import ChatbotComponent from '../chatingUser/chatingUser';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 const Home: React.FC = () => {

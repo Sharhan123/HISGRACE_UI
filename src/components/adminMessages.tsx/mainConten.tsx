@@ -8,8 +8,6 @@ import MessageItem from './TimeSelector';
 import VoiceRecorder from '../customUI/audio';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import { updateNewMessage, updateUnRead } from '../../services/userServices';
-import ImageIcon from '@mui/icons-material/Image';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +28,6 @@ const AdminChat: React.FC = () => {
     const [showPicker, setShowPicker] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null);
     const [start, setStart] = useState(false)
-    const [toggle,setToggle] = useState(false)
 
     const scrollToBottom = () => {
         if (chatContainerRef.current) {
@@ -93,6 +90,8 @@ const AdminChat: React.FC = () => {
 
     useEffect(() => {
         fetchData();
+        console.log(typeof messages);
+        
         document.body.style.overflowY = 'hidden'
     }, [])
 
@@ -155,7 +154,7 @@ const AdminChat: React.FC = () => {
             isRead:false
         }
         try {
-            const res = await saveChat(data)
+            await saveChat(data)
             await updateNewMessage({id:selected?._id,count:'inc'})
         } catch (err:any) {
             console.log(err);
@@ -180,7 +179,7 @@ const AdminChat: React.FC = () => {
             isRead:false
         }
         try {
-            const res = await saveChat({
+             await saveChat({
                 content:`data:audio/wav;base64,${base64Voice}` ,
                 sender: 'admin',
                 reciever: selected?._id,
@@ -202,7 +201,6 @@ const AdminChat: React.FC = () => {
 
     const getCount = (id:string)=>{
         const Count = count.findIndex((item:any)=>item.id === id);
-        // console.log(count,'counttttt');
         
         return Count;
 
@@ -215,7 +213,6 @@ const AdminChat: React.FC = () => {
             reader.onloadend = () => {
                 const base64String = reader.result?.toString();
                 if (base64String) {
-                    // Extract base64 data (remove prefix)
                     const base64Data = base64String.split(',')[1];
                     resolve(base64Data);
                 } else {
@@ -228,23 +225,20 @@ const AdminChat: React.FC = () => {
         });
     };
     const formatDate = (lastSeen: any) => {
-        if (!lastSeen) return ''; // Handle case when lastSeen is not defined
+        if (!lastSeen) return ''; 
 
         const lastSeenDate = new Date(lastSeen);
         const today = new Date();
 
-        // Check if lastSeen is today
         if (
             lastSeenDate.getDate() === today.getDate() &&
             lastSeenDate.getMonth() === today.getMonth() &&
             lastSeenDate.getFullYear() === today.getFullYear()
         ) {
-            // Format time for today's date
             const hours = lastSeenDate.getHours().toString().padStart(2, '0');
             const minutes = lastSeenDate.getMinutes().toString().padStart(2, '0');
             return `Last seen today at ${hours}:${minutes}`;
         } else {
-            // Format date for other days
             const day = lastSeenDate.getDate().toString().padStart(2, '0');
             const month = (lastSeenDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
             const year = lastSeenDate.getFullYear();
@@ -459,33 +453,9 @@ const AdminChat: React.FC = () => {
                                 <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
 
                                     <div>
-                                        {/* <button onClick={()=>setToggle(!toggle)} onMouseEnter={()=>setToggle(true)}  className="flex items-center justify-center text-gray-400 hover:text-gray-600">
-                                            <svg
-                                                className="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                            </svg>
-                                        </button> */}
+                                        
                                         {
-                                        //     toggle && (
-                                        // <div  className="fixed bottom-[calc(4rem+1.5rem)]   mr-4 p-6 rounded-lg  w-[200px] h-auto">
-                                        //     <div className='bg-white grid grid-rows-2 rounded-md border  h-28 drop-shadow-xl'>
-                                        //         <span className='border-b text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
-                                        //             <ImageIcon className='text-red-500'/>
-                                        //             Image
-                                        //         </span>
-                                        //         <span className=' text-md kanit-regular flex items-center justify-center gap-5 hover:bg-slate-100' >
-                                        //             <VideocamIcon className='text-blue-500'/>
-                                        //             Video
-                                        //         </span>
-                                                
-                                        //     </div>
-                                        //     </div>
-                                        //     )
+                                        
 }
                                     </div>
                                     <div className="flex-grow ml-4">

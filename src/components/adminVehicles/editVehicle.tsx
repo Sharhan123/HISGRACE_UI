@@ -1,6 +1,6 @@
 import React, { ChangeEvent,  useState } from 'react';
-import { addVehicle, updateVehicle } from '../../services/vehicleService';
-import { Ivehicle } from '../../interfaces';
+import {  updateVehicle } from '../../services/vehicleService';
+import {Ivehicle } from '../../interfaces';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '../../redux/slices/alertSlice';
 interface ModalProps {
@@ -22,7 +22,6 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
     const [desc, setDesc] = useState(data.desc)
     const [selectedFiles, setSelectedFiles] = useState(data.images);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]); 
-    const [file,setFile] = useState('')
     const [changed,setChanged] = useState(false)
     const [nameErr, setNameErr] = useState('')
     const [seatErr, setSeatErr] = useState('')
@@ -59,7 +58,7 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
                 return
             }
             if (!desc.trim() || desc.length < 15) {
-                setSeatErr('Please provide your vehicle description more than 5 words')
+                setDescErr('Please provide your vehicle description more than 5 words')
                 return
             }
         if(!selectedFiles){
@@ -118,7 +117,6 @@ const EditVehicle: React.FC<ModalProps> = ({reload,loader,data,hide}) => {
             const previews = files.map((file) => URL.createObjectURL(file));
             setImagePreviews(previews)
             const file = e.target.files[0];
-            setFile(file.name) 
             const reader = new FileReader();
 
             reader.onload = (event) => {

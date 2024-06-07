@@ -12,7 +12,7 @@ const StarRating: React.FC<StarRatingProps> = ({ totalStars = 5, onRatingChange 
   const handleClick = (ratingValue: number) => {
     setRating(ratingValue);
     if (onRatingChange) {
-      onRatingChange(ratingValue);
+      onRatingChange(ratingValue);  
     }
   };
 

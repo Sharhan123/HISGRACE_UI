@@ -19,7 +19,7 @@ export const getPackageBookings = async ()=>{
     }
 }
 
-export const getPackageBookingsByuser = async ()=>{
+export const getPackageBookingsByuser = async ()=>{ 
     try{
         const response = await axiosWithAuth.get('/packageBooking/getPackageBookingsByuser')
         return response

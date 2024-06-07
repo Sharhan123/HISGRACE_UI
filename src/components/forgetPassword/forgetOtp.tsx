@@ -1,34 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/slices/authSlice';
+import React, {  useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { forgetVerify } from '../../services/userServices';
 
 const ForgetOtp: React.FC = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const [err, setErr] = useState('');
-  const [timer, setTimer] = useState(60);
-  const [resendVisible, setResendVisible] = useState(false);
-  const dispatch = useDispatch();
+
  
-//   useEffect(() => {
-//     const countdown = setInterval(() => {
-//       setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
-//     }, 1000);
 
-    
-//     return () => {
-//       clearInterval(countdown);
-//     };
-//   }, []); 
-
-//   useEffect(() => {
-    
-//     if (timer === 0) {
-//       setResendVisible(true);
-//     }
-//   }, [timer]); 
 
 const email = localStorage.getItem('email')
 
@@ -45,7 +25,7 @@ const email = localStorage.getItem('email')
     };
 
     try {
-      const res = await forgetVerify(data);
+       await forgetVerify(data);
       navigate('/resetPassword');
     } catch (err: any) {
       if (err.response && err.response.data) {
@@ -55,30 +35,11 @@ const email = localStorage.getItem('email')
       }
     }
   };
-
-//   const handleResendOtp = async () => {
-//     try {
-//       await resendOtp()
-//       setTimer(60);
-//       setResendVisible(false);
-//     } catch (err: any) {
-//       if (err.response && err.response.data) {
-//         setErr(err.response.data.message);
-//       } else {
-//         console.log(err);
-//       }
-//     }
-
-//   };
-
   return (
     <div className="bg-custom min-h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="text-center mb-4">
-          {/* <p className="text-xl font-semibold">
-            {Math.floor(timer / 60).toString().padStart(2, '0')}:
-            {(timer % 60).toString().padStart(2, '0')}
-          </p> */}
+          
         </div>
         <h2 className="text-2xl font-bold mb-4 text-center">Forget Password </h2>
         <form onSubmit={handleSubmit}>
@@ -98,11 +59,7 @@ const email = localStorage.getItem('email')
             Verify OTP
           </button>
 
-          {/* {resendVisible && (
-            <a className="text-blue-500 px-6 py-3 rounded-md cursor-pointer" onClick={handleResendOtp}>
-              Resend OTP
-            </a>
-          )} */}
+         
         </form>
       </div>
     </div>

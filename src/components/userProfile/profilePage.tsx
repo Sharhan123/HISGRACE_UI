@@ -2,13 +2,12 @@ import React from 'react'
 import { IuserRes } from '../../interfaces'
 import QuoteComponent from '../customUI/quote'
 
-interface props {
+interface props { 
     user:IuserRes | undefined
     setEdit:()=>void
-    setAddress:()=>void
 }
 
-const ProfilePage:React.FC<props> = ({user,setEdit,setAddress})=> {
+const ProfilePage:React.FC<props> = ({user,setEdit})=> {
     
   return (
     <div className="flex flex-col h-full items-center justify-evenly bg-custom text-center text-md overflow-y-auto shadow-md">

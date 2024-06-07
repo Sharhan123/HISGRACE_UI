@@ -4,7 +4,7 @@ import AdminNavbar from '../customUI/adminNavbar'
 import RecordTable from './driversListing'
 import Alert from '../customUI/alert'
 
-function MainContent() {
+const MainContent:React.FC = ()=> {
   return (
     <div className="min-h-screen bg-gray-700-50/50">
       <Alert/>

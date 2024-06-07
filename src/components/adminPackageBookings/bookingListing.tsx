@@ -1,18 +1,8 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { blockVehicle, deleteVehicle, getVehicles } from '../../services/vehicleService';
-import { IbookingRes, IdriverRes, IpackageBookingRes, Ivehicle, IvehicleRes } from '../../interfaces';
-import DeleteItemModal from '../customUI/deleteModal';
-import BlockModalItem from '../customUI/blockCard';
-import mongoose from 'mongoose';
+import React, {  useEffect, useState } from 'react';
+import {  IpackageBookingRes } from '../../interfaces';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
-import { blockAndUnblock, deleteDriver, getDrivers } from '../../services/driverService';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ReactDatePicker from 'react-datepicker';
-import { bookingStatus, getBookings } from '../../services/bookingsServices';
-import BookingDetails from '../customUI/bookingDetails';
 import { PackagebookingStatus, getPackageBookings } from '../../services/packageBooking';
 
 
@@ -22,8 +12,7 @@ const RecordTable: React.FC = () => {
     const [showData, setShowData] = useState<IpackageBookingRes[]>([])
     const [showLoading, setShowLoading] = useState(false)
     const [selected, setSelected] = useState('Active')
-    const [open,setOpen] = useState(false)
-    const naviagate = useNavigate()
+
     const fetch = async () => {  
         try {
             setShowLoading(true)
@@ -31,7 +20,6 @@ const RecordTable: React.FC = () => {
             setdata(res.data.data)
             const filtered = res.data.data.filter((item: IpackageBookingRes) => (item.status === selected))
             setShowData(filtered)
-            // setShowData(res.data.data)
             setShowLoading(false)
         } catch (err:any) { 
             dispatch(showAlert({color:"red",content:err.message}))
@@ -46,44 +34,6 @@ const RecordTable: React.FC = () => {
 
 
     }, [])
-    // const onDelete = async (id: any) => {
-    //     try {
-    //         await deleteDriver(id)
-    //         fetch()
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
-
-    const showLoader = () => {
-        setShowLoading(true)
-    }
-    const hideLoader = () => {
-        setShowLoading(false)
-    }
-
-
-
-    // const onBlock = async (id: any) => {
-    //     try {
-    //         await blockAndUnblock(id)
-    //         fetch()
-    //     } catch (err) {
-    //         console.log(err);
-
-    //     }
-    // }
-    // const handleCancel = async (id:any)=>{
-    //     try{
-    //          await bookingStatus({id:id,status:'Cancelled'})
-    //          fetch()
-    //          setSelected('Cancelled')
-    //     }catch(err:any){
-    //         console.log(err);
-    //         dispatch(showAlert({color:"red",content:err.message}))
-
-    //     }
-    // }
 
     useEffect(() => {
         const filtered = data.filter((item: IpackageBookingRes) => (item.status === selected))
@@ -92,7 +42,7 @@ const RecordTable: React.FC = () => {
 
 const setStatus = async (id:any,status:string)=>{
     try{
-        const res = await PackagebookingStatus({id:id,status:status})
+         await PackagebookingStatus({id:id,status:status})
         fetch()
     }catch(err:any){
         console.log(err);
@@ -259,7 +209,7 @@ const setStatus = async (id:any,status:string)=>{
                                                     </td>
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap text-center">
                                                         <div>
-                                                            <button onClick={()=>setOpen(true)} className="text-md w-full h-8 px-2 rounded-md bg-orange-600 kanit-regular text-white">View details</button>
+                                                            <button  className="text-md w-full h-8 px-2 rounded-md bg-orange-600 kanit-regular text-white">View details</button>
                                                         </div>
                                                     </td>
                                                     </>

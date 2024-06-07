@@ -1,7 +1,7 @@
 import React from 'react'
 import SignUp from '../../components/signInAndSignup/signup'
 
-function Authentcation() {
+const Authentcation:React.FC = ()=> {
   return (
     <>
     <SignUp />

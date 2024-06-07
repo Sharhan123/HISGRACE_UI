@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import ListingCard from './listingCard'
-import {  IpackageRes, Ivehicle } from '../../interfaces'
+import {  IpackageRes } from '../../interfaces'
 import SidebarMenu from '../vehicleListing/filter'
 import Footer from '../customUI/Footer'
 import { getPackages } from '../../services/packageService'
@@ -12,7 +12,6 @@ const MainContent: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [filter,setFilter] = useState('')
     const [search,setSearch] = useState('')
-    const [available,setAvailable] = useState<boolean | string>('')
     const itemsPerPage = 4; 
 const dispatch = useDispatch()
 
@@ -88,7 +87,6 @@ const dispatch = useDispatch()
         }else{
             filteredData = data.filter((item)=>item.isAvailable === val)
         }
-        setAvailable(val)
         setShowData(filteredData)
         setCurrentPage(1)
     }
@@ -131,7 +129,6 @@ const dispatch = useDispatch()
                 <h6 className="text-center text-lg kanit-regular text-black">No Vehicles</h6>
             )}
 
-            {/* Pagination */}
             {totalPages > 1 && (
                 <div className="flex justify-center mt-5">
                     <nav className="flex space-x-2" aria-label="Pagination">

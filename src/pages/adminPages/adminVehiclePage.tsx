@@ -1,7 +1,7 @@
 import React from 'react'
 import MainContent from '../../components/adminVehicles/mainContent'
 
-function AdminVehiclePage() {
+const AdminVehiclePage:React.FC = ()=> {
   return (
     <>
     <MainContent/>

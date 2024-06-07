@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2'
-import { useNavigate } from 'react-router-dom';
-import { Iuser, IuserRes } from '../../interfaces';
+import {  IuserRes } from '../../interfaces';
 import { blockUser, getUsers } from '../../services/adminService';
 import BlockModalItem from '../customUI/blockCard';
 import { showAlert } from '../../redux/slices/alertSlice';
@@ -18,7 +16,6 @@ const RecordTable: React.FC = () => {
     const sdata: any = {}
     const [selected, setSelected] = useState<IuserRes>(sdata)
     const dispatch = useDispatch()
-    const naviagate = useNavigate()
     const fetch = async () => {
         try {
 

@@ -2,7 +2,6 @@ import React from 'react';
 
 const MessageItem:React.FC<{item:{sender:string,reciever:string,content:string,time:string},isFirstMessageOfDay:any}> = ({ item ,isFirstMessageOfDay}) => {
   const messageDate = new Date(item.time);
-  const currentDate = new Date();
 
   const getMessageDateLabel = (messageDate:any) => {
     if (isFirstMessageOfDay) {

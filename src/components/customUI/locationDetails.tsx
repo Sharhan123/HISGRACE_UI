@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { call } from '../../services/autoComplete';
 import { Ilocation } from '../../interfaces';
 interface props {

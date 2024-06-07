@@ -1,5 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import MyLocation from '@mui/icons-material/MyLocation';
+import React, {  useState } from 'react'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
@@ -32,7 +31,6 @@ const OnewayCard: React.FC = () => {
     const [pOpen, setPopen] = useState(false)
     const [selected, setSelected] = useState('one-way')
     const [count, setCount] = useState<{ adult: number, child: number }>({ adult: 0, child: 0 })
-    const [data, setData] = useState<IbookingAuth>()
     const token = useSelector((state: RootState) => state.auth.token)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -147,22 +145,11 @@ if(selected ==='round-way'){
             show:true
         }
         }
-        setData(data)
         localStorage.setItem('booking', JSON.stringify(data))
 
         dispatch(setBookingData(data))
         navigate('/choosevehicle')
     }
-    const handleSelectCurrentLocation = () => {
-        if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-           (item)=>console.log(item.coords)
-           
-        );
-    } else {
-        console.error('Geolocation is not supported by this browser.');
-    }
-};
 
     return (
         <div className='h-full py-5 px-5 w-full mx-auto'>
@@ -400,5 +387,5 @@ if(selected ==='round-way'){
         // </div>
     )
 }
-
+ 
 export default OnewayCard

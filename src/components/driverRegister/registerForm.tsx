@@ -1,14 +1,9 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
-import { addVehicle } from '../../services/vehicleService';
 import { useNavigate } from 'react-router-dom';
 import { Idriver } from '../../interfaces';
 import { addDriver, driverLogin } from '../../services/driverService';
-import Alert from '../customUI/alert';
-import { showAlert } from '../../redux/slices/alertSlice';
-import { useDispatch } from 'react-redux';
 import Loader from '../customUI/loader';
-import { setFlagsFromString } from 'v8';
 
 
 interface ModalProps {
@@ -19,7 +14,6 @@ interface ModalProps {
 
 
 const Modal: React.FC<ModalProps> = () => {
-    const [showModal, setShowModal] = useState<boolean>(false);
     const [imagePreviews, setImagePreviews] = useState<string[]>([])
     const [login,setLogin] = useState(false)
     const [loader,setLoader]  = useState(false)
@@ -38,7 +32,6 @@ const Modal: React.FC<ModalProps> = () => {
         password:''
     })
     const navigate = useNavigate()
-   const dispatch = useDispatch()
 
     const handleSubmit = async () => {
         if (driver?.name.trim().length < 4) {
@@ -140,7 +133,6 @@ const Modal: React.FC<ModalProps> = () => {
             )
             return
         }
-        setShowModal(false)
         
         const data = {
             name: driver.name,
@@ -160,7 +152,6 @@ const Modal: React.FC<ModalProps> = () => {
             localStorage.setItem('driver',res.data.data.email)
             setLoader(true)
             navigate('/driver/verification')
-            // dispatch(showAlert({head:"Hisgrace Admin Driver Added",content:'A new driver successfully added to hisgrace application.',color:'green'}))
         }catch(err:any){
             console.log(err);
             
@@ -524,7 +515,7 @@ const handleLogin = async ()=>{
 
                                 onClick={handleSubmit}
                                 type="button"
-                                className="flex items-center w-full justify-center px-4 font-medium bg-gradient-to-br from-custom to-blue-900 text-white h-9 rounded-md rounded md hover:bg-violet-800 transition-all duration-300"
+                                className="flex items-center w-full justify-center px-4 font-medium bg-gradient-to-br from-custom to-blue-900 text-white h-9 rounded-md   hover:bg-violet-800 transition-all duration-300"
                             >
                                 <span className="flex items-center justify-center space-x-2">{loader?<Loader open={loader}/>:'Add Driver'}</span>
                             </button>

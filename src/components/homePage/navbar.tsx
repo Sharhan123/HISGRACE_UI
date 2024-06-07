@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Info from '@mui/icons-material/AccountCircle';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import Image from '../../assets/logo.jpg'
 import {  jwtDecode } from 'jwt-decode';
-import { Itoken, Iuser, IuserRes } from '../../interfaces';
+import { Itoken } from '../../interfaces';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
 import RouteIcon from '@mui/icons-material/Route';
 import TourIcon from '@mui/icons-material/Tour';
 import MessageIcon from '@mui/icons-material/Message';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import OnewayCard from '../customUI/onewayCard';
 import { getUser } from '../../services/userServices';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 const Navbar: React.FC = () => {
-    const navigate = useNavigate(); 
     const state = useSelector((state: RootState) => state.auth.token ?? null);
     const [data,setData] = useState<Itoken>()
-    const [user,setUser] = useState<IuserRes>()
     const [isOpen, setIsOpen] = useState(false);
     const [count ,setCount] = useState(0)
     const dispatch = useDispatch()
     const fetch = async ()=>{
         try{
             const res = await getUser()
-            setUser(res.data.data) 
             setCount(res.data.data.newMessage)
         } catch (err:any) { 
             console.error('Error fetching data:', err);
@@ -48,9 +42,7 @@ const Navbar: React.FC = () => {
                              
         }
     },[])
-    const navigateSignIn = () => {
-        navigate('/signin-signup');
-    };
+   
 
     return (
         <>
@@ -72,10 +64,7 @@ const Navbar: React.FC = () => {
                                 {/* <img src={Image} className='h-10 ' /> */}
                                 <TravelExploreIcon fontSize={'large'} className='text-yellow-400 '/>
                                 <h1 className='text-white kanit-medium text-3xl ml-5'>HISGRACE CABS</h1>
-                                {/* <a className="relative z-10 text-white flex items-center justify-between" href="#" aria-label="logo">
-                                    <img className='max-h-12 lg:max-h-16 rounded-lg ' src={Image} />
-                                    <h1 className='text-2xl lg:text-4xl ml-5 kanit-regular'>HISGRACE CABS</h1>
-                                </a> */}
+                                
                                 <label htmlFor="hbr" className="peer-checked:hamburger block relative z-20 p-6 -mr-6 cursor-pointer lg:hidden">
                                     <div aria-hidden="true" className="m-auto h-0.5 w-5 rounded bg-gray-900 dark:bg-gray-300 transition duration-300"></div>
                                     <div aria-hidden="true" className="m-auto mt-2 h-0.5 w-5 rounded bg-gray-900 dark:bg-gray-300 transition duration-300"></div>
@@ -124,7 +113,7 @@ const Navbar: React.FC = () => {
                                         </li>
                                     </ul>
                                 </div>
-                                <div className="w-full text-white  space-y-2 border-primary/10 dark:border-gray-700 flex flex-col justify-center items-center -ml-1 hidden md:block lg:block sm:flex-row lg:space-y-0 md:w-max lg:border-l ">
+                                <div className="w-full text-white  space-y-2 border-primary/10 dark:border-gray-700 flex flex-col justify-center items-center -ml-1  md:block lg:block sm:flex-row lg:space-y-0 md:w-max lg:border-l ">
                                     {
                                         data ? (
                                             <a href="/profile" className="relative flex h-9 ml-auto items-center justify-center sm:px-6 before:absolute before:inset-0 before:rounded-full focus:before:bg-sky-600/10 dark:focus:before:bg-sky-400/10 before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">

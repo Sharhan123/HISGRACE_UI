@@ -1,18 +1,16 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import { getUser, handleLogout, updateImage } from '../../services/userServices';
-import { Itoken, Iuser, IuserRes } from '../../interfaces';
+import { Itoken, IuserRes } from '../../interfaces';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { jwtDecode } from 'jwt-decode';
 import Loader from '../customUI/loader';
-import QuoteComponent from '../customUI/quote';
 import UserModal from '../customUI/modalUser';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 import { selectBookingData } from '../../redux/slices/bookingSice';
-import AddressModal from './addressModal';
-import ProfilePage from './profilePage';
+import ProfilePage from './profilePage'; 
 import BookingsPage from './bookingsPage';
 import { useNavigate } from 'react-router-dom';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
@@ -28,7 +26,6 @@ const Profile: React.FC = () => {
   const [showModal, setShowModal] = useState(false)
   const [edit, setEdit] = useState(false)
   const [user, setUser] = useState<IuserRes>()
-  const [address,setAddress] = useState(false)
   let image = ''
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token);
@@ -115,7 +112,6 @@ const Profile: React.FC = () => {
   return (
     <>
       <UserModal close={() => setEdit(false)} reload={fetch} data={user} open={edit} />
-      <AddressModal close={() => setAddress(false)} reload={fetch} data={user} open={address} />
       <Loader open={open} />
       <div className="flex min-h-screen flex-row bg-gray-100 text-white">
 
@@ -260,8 +256,8 @@ const Profile: React.FC = () => {
         >
           {
             selected === 'profile'&&(
-
-              <ProfilePage user={user} setAddress={()=>setAddress(true)} setEdit={()=>setEdit(true)} /> 
+   
+              <ProfilePage  user={user}  setEdit={()=>setEdit(true)} /> 
             ) 
           }
           {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { clearPackage, setPackage } from '../../redux/slices/packageBookingSlice';
+import { clearPackage } from '../../redux/slices/packageBookingSlice';
 
 const PackageSuccess: React.FC = () => {
     const dispatch = useDispatch()

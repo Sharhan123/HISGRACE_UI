@@ -10,14 +10,15 @@ interface props {
     reload:()=>void
 }
 const CancelBooking:React.FC<props> = ({open,close,item,reload}) =>{
-    const [selected,setSelected] = useState('')
-    const dispatch = useDispatch()
+    const [selected,setSelected] = useState('') 
+    const dispatch = useDispatch() 
     const handleSubmit = async (id:any)=>{
         try{
+            console.log(id)
             if(!selected){
                 return
             }
-            const res = await bookingStatus({id:item,status:'pending'})
+             await bookingStatus({id:item,status:'pending'})
             close()
             reload()
         } catch (err:any) { 

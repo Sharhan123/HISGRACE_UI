@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../customUI/asideAdmin'
-import AdminNavbar from '../customUI/adminNavbar'
-import RecordTable from '../adminVehicles/vehicleListing'
 import { useNavigate } from 'react-router-dom'
 import LogoutIcon from '@mui/icons-material/Logout';
 import { getBookings } from '../../services/bookingsServices'
@@ -57,7 +54,7 @@ const Dashboard:React.FC<props> = ({driver})=>{
                 /> */}
                 <nav className={` w-full bg-custom backdrop-blur navbar shadow-2xl shadow-gray-600/5  `}>
                     <div className="xl:container m-auto px-6 md:px-12 lg:px-6">
-                        <div className="flex w-full grid grid-cols-2 items-center justify-between gap-6 md:py-2 md:gap-0 lg:py-2">
+                        <div className=" w-full grid grid-cols-2 items-center justify-between gap-6 md:py-2 md:gap-0 lg:py-2">
                             <div className="w-full   items-center flex justify-between lg:w-auto">
                                 
                                 <h1 className='text-white kanit-medium text-3xl ml-5'>HISGRACE CABS - DRIVER</h1>

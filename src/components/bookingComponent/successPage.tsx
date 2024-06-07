@@ -8,16 +8,13 @@ interface BoardingPassProps {
   location: string;
 }
 
-import Barcode from 'react-barcode';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { clearBookingData, selectBookingData, setBookingData } from '../../redux/slices/bookingSice';
+import {  selectBookingData, setBookingData } from '../../redux/slices/bookingSice';
 import { IbookingRes } from '../../interfaces';
 import { useDispatch } from 'react-redux';
 
-interface props{
-  value:any
-}
+
 
 
 
@@ -33,7 +30,6 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
           <div className="bg-white h-full w-full relative drop-shadow-2xl rounded-[45px]  p-4 ">
             <div className="flex-none sm:flex">
               <div className="relative h-32 w-32 sm:mb-0 mb-3 hidden">
-                {/* <img src={image} alt={title} className="w-32 h-32 object-cover rounded-2xl" /> */}
                 <a href="#" className="absolute -right-2 bottom-2 -ml-3 text-white p-1 text-xs bg-green-400 hover:bg-green-500 font-medium tracking-wider rounded-full transition ease-in duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
@@ -46,7 +42,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                   <VerifiedIcon className='text-green'/>
                   <h1 className='kanit-regular ml-2 text-custom'>Payment Successfull</h1>
                 </div>
-                <div className="border-b border-dashed border-b-2 my-5"></div>
+                <div className=" border-dashed border-b-2 my-5"></div>
                 <div className="flex  flex-col items-start h-auto justify-between">
                   <div className="flex   justify-between flex-col">
                     <div className="flex-auto text-xs text-gray-400 my-1">
@@ -56,7 +52,6 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                     {/* <div className="text-xs">Cochin</div> */}
                   </div>
                   <div className="flex flex-col mx-auto">
-                    {/* <img src={image} alt="Airline Logo" className="w-20 p-1" /> */}
                   </div>
                   <div className="flex mt-2 flex-col">
                     <div className="flex-auto text-xs text-gray-400 my-1">
@@ -65,7 +60,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                     <div className="w-full flex-none text-xl kanit-medium leading-none">{booking.to.name || booking.to.city}</div>
                   </div>
                 </div>
-                <div className="border-b border-dashed mb-5 border-b-2 my-2 pt-5">
+                <div className=" border-dashed mb-5 border-b-2 my-2 pt-5">
                  
                 </div>
                 <div className="flex items-center mb-5  text-sm">
@@ -92,7 +87,7 @@ const BoardingPass: React.FC<BoardingPassProps> = () => {
                     <div className="font-semibold">₹ {booking.totalPrice} /-</div>
                   </div>
                 </div>
-                <div className="border-b border-dashed border-b-2 my-2 pt-5">
+                <div className=" border-dashed border-b-2 my-2 pt-5">
                  
                 </div>
                 <div className="flex items-center justify-between  pt-3 text-sm">
@@ -135,17 +130,14 @@ useEffect(()=>{
 },[])
   return (
     <div  className={` h-[100vh] bg-black/20  flex items-center`}>
-{/* <div className='h-4/5 py-10  w-2/6 rounded-md container mx-auto flex items-center'> */}
 
-<div className={`mx-auto ${popUp ? 'block' : 'hidden mb-5'}  relative flex justify-center h-[650px] w-[310px] border border-[6px]  border-custom bg-white ${popUp ? 'jump-animation' : 'hidden'}`}
+<div className={`mx-auto ${popUp ? 'block' : 'hidden mb-5'}  relative flex justify-center h-[650px] w-[310px]  border-[6px]  border-custom bg-white ${popUp ? 'jump-animation' : 'hidden'}`}
          style={{borderRadius:'45px'}}>
-    {/* <div className='flex mt-3 justify-center items-center'> */}
-    {/* </div> */}
     <BoardingPass image='' location='Kottakkal' title='Kottakkal to Kozhikode'/>
     <span className="border ml-2 absolute mx-auto top-2 border-custom bg-custom w-16 h-4  rounded-xl "></span>
 
 
-    <span className="absolute -right-2 top-20 border border-4 border-custom h-10 rounded-md"></span>
+    <span className="absolute -right-2 top-20  border-4 border-custom h-10 rounded-md"></span>
     <span className="absolute -left-2 top-20   border-4 border-custom h-6  rounded-md"></span>
     <span className="absolute -left-2 top-32   border-4 border-custom h-24 rounded-md"></span>
     <span className="border ml-2 absolute bottom-1 border-custom bg-custom w-20 h-1  rounded-xl "></span>

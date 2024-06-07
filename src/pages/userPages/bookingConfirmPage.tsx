@@ -1,7 +1,7 @@
 import React from 'react'
 import BookingConfirm from '../../components/bookingComponent/bookingConfirm'
 
-function BookingConfirmPage() {
+const BookingConfirmPage:React.FC = ()=> {
   return (
     <>
     <BookingConfirm/>

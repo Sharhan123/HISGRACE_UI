@@ -1,7 +1,7 @@
-import React, { Children } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { verifyUserToken } from '../middleWares/userTokenVerify';
 import { selectBookingData } from '../redux/slices/bookingSice';
 import { selectPackageData } from '../redux/slices/packageBookingSlice';

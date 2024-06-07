@@ -1,5 +1,5 @@
-import { Route, Routes, BrowserRouter as Router, Navigate } from "react-router-dom"
-import AdminLoginPage from "../pages/adminPages/adminLoginPage"
+import { Route, Routes } from "react-router-dom"
+import AdminLoginPage from "../pages/adminPages/adminLoginPage" 
 import AdminDashboardPage from "../pages/adminPages/adminDashboardPage"
 import AdminVehiclePage from "../pages/adminPages/adminVehiclePage"
 import adminProtected from "../protectedRouters/adminProtected"

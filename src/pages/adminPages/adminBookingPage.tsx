@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import MainContent from '../../components/adminBookings/mainContent'
-import { matrix } from '../../services/autoComplete'
 
 const  AdminBookingsPage:React.FC = ()=> {
     

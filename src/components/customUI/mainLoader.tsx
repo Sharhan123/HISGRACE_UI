@@ -13,7 +13,6 @@ const MainLoader:React.FC<props> = ({open})=> {
             role="dialog"
             id="modal-example"
             aria-hidden="true"
-            // style={{ display: 'none'  }}
             className={` ${open?'flex':'hidden'}  modal fixed top-0 left-0 z-50 w-screen h-screen bg-custom  items-center flex-col justify-center p-6 fade`}
             tabIndex={-1}
         >

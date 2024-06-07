@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface StarRatingProps {
   totalStars?: number;
@@ -6,7 +6,6 @@ interface StarRatingProps {
 }
 
 const Review: React.FC<StarRatingProps> = ({ totalStars = 5,rate}) => {
-  const [rating, setRating] = useState<number>(rate);
   return (
     <div className="flex mt-5 gap-1 rounded w-fit px-2 py-1">
       {Array.from({ length: totalStars }, (_, index) => {

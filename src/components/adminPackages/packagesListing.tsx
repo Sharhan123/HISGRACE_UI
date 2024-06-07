@@ -1,6 +1,4 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
 import AddRecord from './addPackage';
 import { IpackageRes,  } from '../../interfaces';
 import { blockPackage, deletePackage, getPackages } from '../../services/packageService';
@@ -16,7 +14,6 @@ const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IpackageRes[] | null>([])
     const [showLoading,setShowLoading] = useState(false)
     const [showData,setShowData] = useState<IpackageRes[] | null>([])
-    const naviagate = useNavigate()
     const dispatch = useDispatch()
     const fetch = async()=>{
         try{

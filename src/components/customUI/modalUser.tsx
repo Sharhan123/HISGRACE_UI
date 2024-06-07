@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { IuserEdit, IuserRes } from '../../interfaces'
-import { error } from 'console'
 import { useDispatch } from 'react-redux'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { updateProfile } from '../../services/userServices'
@@ -11,7 +10,7 @@ interface props {
   reload:()=>void
 }
 
-const UserModal: React.FC<props> = ({ open, close, data,reload }) => {
+const UserModal: React.FC<props> = ({ open, close, data,reload }) => { 
   const dispatch = useDispatch()
   const [submitData, setSubmitData] = useState<IuserEdit>()
   const [errors, setErrors] = useState<{
@@ -108,7 +107,7 @@ const UserModal: React.FC<props> = ({ open, close, data,reload }) => {
     }
 
     try{
-      const res = await updateProfile(submitData)
+       await updateProfile(submitData)
       reload()
       setErrors({name:'',email:'',mobile:'',secondaryMobile:'',age:''})
       dispatch(showAlert({head:'Hisgrace Account updated',content:'Your account details had been updated successfully',color:'blue'}))

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-// import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import LottieAnimation from '../customUI/lottie';
 

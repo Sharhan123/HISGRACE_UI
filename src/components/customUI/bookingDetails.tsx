@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IbookingRes } from '../../interfaces'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 interface props{
@@ -8,7 +8,6 @@ booking:IbookingRes
 }
 
 const BookingDetails:React.FC<props> = ({showModal,close,booking})=>{
-    // const [showModal,setShowModal] = useState(false)
     const formatDate = (dateString:any, timeString:any) => {
         const date = new Date(dateString);
         const timeParts = timeString.split(':');

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './style.css'
 import { IpackageRes } from '../../interfaces';
 import { useNavigate } from 'react-router-dom';

@@ -1,18 +1,16 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './signup.css';
 import Image from '../../assets/HISGRACE-logos_transparent.png'
 import axiosWithAuth from '../../services/axiosConfig';
 interface SignUpProps { }
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../redux/slices/authSlice';
 import { register } from '../../services/userServices';
-import Forget from '../forgetPassword/forgetPassword';
 import { showAlert } from '../../redux/slices/alertSlice';
 const SignUp: React.FC<SignUpProps> = () => {
 
-  const [value, setValue] = useState('')
   const [className, setClass] = useState<string>('');
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
@@ -149,11 +147,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         <div className="signin-signup">
 
           <form onSubmit={handleSigninSubmit} className="sign-in-form">
-            {value && (
-              <div className="mb-4">
-                <p className='text-red-500 '>* {value}</p>
-              </div>
-            )}
+            
             <h2 className="title">Sign in</h2>
             <div className={`input-field ${emailErr ? 'border-red-500' : ''} border`}>
               <i className="fas fa-user"></i>
@@ -188,11 +182,7 @@ const SignUp: React.FC<SignUpProps> = () => {
             </div> */}
           </form>
           <form onSubmit={handleSignupSubmit} className="sign-up-form">
-            {value && (
-              <div className="mb-4">
-                <p className='text-red-500 '>* {value}</p>
-              </div>
-            )}
+            
 
 
             <h2 className="title">Sign up</h2>

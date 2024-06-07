@@ -1,24 +1,25 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import Navbar from '../homePage/navbar'
 import ListingCard from './ListingCard'
-import {  Ivehicle, IvehicleRes } from '../../interfaces'
+import {   IvehicleRes } from '../../interfaces'
 import { getVehicles } from '../../services/vehicleService'
 import SidebarMenu from './filter'
 import Footer from '../customUI/Footer'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
+import Loader from '../customUI/loader'
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IvehicleRes[]>([]);
     const [showData, setShowData] = useState<IvehicleRes[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [filter,setFilter] = useState('')
     const [search,setSearch] = useState('')
-    const [available,setAvailable] = useState<boolean | string>('')
-    const itemsPerPage = 4; // Number of items per page
+    const [load,setLoad] = useState(false)
+    const itemsPerPage = 4; 
     const dispatch = useDispatch()
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
+
                 const res = await getVehicles();
                 setData(res.data.data);
                 setShowData(res.data.data);
@@ -32,8 +33,9 @@ const MainContent: React.FC = () => {
 
             }
         };
-
+        setLoad(true)
         fetchVehicles();
+        setLoad(false)
     }, []);
 
     const handleFilter = (e: string) => {
@@ -88,7 +90,6 @@ const MainContent: React.FC = () => {
         }else{
             filteredData = data.filter((item)=>item.isBlocked === val)
         }
-        setAvailable(val)
         setShowData(filteredData)
         setCurrentPage(1)
     }
@@ -113,6 +114,7 @@ const MainContent: React.FC = () => {
     };
     return (
            <div className='h-screen'>
+            <Loader open={load} />
                         <SidebarMenu handleAvailability={(e)=>handleAvailability(e)} filter={filter} handleSearch={handleSearch} clear={()=>{setShowData(data)
                             setFilter('')
                         }} handleFilter={(e)=>handleFilter(e)}/>

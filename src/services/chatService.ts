@@ -6,7 +6,7 @@ export const saveChat = async (data:any)=>{
         return response
     }catch(err){
         throw err
-    }
+    } 
 }
 
 export const findChats = async (id:any)=>{

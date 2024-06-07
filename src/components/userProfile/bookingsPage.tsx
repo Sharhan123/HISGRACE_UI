@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import EmployeeTable from './table'
-import { getBookings, getBookingsByuser } from '../../services/bookingsServices'
+import {  getBookingsByuser } from '../../services/bookingsServices'
 import { IbookingRes } from '../../interfaces'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'

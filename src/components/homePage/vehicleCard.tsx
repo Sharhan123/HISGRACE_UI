@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {  IvehicleRes } from '../../interfaces'
 import CustomsButtons from '../customUI/customsButtons'
 interface props{

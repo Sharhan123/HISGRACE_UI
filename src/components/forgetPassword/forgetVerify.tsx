@@ -46,7 +46,7 @@ const ForgetVerify: React.FC = () => {
         }
 
         try {
-            const res = await resetPassword(data)
+             await resetPassword(data)
             localStorage.removeItem('email')
             navigate(`/signin-signup`)
         } catch (err) {
@@ -128,7 +128,7 @@ const ForgetVerify: React.FC = () => {
 
                                 onClick={handleSubmit}
                                 type="button"
-                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md rounded md hover:bg-violet-800 transition-all duration-300"
+                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md  hover:bg-violet-800 transition-all duration-300"
                             >
                                 <span className="flex items-center justify-center space-x-2">Submit</span>
                             </button>

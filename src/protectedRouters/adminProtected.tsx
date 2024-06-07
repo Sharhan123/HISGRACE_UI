@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { verifyAdminToken } from '../middleWares/adminTokenVerify';
 
 const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => {

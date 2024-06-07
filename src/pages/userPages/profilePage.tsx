@@ -1,11 +1,10 @@
 import React from 'react'
 import Profile from '../../components/userProfile/mainContent'
-import Navbar from '../../components/homePage/navbar'
 import Alert from '../../components/customUI/alert'
 
-function ProfilePage() {
+const ProfilePage:React.FC = ()=> {
   return (
-    <>
+    <> 
     <Alert/>
     <Profile/>
     </>

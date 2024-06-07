@@ -4,13 +4,11 @@ import { IdriverRes } from '../../interfaces'
 import { findDriver } from '../../services/driverService'
 import PendingPage from '../driverRegister/pendingPage'
 import Rejected from '../driverRegister/rejected'
-import { Navigate, useNavigate } from 'react-router-dom'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
 import Dashboard from './dashboard'
 const Aprooval:React.FC = ()=> {
     const [driver,setDriver] = useState<IdriverRes>()
-    const navigate = useNavigate()
     const dispatch = useDispatch()
   const fetch = async ()=>{
     try{

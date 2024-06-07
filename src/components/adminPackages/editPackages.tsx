@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { getVehicles } from '../../services/vehicleService';
-import { useNavigate } from 'react-router-dom';
-import { addPackage, editPackage } from '../../services/packageService';
+import { editPackage } from '../../services/packageService';
 import { IpackageRes, Ivehicle } from '../../interfaces';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '../../redux/slices/alertSlice';
@@ -25,7 +24,6 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
     const [desc, setDesc] = useState(data.desc)
     const [selectedFiles, setSelectedFiles] = useState(data.image);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-    const [file, setFile] = useState('')
     const [changed,setChanged] = useState(false)
     const [nameErr, setNameErr] = useState('')
     const [daysErr, setDaysErr] = useState('')
@@ -36,7 +34,6 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
     const [fileErr,setFileErr] = useState('')
     const [typeErr, setTypeErr] = useState('')
 
-    // const navigate = useNavigate()
     const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
@@ -111,7 +108,7 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
         setShowModal(false)
                 
         try {
-            const res = await editPackage(sendingData)
+            await editPackage(sendingData)
             hide()
             reload()
         } catch (err:any) {
@@ -145,7 +142,6 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
             const previews = files.map((file) => URL.createObjectURL(file));
             setImagePreviews(previews)
             const file = e.target.files[0];
-            setFile(file.name)
             const reader = new FileReader();
 
             reader.onload = (event) => {

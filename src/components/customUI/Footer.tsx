@@ -1,5 +1,4 @@
 import React from 'react';
-import HISGRACE from './logo';
 import { FaWhatsapp, FaInstagram, FaFacebook,FaTwitter } from 'react-icons/fa'; // Import icons from react-icons library
 
 const Footer: React.FC = () => {
@@ -18,9 +17,7 @@ const Footer: React.FC = () => {
                   <a href="/packages" className="text-gray-200">Packages</a>
                   <a href="/services" className="text-gray-200">Service</a>
                   <a href="/chat" className="text-gray-200">Contact Admin</a>
-                  {/* <a href="javascript:void(0)" className="text-gray-200">Partners</a>
-                  <a href="javascript:void(0)" className="text-gray-200">Help</a>
-                  <a href="javascript:void(0)" className="text-gray-200">Terms</a> */}
+                  
                 </div>
                 <div className="social-icons w-2/6 flex justify-between">
         <a href="https://wa.me/your-whatsapp-number" target="_blank" rel="noopener noreferrer">
@@ -35,7 +32,6 @@ const Footer: React.FC = () => {
         <a href="https://www.facebook.com/your-facebook-page" target="_blank" rel="noopener noreferrer">
           <FaTwitter style={{ fontSize: '24px',color:'skyblue' }} /> {/* Adjust the icon size here */}
         </a>
-        {/* Add more social icons as needed */}
       </div>
               </div>
             </div>

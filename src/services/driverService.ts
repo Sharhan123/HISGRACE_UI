@@ -1,4 +1,3 @@
-import { Idriver } from "../interfaces";
 import axiosWithAuth from "./axiosConfig";
 
 export const addDriver = async (data: any) => {
@@ -31,6 +30,7 @@ export const findDriver = async (id:any)=>{
 export const updateDriver = async (data: any) => {
     try {
         const response = await axiosWithAuth.post('/driver/updateDriver',data)
+        return response
     } catch (err) {
         throw err
     }

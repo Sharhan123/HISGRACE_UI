@@ -1,13 +1,8 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
-import AddRecord from './addDriver';
-import { blockVehicle, deleteVehicle, getVehicles } from '../../services/vehicleService';
-import { IdriverRes, Ivehicle, IvehicleRes } from '../../interfaces';
+import { IdriverRes,   } from '../../interfaces';
 import DeleteItemModal from '../customUI/deleteModal';
-import EditVehicle from './editDriver';
 import BlockModalItem from '../customUI/blockCard';
-import mongoose from 'mongoose';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 import { blockAndUnblock, deleteDriver, getDrivers, updateRequest } from '../../services/driverService';
@@ -20,7 +15,6 @@ const RecordTable: React.FC = () => {
     const [showLoading, setShowLoading] = useState(false)
     const [selected,setSelected] = useState('active')
 
-    const naviagate = useNavigate()
     const fetch = async () => {
         try {
             setShowLoading(true)
@@ -58,48 +52,6 @@ const RecordTable: React.FC = () => {
             dispatch(showAlert({color:"red",content:err.message}))
         }
     }
-
-    const showLoader = () => {
-        setShowLoading(true)
-    }
-    const hideLoader = () => {
-        setShowLoading(false)
-    }
-
-
-
-    const handleFilter = (value: string) => {
-
-        const arr = data?.filter((item) => item.vehicles.includes(value))
-        if (arr) {
-
-            setShowData(arr);
-        }
-        else {
-            setShowData([])
-        }
-    }
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value
-
-        const arr = data?.filter((item) => {
-            
-            const res = item.driverName.toLowerCase().split(' ')
-            for(let i=0;i<res.length;i++){
-                if (res[i].startsWith(value.toLowerCase())) {
-                    return true; 
-                  }
-            }
-            return false
-        })
-        if (arr) {
-
-            setShowData(arr)
-        } else {
-            setShowData([])
-        }
-    }
-
     const onBlock = async (id: any) => {
         try {
             await blockAndUnblock(id)
@@ -112,7 +64,7 @@ const RecordTable: React.FC = () => {
 
     const handleRequest = async (id:any,status:string)=>{
         try{
-            const res = await updateRequest({id,status})
+              await updateRequest({id,status})
             setSelected('active')
         }catch(err){
             console.log(err);
@@ -149,18 +101,7 @@ const RecordTable: React.FC = () => {
                         </div>
                         <h3 className="mt-10 text-md text-black text-xl kanit-regular">Filter Drivers</h3>
                     </div>
-                    {/* <div className="flex items-center mt-4 gap-x-3 ">
-
-
-                        <button className=" flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-orange-500 rounded-lg shrink-0 sm:w-auto gap-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <AddRecord reload={fetch} loader={showLoader} hide={hideLoader} />
-
-                        </button>
-
-                    </div> */}
+                    
 
                 </div>
                 <div className="mt-6  md:flex md:items-center md:justify-between">
@@ -176,13 +117,7 @@ const RecordTable: React.FC = () => {
                        
                     </div>
 
-                    {/* <div className="relative flex items-center mt-4 md:mt-0">
-
-                        <div className="relative w-full min-w-[300px] h-10">
-                            <input  className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
-                            <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal peer-placeholder-shown:text-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-blue-500 before:border-blue-gray-200 peer-focus:before:border-blue-500 after:border-blue-gray-200 peer-focus:after:border-blue-500">Search here</label>
-                        </div>
-                    </div> */}
+                    
                 </div>
                 <div className="flex flex-col mt-6">
                     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -209,7 +144,7 @@ const RecordTable: React.FC = () => {
                                             </th>
 
                                             {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Edit</th> */}
-                                            <th scope="col" colSpan={2} className="px-4 text-center py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Actions</th>
+                                            <th scope="col" colSpan={2} className="px-4  py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Actions</th>
                                             {/* <th scope="col" className="px-4 py-3.5 text-lg kanit-medium font-normal text-center rtl:text-right text-black ">Status</th> */}
 
 

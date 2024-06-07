@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface props {
     image: string,
@@ -42,9 +42,7 @@ const ModalImage: React.FC<props> = ({ open, image,closeModal }) => {
                         </div>
                     </div>
                 )}
-                {/* End: Modal dialog */}
             </div>
-            {/* End: Modal image component */}
         </div>
 
     );

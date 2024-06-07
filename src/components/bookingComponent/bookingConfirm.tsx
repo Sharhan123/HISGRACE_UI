@@ -167,11 +167,11 @@ const BookingConfirm: React.FC = () => {
         const result = stripe?.redirectToCheckout({
             sessionId:session
         })
+        console.log(typeof result);
         
         localStorage.setItem('booking',JSON.stringify(data))
         dispatch(setBookingData(data))
-        // localStorage.removeItem('booking')
-        // dispatch(setBookingData(null))
+        
 
         
         

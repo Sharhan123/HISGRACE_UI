@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/slices/authSlice';
 import { resendOtp } from '../../services/driverService';
 import { verifyOtp } from '../../services/driverService';
 import { showAlert } from '../../redux/slices/alertSlice';

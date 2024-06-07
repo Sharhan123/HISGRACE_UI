@@ -3,7 +3,7 @@ import Sidebar from '../customUI/asideAdmin'
 import AdminNavbar from '../customUI/adminNavbar'
 import RecordTable from './userListing'
 
-function MainContent() {
+const MainContent:React.FC = ()=> {
   return (
     <div className="min-h-screen bg-gray-700-50/50">
         <Sidebar users={'true'}/>

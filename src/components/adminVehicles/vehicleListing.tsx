@@ -1,13 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
 import AddRecord from './addVehicles';
 import { blockVehicle, deleteVehicle, getVehicles } from '../../services/vehicleService';
-import { Ivehicle, IvehicleRes } from '../../interfaces';
+import {  IvehicleRes } from '../../interfaces';
 import DeleteItemModal from '../customUI/deleteModal';
 import EditVehicle from './editVehicle';
 import BlockModalItem from '../customUI/blockCard';
-import mongoose from 'mongoose';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 
@@ -17,9 +14,7 @@ const RecordTable: React.FC = () => {
     const [data, setdata] = useState<IvehicleRes[] | null>([])
     const [showData, setShowData] = useState<IvehicleRes[] | null>([])
     const [showLoading, setShowLoading] = useState(false)
-    const navigate = useNavigate()
     const dispatch = useDispatch()
-    const naviagate = useNavigate()
     const fetch = async () => {
         try {
             setShowLoading(true)

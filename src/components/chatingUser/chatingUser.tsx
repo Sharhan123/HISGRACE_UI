@@ -3,7 +3,7 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 
 import { Socket, io } from "socket.io-client"
 import { getUser, updateLastseen, updateNewMessage, updateUnRead } from '../../services/userServices';
-import { IuserRes, Iuser } from '../../interfaces';
+import { IuserRes } from '../../interfaces';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { jwtDecode } from 'jwt-decode';
@@ -111,7 +111,7 @@ const ChatbotComponent: React.FC = () => {
             isRead:false
         }
         try {
-            const res = await saveChat(data)
+             await saveChat(data)
             await updateUnRead({id:user?._id,count:'inc'})
         } catch (err:any) { 
             console.error('Error fetching data:', err);
@@ -141,7 +141,7 @@ const ChatbotComponent: React.FC = () => {
         }
         setMessages((prev) => [...prev, data])
         try {
-            const res = await saveChat({
+             await saveChat({
                 content: `data:audio/wav;base64,${base64Voice}`,
                 sender: user?._id,
                 reciever: 'admin',

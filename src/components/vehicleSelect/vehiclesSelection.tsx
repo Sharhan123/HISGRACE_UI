@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { IbookingAuth, IvehicleRes } from '../../interfaces'
-import { getBookingVehicles, getVehicles } from '../../services/vehicleService'
+import { getBookingVehicles } from '../../services/vehicleService'
 import ModalImage from '../customUI/imageModal'
 import { useSelector } from 'react-redux'
 import { backBookingData, selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
@@ -15,7 +14,6 @@ const VehicleSelection: React.FC = () => {
     const [show, setShow] = useState(false)
     const [image, setImage] = useState('')
     const [driver,setDriver] = useState(false)
-    const navigate = useNavigate()
     const booking:IbookingAuth = useSelector(selectBookingData)
     const dispatch = useDispatch()
     useEffect(() => {
@@ -30,7 +28,7 @@ const VehicleSelection: React.FC = () => {
                 const res = await getBookingVehicles(dates)
                 const arr: [] = res.data.data.filter((item:IvehicleRes)=>item.seat >= (booking.person.adult + booking.person.child))
                 
-                setVehicles(res.data.data)
+                setVehicles(arr)
             } catch (err:any) { 
                 console.error('Error fetching data:', err);
                 if(err.response.data){ 

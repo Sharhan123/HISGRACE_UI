@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
-import animationData from '../../assets/Animation - 1715165361315.json'; // Import your Lottie animation JSON file
+import animationData from '../../assets/Animation - 1715165361315.json'; 
 
-const LottieAnimation = () => {
+const LottieAnimation:React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -20,7 +20,7 @@ const Rejected:React.FC<props> = ({driver})=> {
     const dispatch = useDispatch() 
   const removeDriver = async ()=>{
     try{
-        const res = await removeDriverById(driver?._id)
+          await removeDriverById(driver?._id)
         localStorage.removeItem('driver')
         navigate('/driver')
     } catch (err:any) { 

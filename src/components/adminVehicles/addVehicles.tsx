@@ -1,8 +1,7 @@
-import React, { ChangeEvent, ChangeEventHandler, useCallback, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 import { addVehicle } from '../../services/vehicleService';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '../../redux/slices/alertSlice';
 interface ModalProps {
@@ -25,8 +24,6 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
     const [price, setPrice] = useState('')
     const [desc, setDesc] = useState('')
     const [selectedFiles, setSelectedFiles] = useState('');
-    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-    const [file, setFile] = useState('')
     const [button,setButton] = useState(true)
 
     const [nameErr, setNameErr] = useState('')
@@ -35,9 +32,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
     const [priceErr, setPriceErr] = useState('')
     const [spriceErr, setSpriceErr] = useState('')
     const [descErr, setDescErr] = useState('')
-    const [gErr, setGErr] = useState('')
 
-    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const handleSubmit = async () => {
@@ -64,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
             return
         }
         if (!desc.trim() || desc.length < 15) {
-            setSeatErr('Please provide your vehicle description more than 5 words')
+            setDescErr('Please provide your vehicle description more than 5 words')
             return
         }
 
@@ -82,7 +77,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
         loader()
         setShowModal(false)
         try {
-            const res = await addVehicle(data)
+             await addVehicle(data)
             hide()
             reload()
         } catch (err:any) {
@@ -304,16 +299,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
                 </div>
             )}
 
-                            {/* {imagePreviews.length > 0 && (
-                                <div className="image-preview">
-                                    {imagePreviews.map((preview, index) => (
-                                        <div key={index} className="preview-item">
-                                            <img src={preview} className='max-h-48' onClick={handleRemoveImage} alt={`Preview ${index}`} />
-                                           
-                                        </div>
-                                    ))}
-                                </div>
-                            )} */}
+                            
 
 
                         </main>
@@ -321,7 +307,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
                         <footer className="flex flex-shrink-0 flex-wrap items-center justify-end flex-row p-4 gap-1" >
                             <button
                                 type="button"
-                                className="flex items-center justify-center px-4 font-medium bg-gray-200 text-black h-9 rounded-md rounded md hover:bg-gray-300 transition-all duration-300"
+                                className="flex items-center justify-center px-4 font-medium bg-gray-200 text-black h-9 rounded-md  md hover:bg-gray-300 transition-all duration-300"
                                 onClick={closeModal}
                             >
                                 <span className="flex items-center justify-center space-x-2">Close</span>
@@ -330,7 +316,7 @@ const Modal: React.FC<ModalProps> = ({ reload, loader, hide }) => {
 
                                 onClick={handleSubmit}
                                 type="button"
-                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md rounded md hover:bg-violet-800 transition-all duration-300"
+                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md  md hover:bg-violet-800 transition-all duration-300"
                             >
                                 <span className="flex items-center justify-center space-x-2">Add Vehicle</span>
                             </button>

@@ -1,7 +1,7 @@
 import React from 'react'
 import MainContent from '../../components/driverRegister/mainContent'
 
-function DriverLoginPage() {
+const DriverLoginPage:React.FC = ()=> {
   return (
     <>
       <MainContent/>

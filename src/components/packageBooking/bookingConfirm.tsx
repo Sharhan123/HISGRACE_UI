@@ -3,17 +3,13 @@ import { clearPackage, selectPackageData } from '../../redux/slices/packageBooki
 import { useNavigate } from 'react-router-dom'
 import { statesInIndia } from '../../constants/states';
 import { useSelector } from 'react-redux';
-import { selectBookingData, setBookingData } from '../../redux/slices/bookingSice';
-import { IbookingOver, IdriverRes, IpackageBookingStart, IpackageRes, Ipickup, IuserRes, IvehicleRes } from '../../interfaces';
-import { getVehicles } from '../../services/vehicleService';
-import { getDrivers } from '../../services/driverService';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import {  setBookingData } from '../../redux/slices/bookingSice';
+import {  IpackageBookingStart, IpackageRes, Ipickup, IuserRes } from '../../interfaces';
+
 import DatePicker from 'react-datepicker';
 import '../customUI/style.css'
 import { getUser } from '../../services/userServices';
-import { loadStripe } from '@stripe/stripe-js';
 import { useDispatch } from 'react-redux';
-import { sendPayment } from '../../services/bookingsServices';
 import { findById } from '../../services/packageService';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { savePackageBooking } from '../../services/packageBooking';
@@ -164,7 +160,7 @@ const PackageBooking: React.FC = () => {
         localStorage.setItem('package',JSON.stringify(data))
         dispatch(setBookingData(data))
         try{
-        const res = await savePackageBooking(data)
+        await savePackageBooking(data)
         navigate('/packageSuccess')    
     } catch (err:any) { 
         console.error('Error fetching data:', err);
@@ -365,7 +361,6 @@ const PackageBooking: React.FC = () => {
 
 
             </div>
-            {/* <h1>Hellloooo</h1> */}
         </div>
     )
 }

@@ -1,9 +1,7 @@
 import axiosWithAuth from "./axiosConfig";
 import { Idata } from "../interfaces";
 import { logout } from "../redux/slices/authSlice";
-import { jwtDecode } from "jwt-decode";
 import { showAlert } from "../redux/slices/alertSlice";
-import { verifyUserToken } from "../middleWares/userTokenVerify";
 
 
 export const register = async (data: Idata) => {

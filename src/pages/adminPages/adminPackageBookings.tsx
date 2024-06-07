@@ -1,7 +1,7 @@
 import React from 'react'
 import MainContent from '../../components/adminPackageBookings/mainContent'
 
-function AdminPackageBookings() {
+const AdminPackageBookings:React.FC = ()=> {
   return (
       <MainContent/>
   )

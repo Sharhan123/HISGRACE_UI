@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { Ivehicle, IvehicleRes } from "../interfaces";
+import {  IvehicleRes } from "../interfaces";
 import axiosWithAuth from "./axiosConfig";
 
 export const addVehicle = async(data:any)=>{

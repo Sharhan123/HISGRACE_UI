@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Ivehicle, IvehicleRes } from '../../interfaces';
-import { getVehicles } from '../../services/vehicleService';
+import React, { useEffect } from 'react';
+import {  IvehicleRes } from '../../interfaces';
 import { useNavigate } from 'react-router-dom';
-import CustomsButtons from './customsButtons';
 import VehicleCard from '../homePage/vehicleCard';
-import { VehicleCardPlaceholder } from './placeholders';
 import Slider from 'react-slick';
 
 interface Vehicle {
@@ -63,7 +60,7 @@ useEffect(()=>{
 <div className="w-4/5 mt-5">
       {loading ? (
         <Slider {...settings}>
-          {Array.from({ length: 3 }).map((item, index) => (
+          {Array.from({ length: 3 }).map(() => (
             <div className='bg-red-400 h-full w-full' >
 
             </div>

@@ -6,7 +6,7 @@ import RvHookupIcon from '@mui/icons-material/RvHookup';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 interface props{
-    handleFilter:(e:string)=>void
+    handleFilter:(e:string)=>void 
     handleSearch:(e: ChangeEvent<HTMLInputElement>)=>void
     clear:()=>void
     filter:string

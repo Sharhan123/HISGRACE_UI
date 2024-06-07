@@ -1,10 +1,7 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
-import { addVehicle } from '../../services/vehicleService';
-import { useNavigate } from 'react-router-dom';
 import { Idriver } from '../../interfaces';
 import { addDriver } from '../../services/driverService';
-import Alert from '../customUI/alert';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 
@@ -32,7 +29,6 @@ const Modal: React.FC<ModalProps> = ({loader,reload,hide}) => {
         image: '',
         password:''
     })
-    const navigate = useNavigate()
    const dispatch = useDispatch()
 
     const handleSubmit = async () => {
@@ -121,7 +117,7 @@ const Modal: React.FC<ModalProps> = ({loader,reload,hide}) => {
         }
 
         try{
-            const res = await addDriver(data)
+             await addDriver(data)
             hide()
             reload()
             dispatch(showAlert({head:"Hisgrace Admin Driver Added",content:'A new driver successfully added to hisgrace application.',color:'green'}))
@@ -393,7 +389,7 @@ const Modal: React.FC<ModalProps> = ({loader,reload,hide}) => {
                         <footer className="flex flex-shrink-0 flex-wrap items-center justify-end flex-row p-4 gap-1" >
                             <button
                                 type="button"
-                                className="flex items-center justify-center px-4 font-medium bg-gray-200 text-black h-9 rounded-md rounded md hover:bg-gray-300 transition-all duration-300"
+                                className="flex items-center justify-center px-4 font-medium bg-gray-200 text-black h-9 rounded-md  md hover:bg-gray-300 transition-all duration-300"
                                 onClick={closeModal}
                             >
                                 <span className="flex items-center justify-center space-x-2">Close</span>
@@ -402,7 +398,7 @@ const Modal: React.FC<ModalProps> = ({loader,reload,hide}) => {
 
                                 onClick={handleSubmit}
                                 type="button"
-                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md rounded md hover:bg-violet-800 transition-all duration-300"
+                                className="flex items-center justify-center px-4 font-medium bg-violet-700 text-white h-9 rounded-md  md hover:bg-violet-800 transition-all duration-300"
                             >
                                 <span className="flex items-center justify-center space-x-2">Add Driver</span>
                             </button>

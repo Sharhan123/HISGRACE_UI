@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter as Router, Navigate } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import Loader from "../components/customUI/loader";
 import React, { Suspense } from "react";
 import DriverOtp from "../components/driverRegister/otpVerification";

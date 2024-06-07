@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { getVehicles } from '../../services/vehicleService';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { IpackageRes } from '../../interfaces';
-import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
 import { getPackages } from '../../services/packageService';
 import CustomsButtons from '../customUI/customsButtons';
 import { setPackage } from '../../redux/slices/packageBookingSlice';
