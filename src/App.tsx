@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Routers from './Router';
 import Alert from './components/customUI/alert'
-import { BrowserRouter as Router } from "react-router-dom";
 
 const App:React.FC = (): JSX.Element => {
   const [isInitialLoading, setInitialLoading] = useState(true);
@@ -19,9 +18,8 @@ const App:React.FC = (): JSX.Element => {
   return (
    <>
    <Alert/>
-    <Router>
+    
         <Routers/>
-     </Router>
    </> 
     
   );
