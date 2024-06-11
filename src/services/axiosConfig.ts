@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosWithAuth = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "https://higraceapi.electromania.tech/api",
 });
 
 axiosWithAuth.interceptors.request.use(
