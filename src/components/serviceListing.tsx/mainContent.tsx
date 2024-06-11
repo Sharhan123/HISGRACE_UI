@@ -7,10 +7,6 @@ import Navbar from '../homePage/navbar';
 
 
 const MainContent: React.FC = () => {
-    // useEffect(()=>{
-    //     document.body.style.overflowY = 'hidden';
-    //     return ()=>{document.body.style.overflowY = ''}
-    // },[])
     
 
     return (
