@@ -33,7 +33,7 @@ const SidebarMenu: React.FC<props> = ({clear,handleSearch,handleAvailability,fil
     
 
     return (
-            <div className="py-3 px-5 flex justify-evenly bg-white rounded shadow-xl">
+            <div className="py-3 px-5 flex flex-col sm:flex-col lg:flex-row md:flex-col lg:gap-0 gap-3 justify-evenly bg-white rounded shadow-xl">
                 <div className="  w-fit overflow-hidden bg-white border divide-x rounded-lg  rtl:flex-row-reverse ">
                     
 
@@ -52,17 +52,17 @@ const SidebarMenu: React.FC<props> = ({clear,handleSearch,handleAvailability,fil
                             <button onClick={() => handleFilter('BUS')} className={` ${filter ==='BUS'?'bg-custom text-white':'text-black'} px-5 py-2 text-xs font-medium text-black transition-colors duration-200 sm:text-sm `}>
                                 BUS
                             </button>
-                            <button onClick={clear}  className="px-5 py-2  bg-red-700 text-xs font-medium text-white transition-colors duration-200 sm:text-sm ">
+                            <button onClick={clear}  className="px-5 py-2 w-full lg:w-fit  bg-red-700 text-xs font-medium text-white transition-colors duration-200 sm:text-sm ">
                                 Clear Filters
                             </button>
                     </div>
                     <div className="relative flex items-center mt-4 md:mt-0">
-                <div className="relative w-full min-w-[300px] h-10">
+                <div className="relative  min-w-[300px] h-10">
                             <input onChange={handleSearch} className="peer w-full h-full bg-transparent text-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500" placeholder="" />
                             <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal peer-placeholder-shown:text-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-blue-gray-400 peer-focus:text-blue-500 before:border-blue-gray-200 peer-focus:before:border-blue-500 after:border-blue-gray-200 peer-focus:after:border-blue-500">Search here</label>
                         </div>
                         </div>
-                <div className="-mx-1">
+                <div className="-mx-1 ">
                     <ul className="flex justify-between w-full flex-wrap items-center h-10">
                         <li className="block relative">
                             <span
@@ -75,7 +75,7 @@ const SidebarMenu: React.FC<props> = ({clear,handleSearch,handleAvailability,fil
                                 <span className="ml-2"> <i className="mdi mdi-chevron-down"></i> </span>
                             </span>
                             {showDashboardMenu && (
-                                <div className="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-auto right-5 min-w-full w-56 z-30 mt-1">
+                                <div className="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-auto lg:right-5  right-auto min-w-full w-56 z-30 mt-1">
                                     <ul className="list-reset">
                                         <li>
                                             <span
@@ -115,7 +115,7 @@ const SidebarMenu: React.FC<props> = ({clear,handleSearch,handleAvailability,fil
                                 <span className="ml-2"> <i className="mdi mdi-chevron-down"></i> </span>
                             </span>
                             {showUIElementsMenu && (
-                                <div className="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-auto right-5 min-w-full w-56 z-30 mt-1">
+                                <div className="bg-white shadow-md rounded border border-gray-300 text-sm absolute top-auto left-auto lg:right-5 right-auto min-w-full w-56 z-30 mt-1">
                                     <ul className="list-reset">
                                         <li onClick={()=>handleAvailability(false)}>
                                             <span

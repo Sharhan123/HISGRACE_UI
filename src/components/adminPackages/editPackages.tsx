@@ -54,11 +54,11 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
     const handleSubmit = async () => {
         console.log(selectedFiles)
 
-        if (!name.trim() || name.length < 4 || !/^[A-Za-z\s]+$/.test(name) ) {
+        if (!name.trim() || name.length < 4 ) {
             setNameErr('Name should be at least 4 characters long and contain only letters')
             return
         }
-        if (!location.trim() || location.length < 4 || !/^[A-Za-z\s]+$/.test(location) ) {
+        if (!location.trim() || location.length < 4  ) {
             setLocationErr('Name should be at least 4 characters long and contain only letters')
             return
         }
@@ -257,7 +257,7 @@ const Edit: React.FC<ModalProps> = ({ reload, data ,loader,hide }) => {
                             <label htmlFor="input-group-1" className="block mb-2 text-sm font-medium text-black text-start">Locations</label>
                             <div className="relative mb-6">
 
-                                <input value={data.location} type="text" min={1} onChange={(e) => setLocation(e.target.value)} name='seat' id="input-group-1" className={`bg-gray-50 border ${locationErr ? 'border-red-500' : 'border-gray-300'}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5`} placeholder='Enter the locations covering seprate by `-` ' />
+                                <input value={location} type="text" min={1} onChange={(e) => setLocation(e.target.value)} name='seat' id="input-group-1" className={`bg-gray-50 border ${locationErr ? 'border-red-500' : 'border-gray-300'}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5`} placeholder='Enter the locations covering seprate by `-` ' />
                                 <p className='text-red-500 kanit-regular text-start ml-2'>{locationErr}</p>
                             </div>
 

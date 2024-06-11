@@ -152,14 +152,14 @@ if(selected ==='round-way'){
     }
 
     return (
-        <div className='h-full py-5 px-5 w-full mx-auto'>
+        <div className='h-screen py-5 px-5 w-full mx-auto'>
     <LocationInfo close={close} selectedFrom={(data: Ilocation) => setSelectedFrom(data)} type={type} selectedTo={(data: Ilocation) => setSelectedTo(data)} open={open} />
     <PassengersCount count={(data: { adult: number, child: number }) => {
                 setCount(data)
                 console.log(data)
             }
             } open={pOpen} close={() => setPopen(false)} />
-            <div className='drop-shadow-md bg-custom px-5 flex flex-col justify-evenly items-center  border rounded container mx-auto h-full'>
+            <div className='drop-shadow-md bg-custom overflow-auto px-5 flex flex-col justify-evenly items-center  border rounded container mx-auto h-full'>
                 <div className='w-full bg-white h-auto rounded-sm grid grid-rows-6'>
                     <span className=' col-span-1 py-2 flex pl-5 border-b items-center gap-5 '>
                         <div onClick={() => setSelected('one-way')} className='cursor-pointer flex gap-2 items-center'>
@@ -171,8 +171,8 @@ if(selected ==='round-way'){
                             <label className='kanit-regular' htmlFor="roundTrip">Round-trip</label>
                         </div>
                     </span>
-                    <span className={`grid ${selected === 'one-way' ? 'grid-cols-5' : 'grid-cols-6'} row-span-4`}>
-                        <div className='border-r flex flex-col ml-5  items-start justify-evenly col-span-1'>
+                    <span className={`grid ${selected === 'one-way' ? 'lg:grid-cols-5 md:grid-cols-5 gap-5' : 'lg:grid-cols-6 md:grid-cols-6 gap-4'} row-span-4`}>
+                        <div className='lg:border-r md:border-r border-b  flex flex-col ml-5  items-start justify-evenly col-span-1'>
 
                             <div onClick={() => {
                                 setType('from')
@@ -196,7 +196,7 @@ if(selected ==='round-way'){
 
                             </div>
                         </div>
-                        <div className='border-r flex flex-col ml-5  items-start justify-evenly col-span-1'>
+                        <div className='lg:border-r md:border-r border-b flex flex-col ml-5  items-start justify-evenly col-span-1'>
 
                      <div className='flex  w-full justify-between'>
 
@@ -222,7 +222,7 @@ if(selected ==='round-way'){
 
                     </div>
                 </div>
-                <div className="border-r flex flex-col ml-5 items-center justify-evenly col-span-1">
+                <div className="lg:border-r md:border-r border-b flex flex-col ml-5 lg:items-center md:items-center items-start justify-evenly col-span-1">
                      <div className="flex ">
                          <CalendarMonthIcon color="success" />
                          <p className="kanit-light ml-5 text-md text-black">Pick up date</p>
@@ -233,7 +233,7 @@ if(selected ==='round-way'){
                             selected={selectedDate}
                             onChange={handleDateChange}
                             dateFormat="dd MMM yy"
-                            className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
+                            className="text-black md:text-center text-start lg:text-center kanit-regular text-lg outline-none bg-transparent"
                             popperPlacement="bottom-start"
                             popperModifiers={[
                                 {
@@ -257,7 +257,7 @@ if(selected ==='round-way'){
                 </div>
                 {
                     selected === 'round-way' && (
-                        <div className="border-r flex flex-col ml-5 items-center justify-evenly col-span-1">
+                        <div className="lg:border-r md:border-r border-b flex flex-col ml-5 md:items-center items-start lg:items-center justify-evenly col-span-1">
                     <div className="flex ">
                         <CalendarMonthIcon color="success" />
                         <p className="kanit-light ml-5 text-md text-black">Return date</p>
@@ -268,7 +268,7 @@ if(selected ==='round-way'){
                             selected={returnDate}
                             onChange={handleReturnDate}
                             dateFormat="dd MMM yy"
-                            className="text-black text-center kanit-regular text-lg outline-none bg-transparent"
+                            className="text-black lg:text-center text-start md:text-center kanit-regular text-lg outline-none bg-transparent"
                             popperPlacement="bottom-start"
                             popperModifiers={[
                                 {
@@ -293,7 +293,7 @@ if(selected ==='round-way'){
                     )
                 }
 
-<div className="border-r  flex flex-col ml-5 items-center justify-evenly col-span-1">
+<div className="lg:border-r md:border-r border-b flex flex-col ml-5 lg:items-center items-start md:items-center justify-evenly col-span-1">
                     <div className="flex" onClick={handleTextClick}>
                         <AccessTimeIcon color="info" />
                         <p className="kanit-light ml-5 text-md text-black cursor-pointer">Pick up time</p>
@@ -333,7 +333,7 @@ if(selected ==='round-way'){
                         </span>
                     </div>
                 </div>
-                <div className=' flex flex-col ml-5 items-center justify-evenly col-span-1'>
+                <div className=' flex flex-col ml-5 lg:items-center items-start md:items-center justify-evenly col-span-1'>
 
                      <div className='flex   '>
                      <GroupIcon color='error' />

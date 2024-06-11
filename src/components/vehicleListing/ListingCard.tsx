@@ -6,7 +6,7 @@ const ListingCard: React.FC<{datas:IvehicleRes}> = ({datas}) => {
     const navigate = useNavigate()  
 
     return (
-        <div className="flex flex-col bg-custom shadow-md rounded-md items-center">
+        <div className="flex w-80 mx-auto md:w-70 flex-col bg-custom shadow-md rounded-md items-center">
                 
                 <div
                 style={{
@@ -14,7 +14,7 @@ const ListingCard: React.FC<{datas:IvehicleRes}> = ({datas}) => {
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
-                 className={`h-80 w-full opacity-70   rounded-t-md`}>
+                 className={` lg:h-80 md:h-80 sm-h-80 h-80 w-full opacity-70   rounded-t-md`}>
                 
                 </div>
                 

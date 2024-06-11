@@ -30,7 +30,7 @@ useEffect(()=>{
         
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1300,
         settings: {
           slidesToShow: 2, 
           slidesToScroll: 1,
@@ -39,7 +39,7 @@ useEffect(()=>{
         }
       },
       {
-        breakpoint: 768,
+        breakpoint: 850,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1

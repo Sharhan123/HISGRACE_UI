@@ -11,11 +11,13 @@ import { getVehicles } from '../../services/vehicleService';
 import ImageSlider from './carousal';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const Home: React.FC = () => {
   const [packages, setPackages] = useState<IpackageRes[]>([])
   const [vehicles, setVehicles] = useState<IvehicleRes[] | null>([])
   const [loader, setLoader] = useState(true)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -64,7 +66,7 @@ const Home: React.FC = () => {
             <div className="col-span-12  ml-2 lg:col-span-6  md:col-span-6">
               {/* <span className="uppercase text-white  text-sm kanit-medium  mb-2 block">WE ARE EXPERTS</span> */}
               <h1  className="text-white oswald  leading-loose mb-5  text-xl lg:text-4xl ">Hisgrace make your journey extra ordinary and valuable Book your slot now.</h1>
-              <button className="mt-5 text-white uppercase lg:py-2 py-2 kanit-regular text-xs lg:text-lg  lg:px-5 px-3 bg-blue-600 rounded  hover:bg-white hover:bg-opacity-10">Get started</button>
+              <button onClick={()=>navigate('/services')} className="mt-5 text-white uppercase lg:py-2 py-2 kanit-regular text-xs lg:text-lg  lg:px-5 px-3 bg-blue-600 rounded ">Get started</button>
               {/* <p className="text-white kanit-medium text-md">
                 
               </p> */}
@@ -87,35 +89,7 @@ const Home: React.FC = () => {
 
           <h1 className="text-lg text-black font-semibold">Exclusive <span className='text-red-500'>Packages</span></h1>
 
-          <nav>
-            <ul className="flex space-x-6 text-black">
-              <li>
-                <a href="#" className="flex items-center underline underline-offset-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                  </svg>
-                  Sedan
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center underline underline-offset-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                  </svg>
-
-                  SUV
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center underline underline-offset-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-
-                  </svg>
-                  Van
-                </a>
-              </li>
-            </ul>
-          </nav>
+        
 
           <a href="/packages" className="text-red-500 underline">View All Packages</a>
         </div>

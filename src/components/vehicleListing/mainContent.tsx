@@ -19,6 +19,7 @@ const MainContent: React.FC = () => {
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
+                setLoad(true)
 
                 const res = await getVehicles();
                 setData(res.data.data);
@@ -33,7 +34,6 @@ const MainContent: React.FC = () => {
 
             }
         };
-        setLoad(true)
         fetchVehicles();
         setLoad(false)
     }, []);
@@ -113,24 +113,24 @@ const MainContent: React.FC = () => {
         }
     };
     return (
-           <div className='h-screen'>
+           <div className=''>
             <Loader open={load} />
                         <SidebarMenu handleAvailability={(e)=>handleAvailability(e)} filter={filter} handleSearch={handleSearch} clear={()=>{setShowData(data)
                             setFilter('')
                         }} handleFilter={(e)=>handleFilter(e)}/>
 
-        <div className='h-4/6 '>
-            
-
-
+        <div className='h-auto '>
             {currentItems.length > 0 ? (
-                <div className="py-5 grid grid-cols-4 gap-10 container mx-auto">
+                <div className="py-5 grid grid-cols-1  sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-2  lg:gap-5 container mx-auto">
                     {currentItems.map((item, index) => (
                         <ListingCard key={index} datas={item} />
                     ))}
                 </div>
             ) : (
+                <div className='h-96 flex items-center justify-center'>
+
                 <h6 className="text-center text-lg kanit-regular text-black">No Vehicles</h6>
+                </div>
             )}
 
             {/* Pagination */}

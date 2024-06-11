@@ -6,18 +6,21 @@ import Footer from '../customUI/Footer'
 import { getPackages } from '../../services/packageService'
 import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
+// import Loader from '../customUI/loader'
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IpackageRes[]>([]);
     const [showData, setShowData] = useState<IpackageRes[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [filter,setFilter] = useState('')
     const [search,setSearch] = useState('')
+    const [load,setLoad] = useState(false)
     const itemsPerPage = 4; 
 const dispatch = useDispatch()
 
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
+                setLoad(true)
                 const res = await getPackages();
                 setData(res.data.data);
                 setShowData(res.data.data);
@@ -33,6 +36,7 @@ const dispatch = useDispatch()
         };
 
         fetchVehicles();
+        setLoad(false)
     }, []);
 
     const handleFilter = (e: string) => {
@@ -110,23 +114,40 @@ const dispatch = useDispatch()
         }
     };
     return (
-           <div className='h-screen'>
+           <div className=''>
+{  
+load && ( <div
+                    role="dialog"
+                        id="modal-example"
+                        aria-hidden="false"
+                        style={{ display: 'flex' }}
+                        className="modal fixed top-0 left-0 z-50 w-screen h-screen bg-black/30 flex items-center flex-col justify-center p-6 fade"
+                        tabIndex={-1}
+                    >
+                        <div className="border-t-transparent border-solid animate-spin  rounded-full border-custom border-8 h-20 w-20"></div>
+
+                    </div>
+                )
+            }
                         <SidebarMenu handleAvailability={(e)=>handleAvailability(e)} filter={filter} handleSearch={handleSearch} clear={()=>{setShowData(data)
                             setFilter('')
                         }} handleFilter={(e)=>handleFilter(e)}/>
 
-        <div className='h-4/6 '>
+        <div className='h-auto'>
             
 
 
             {currentItems.length > 0 ? (
-                <div className="py-5 grid grid-cols-4 gap-10 container mx-auto">
+                <div className="py-5 grid grid-cols-1  sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-2  lg:gap-5 container mx-auto">
                     {currentItems.map((item, index) => (
                         <ListingCard key={index} datas={item} />
                     ))}
                 </div>
             ) : (
-                <h6 className="text-center text-lg kanit-regular text-black">No Vehicles</h6>
+                <div className='h-96 flex items-center justify-center'>
+
+                <h6 className="text-center text-lg kanit-regular text-black">No Packages</h6>
+                </div>
             )}
 
             {totalPages > 1 && (
