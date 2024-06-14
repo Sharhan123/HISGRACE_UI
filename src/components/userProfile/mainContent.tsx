@@ -21,6 +21,7 @@ import PackageBookingsPage from './packageBookings';
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch()
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selected,setSelected] = useState('profile')
   const [showModal, setShowModal] = useState(false)
@@ -67,6 +68,7 @@ const Profile: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedFiles, setSelectedFiles] = useState('')
   const [profile, setProfile] = useState('')
+  
   const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
 
     if (e.target.files && e.target.files.length > 0) {
@@ -90,7 +92,7 @@ const Profile: React.FC = () => {
     setSelectedFiles('')
     setShowModal(false)
   }
-
+  
   const handleImageSubmit = async () => {
     try {
       setOpen(true)
@@ -169,6 +171,7 @@ const Profile: React.FC = () => {
             </div>
           )}
 
+
         </div>
         {/* Sidebar */}
         <aside
@@ -178,7 +181,6 @@ const Profile: React.FC = () => {
           <div>
 
             <p className='kanit-medium text-2xl text-white text-center '>HISGRACE CABS</p>
-            {/* <p className='kanit-regular text-md text-white text-start underline'>Home</p> */}
           </div>
           <div className="my-4 w-full border-b-1 border-indigo-100 text-center">
             <span className="font-mono text-xl font-bold tracking-widest">
@@ -212,10 +214,7 @@ const Profile: React.FC = () => {
               <i className="fas fa-user"></i>
               <span className="-mr-1 font-medium">Profile</span>
             </span>
-            {/* <a href="#" className="px-4 py-3 flex items-center space-x-4 rounded-md text-white group">
-                <i className="fas fa-gift"></i>
-                <span>Recompensas</span>
-            </a> */}
+            
 
             <span onClick={()=>setSelected('bookings')} className={`px-4 py-3  cursor-pointer kanit-regular flex items-center space-x-4 rounded-md  ${selected ==='bookings'?'bg-white text-black':'' } group`}>
               <i className="fas fa-exchange-alt"></i>
@@ -226,10 +225,7 @@ const Profile: React.FC = () => {
               <span>Packages</span>
             </span>
 
-            {/* <span  className="px-4 py-3 cursor-pointer flex items-center kanit-regular space-x-4 rounded-md text-white group">
-              <i className="fas fa-wallet"></i>
-              <span>Saved</span>
-            </span> */}
+            
             <span onClick={()=>navigate('/')} className="px-4 py-3 flex items-center cursor-pointer kanit-regular space-x-4 rounded-md text-white group">
               <KeyboardReturnIcon/>
               <span> Home</span>
@@ -238,8 +234,7 @@ const Profile: React.FC = () => {
           <a onClick={()=>{
 
             handleLogout(dispatch)
-            // navigate('/')
-            // dispatch(showAlert({content:"You have been logged out",color:"red"})  )
+            
           }
             } className="px-4 py-3 flex cursor-pointer kanit-regular items-center space-x-4 rounded-md bg-gradient-to-r from-red-700 to-red-500 text-white group">
             <i className="fas fa-sign-out-alt"></i>

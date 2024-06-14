@@ -23,7 +23,7 @@ const Review: React.FC<StarRatingProps> = ({ totalStars = 5,rate}) => {
           </svg>
         );
       })}
-      <h1 className='ml-2 kanit-regular'>{rate} / 5.0</h1>
+
     </div>
   );
 };

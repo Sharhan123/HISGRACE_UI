@@ -96,3 +96,11 @@ export const driverLogin = async (data:any)=>{
         throw err
     }
 }
+export const driverReview = async (data:any)=>{
+    try{
+        const response = await axiosWithAuth.post('/reviews/saveReview',data)
+        return response
+    }catch(err){
+        throw err
+    }
+}

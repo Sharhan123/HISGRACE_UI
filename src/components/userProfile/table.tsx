@@ -24,22 +24,28 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
   const [open,setOpen] = useState(false)  
   const [review,setReview] = useState(false)
   const [reviewData,setReviewData] = useState<{
-    user:any,
-    vehicle:any,
-    review:number
+    driverId:any,
+    vehicle:boolean,
+    review:string,
+    rating:number
+    vehicleId:any
   }>({
-    user:'',
-    vehicle:'',
-    review:0
+    rating:0,
+    driverId:'',
+    vehicle:false,
+    review:'',
+    vehicleId:''
   })
   const dispatch = useDispatch()
-  const handleReviewSubmit = async (review:number)=>{
-    setReviewData(prev=>({...prev,review:review}))  
-    const data = {user:reviewData.user,vehicle:reviewData.vehicle,review:review}
+  
+  const handleReviewSubmit = async (rate:number,review:string)=>{
+    setReviewData(prev=>({...prev,rating:rate,review:review}))  
+    const data = {vehicle:false,review:review,rating:rate,driverId:reviewData.driverId}
     try{
        await setVehicleReview(data)   
       setReview(false)
-      setReviewData({user:'',vehicle:'',review:0})
+      setReviewData({rating:0,vehicle:false,review:'',driverId:'',vehicleId:''
+      })
     }catch(err:any){
       if(err.response.data.message){
         dispatch(showAlert({content:err.response.data.message,color:'red'}))
@@ -52,22 +58,23 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
   return (
       <>
       <BookingDetails booking={data} showModal={open} close={()=>setOpen(false)}/>
-      <ReviewModal submit={(review:number)=>handleReviewSubmit(review)
+      <ReviewModal submit={(rate:number,review:string)=>handleReviewSubmit(rate,review)
 
       } showModal={review} close={()=>{
         setReview(false)
-        setReviewData({user:'',vehicle:'',review:0})
+        setReviewData({review:'',    vehicleId:''
+,          vehicle:false,driverId:'',rating:0})
         } } />
-      <tr className="hover:bg-gray-50 text-black kanit-regular">
+      <tr className="hover:bg-gray-50  text-black kanit-regular">
         
 
-        <td className="px-6 py-4">
+        <td className="px-6 py-4  ">
           
             {new Date(data.period.date).toISOString().split('T')[0]}
           
         </td>
-        <td className="px-6 py-4">
-            <span className='bg-custom text-white px-2 rounded'>{data.from.name || data.from.city}<CompareArrowsIcon className='text-green mr-2 ml-2' /> {data.to.name || data.to.city}</span>
+        <td className="px-6 py-4 w-auto">
+            <span className='bg-custom lg:text-md md:text-md text-xs text-white px-2 rounded'>{data.from.name || data.from.city}<CompareArrowsIcon className='text-green mr-2 ml-2' /> {data.to.name || data.to.city}</span>
           
         </td>
         <td className="px-6 py-4">{data.vehicle.vehicleName}</td>
@@ -75,8 +82,8 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
         <td className="px-6 py-4">{data.type}</td>
         
         <td className="px-6 py-4"> 
-          <button onClick={()=>setOpen(true)} className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
-            View Details
+          <button onClick={()=>setOpen(true)} className='px-2 py-1 rounded text-white kanit-regular bg-gradient-to-br from-blue-800 to-blue-500' >
+            View 
           </button>
         </td>
         {
@@ -85,8 +92,8 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
           <button onClick={()=>{
             cancel()
             id(data._id)
-            }} className='px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-red-800 to-red-500'>
-            Cancel Booking
+            }} className='px-2 py-1 rounded text-white kanit-regular bg-gradient-to-br from-red-800 to-red-500'>
+            Cancel 
           </button>
         </td>
             ):(
@@ -95,9 +102,9 @@ const EmployeeTableRow: React.FC<row> = ({data,cancel,id}) => {
                 <td className="px-6 py-4"> 
                 <button onClick={()=>{
                   setReview(true)
-                  setReviewData(prev=>({...prev,user:data.userId,vehicle:data.vehicle._id}))
+                  setReviewData(prev=>({...prev,driverId:data.driver._id}))
                   }}  className={` px-2 py-2 rounded text-white kanit-regular bg-gradient-to-br from-green to-emerald-600 `}>
-                  Write Review
+                  Review Driver
                 </button>
               </td> 
               ):(
@@ -120,7 +127,7 @@ const EmployeeTable: React.FC<props> = ({data,reload}) => {
     const [id,setId] = useState('') 
 
   return (
-    <div className=" overflow-hidden rounded-lg w-full  border-gray-200 shadow-md m-5">
+    <div className=" overflow-auto rounded-lg w-full  border-gray-200 shadow-md m-5">
         <CancelBooking reload={reload} item={id} close={()=>setCancel(false)}  open={cancel} />
                 
       <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">

@@ -4,8 +4,10 @@ import { showAlert } from '../../redux/slices/alertSlice'
 import { useDispatch } from 'react-redux'
 import { getPackageBookingsByuser } from '../../services/packageBooking'
 import PackageTable from './packageTable'
+import Loader from '../customUI/loader'
 
 const PackageBookingsPage: React.FC = () => {
+    const [load,setLoad] = useState(false)
     const [selected,setSelected] = useState('Active')
     const [data,setData] = useState<IpackageBookingRes[]>([])
     const [showData,setShowData] = useState<IpackageBookingRes[]>([])
@@ -30,7 +32,9 @@ const PackageBookingsPage: React.FC = () => {
         }
     }
     useEffect(()=>{
+        setLoad(true)
         fetch()
+        setLoad(false)
     },[])
 
     useEffect(()=>{
@@ -47,7 +51,8 @@ const PackageBookingsPage: React.FC = () => {
         
     },[selected])
     return (
-
+        <>
+<Loader open={load}/>
         <div className="flex p-1 overflow-x-hidden flex-col h-full items-center justify- bg-custom text-center text-md overflow-auto shadow-md">
         {/* <h1 className='kanit-light bg-white text-black px-3 mt-2 rounded text-xl '>Your Trip Bookings</h1> */}
         <div className="mt-6  md:flex md:items-center md:justify-between">
@@ -67,6 +72,7 @@ const PackageBookingsPage: React.FC = () => {
                     </div>
         <PackageTable reload={fetch} data={showData} />
         </div>
+        </>
     )
 }
 

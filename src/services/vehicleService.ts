@@ -76,7 +76,16 @@ export const getBookingVehicles = async (data:any)=>{
 
 export const setVehicleReview = async (data:any)=>{
     try{
-        const response = await axiosWithAuth.post('/vehicle/setReview',data)
+        const response = await axiosWithAuth.post('/reviews/saveReview',data)
+        return response
+    }catch(err){
+        throw err
+    }
+}
+
+export const getReviews = async ()=>{
+    try{
+        const response = await axiosWithAuth.get('/reviews/getReviews')
         return response
     }catch(err){
         throw err

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { IbookingAuth, IvehicleRes } from '../../interfaces'
-import { getBookingVehicles } from '../../services/vehicleService'
+import { IbookingAuth, IreviewRes, IvehicleRes } from '../../interfaces'
+import { getBookingVehicles, getReviews } from '../../services/vehicleService'
 import ModalImage from '../customUI/imageModal'
 import { useSelector } from 'react-redux'
 import { backBookingData, selectBookingData, setBookingData } from '../../redux/slices/bookingSice'
@@ -14,12 +14,18 @@ const VehicleSelection: React.FC = () => {
     const [show, setShow] = useState(false)
     const [image, setImage] = useState('')
     const [driver,setDriver] = useState(false)
+    const [reviews,setReveiws] = useState<IreviewRes[]>([])
     const booking:IbookingAuth = useSelector(selectBookingData)
     const dispatch = useDispatch()
     useEffect(() => {
         const fetch = async () => {
             try {
                 let dates:any 
+                const res1 = await getReviews();
+                    
+                    const reviews = res1.data.data.filter((item: IreviewRes) => item.vehicle === true);
+                    setReveiws(reviews)
+                    
                 if(booking.type === 'one-way'){
                     dates = {startingDate:booking.period.date,endingDate:booking.period.date,type:booking.type}
                 }else{
@@ -74,17 +80,18 @@ const VehicleSelection: React.FC = () => {
         setDriver(true)
     }
     const getRate = (data:IvehicleRes)=>{
-        const reviews = data.reviews
-        if(reviews){
-            if(reviews.length === 0){
-                return 0
-            }
-            const total = reviews.reduce((acc, review) => acc + review.review, 0);
-            return Math.round(total/reviews.length)
+       const rdata = reviews.filter((item)=>item.vehicleId._id === data._id)
+        if (rdata.length === 0) {
+            return 0;
         }
-        return 0
 
-    }
+        const total = rdata.reduce((acc: number, review: IreviewRes) => acc + review.rating, 0);
+        console.log(total, 'done');
+
+        return Math.round(total / reviews.length)
+        }
+
+    
     return (
         <div className='bg-white h-auto  flex flex-col justify-center items-center'>
             <ModalImage closeModal={() => setShow(false)} open={show} image={image} />
@@ -105,11 +112,9 @@ const VehicleSelection: React.FC = () => {
                 {
 
                     vehicles && vehicles[0] ? (
-                        vehicles.map((item, index) => (
-
-
-                            <div key={index} className='mt-5 border rounded-lg border-custom h-44 '>
-                                <div className='h-2/6 grid grid-cols-5 rounded-t-lg bg-custom'>
+                        vehicles.map((item, index) => ( 
+                            <div key={index} className='mt-5 border rounded-lg border-custom lg:h-44 md:h-auto h-auto '>
+                                <div className='h-2/6 hidden md: lg:hiddengrid lg:grid-cols-5  rounded-t-lg bg-custom'>
                                     <div className='col-span-1 flex justify-center items-center rounded-t-md '>
                                         <span className='text-white text-lg kanit-light text-start'>Vehicle </span>
                                     </div>
@@ -127,43 +132,43 @@ const VehicleSelection: React.FC = () => {
                                     </div>
 
                                 </div>
-                                <div className='h-4/6 grid grid-cols-5'>
+                                <div className='h-auto grid md:grid-rows-5 grid-rows-5 lg:grid-cols-5 '>
                                     <div className='col-span-1 flex flex-col justify-evenly  items-center'>
 
-                                        <p className='kanit-regular text-xl '>{item.vehicleName}</p>
+                                        <p className='kanit-regular lg:text-xl md:text-md'>{item.vehicleName}</p>
                                         {/* <p className='kanit-regular text-red-600 underline text-md '>View Details</p> */}
                                         <Review rate={getRate(item)} totalStars={5} />
                                     </div>
-                                    <div className='col-span-1 flex flex-col justify-evenly  items-start'>
+                                    <div className='col-span-1 flex flex-col justify-evenly  lg:items-start md:items-center items-center'>
 
-                                        <p className='kanit-regular text-md '>{item.seat} seater {item.type}</p>
-                                        <p className='kanit-regular text-md '>{item.fuel} comfort vehicle</p>
+                                        <p className='kanit-regular lg:text-md md:text-sm'>{item.seat} seater {item.type}</p>
+                                        <p className='kanit-regular lg:text-md md:text-sm'>{item.fuel} comfort vehicle</p>
                                         <button onClick={() => {
                                             setImage(item.images)
                                             setShow(true)
-                                        }} className="  bg-yellow-500 kanit-light text-sm w-fit  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md px-2 py-1 mb-2 ">
+                                        }} className="  bg-yellow-500 kanit-light lg:text-sm md:text-xs w-fit  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded lg:px-2 md:px-1 md:py-0 lg:py-1 px-1 py-1 mb-2 ">
                                             view image
                                         </button>
                                     </div>
-                                    <div className='col-span-1 flex flex-col justify-evenly  items-start'>
+                                    <div className='col-span-1 flex flex-col justify-evenly  lg:items-start md:items-center items-center'>
 
-                                        <p className='kanit-regular text-md '>From : {booking.from.name || booking.from.city }</p>
-                                        <p className='kanit-regular text-md '>To : {booking.to.name || booking.to.city }</p>
-                                        <p className='kanit-regular text-md '>distance : {booking.distance/1000} km</p>
+                                        <p className='kanit-regular lg:text-md md:text-sm'>From : {booking.from.name || booking.from.city }</p>
+                                        <p className='kanit-regular lg:text-md md:text-sm'>To : {booking.to.name || booking.to.city }</p>
+                                        <p className='kanit-regular lg:text-md md:text-sm'>distance : {booking.distance/1000} km</p>
                                     </div>
-                                    <div className='col-span-1 flex flex-col justify-evenly  items-start'>
+                                    <div className='col-span-1 flex flex-col justify-evenly md:items-center items-center lg:items-start'>
                                         {
                                             (booking.distance/1000 ) < 100 ?(
                                                 <>
-                                                <p className='kanit-regular text-xl text-blue-600'>Estimate Price : ₹ {((Math.floor(booking.distance /1000)    )  * item.price )<500 ? 500:((Math.floor(booking.distance /1000)    )  * item.price + 100 )}</p>
-                                                <p className='kanit-regular text-md '>Price /KM : ₹ {item.price} + <span className='text-sm kanit-regular text-red-950'>extra charge ₹100</span></p>
-                                                <p className='kanit-regular text-md '>Total KM : {Math.floor(booking.distance/1000) *2} km</p>
+                                                <p className='kanit-regular lg:text-xl md:text-md text-blue-600'>Estimate Price : ₹ {((Math.floor(booking.distance /1000)    )  * item.price )<500 ? 500:((Math.floor(booking.distance /1000)    )  * item.price + 100 )}</p>
+                                                <p className='kanit-regular lg:text-md md:text-sm '>Price /KM : ₹ {item.price} + <span className='text-sm kanit-regular text-red-950'>extra charge ₹100</span></p>
+                                                <p className='kanit-regular lg:text-md md:text-sm '>Total KM : {Math.floor(booking.distance/1000) *2} km</p>
                                                 </>
                                             ):(
                                                 <>
-                                                <p className='kanit-regular text-xl text-blue-600'>Estimate Price : ₹ {item.startingPrice + ((Math.floor(booking.distance /1000))-100 )  * item.price + 100}</p>
-                                                <p className='kanit-regular text-md '>Price details : ₹ {item.startingPrice} upto 100 km + <span className='text-sm kanit-regular text-orange-400'> ₹{item.price} extra / km</span></p>
-                                                <p className='kanit-regular text-md '>Total KM : {Math.floor(booking.distance/1000) } km</p>
+                                                <p className='kanit-regular lg:text-xl md:text-md text-blue-600'>Estimate Price : ₹ {item.startingPrice + ((Math.floor(booking.distance /1000))-100 )  * item.price + 100}</p>
+                                                <p className='kanit-regular lg:text-md md:text-sm '>Price details : ₹ {item.startingPrice} upto 100 km + <span className='text-sm kanit-regular text-orange-400'> ₹{item.price} extra / km</span></p>
+                                                <p className='kanit-regular lg:text-md md:text-sm '>Total KM : {Math.floor(booking.distance/1000) } km</p>
                                                 </>
                                             )
                                         }
@@ -174,7 +179,7 @@ const VehicleSelection: React.FC = () => {
                             <button onClick={() => {
                                 handleSubmit(item)
                                             
-                                        }} className="  bg-blue-600 kanit-light text-sm w-fit  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md px-10 py-2 mb-2 ">
+                                        }} className="  bg-blue-600 kanit-light md:text-xs lg:text-sm w-fit  opacity-100 hover:opacity-100 text-white hover:text-gray-900 rounded-md lg:px-10 md:px-5 px-5 lg:py-2 md:py-1  py-2mb-2 ">
                                             select vehicle
                                         </button>
                                     </div>

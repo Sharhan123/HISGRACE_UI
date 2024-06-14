@@ -1,8 +1,11 @@
 import React from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 const  AdminNavbar:React.FC = ()=> {
+  const navigate = useNavigate()
   return (
-    <nav className="block w-full max-w-full bg-transparent text-white shadow-none rounded-xl transition-all px-0 py-1">
+    <>
+    <nav className="lg:block md:hidden hidden w-full max-w-full bg-transparent text-white shadow-none rounded-xl transition-all px-0 py-1">
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
           <nav aria-label="breadcrumb" className="w-max">
@@ -43,6 +46,41 @@ const  AdminNavbar:React.FC = ()=> {
           </div>
           </div>
           </nav>
+
+          <nav className=' lg:hidden md:block grid grid-cols-3 gap-5 w-full h-auto px-2 py-5 bg-custom  items-center justify-around'>
+            <button onClick={()=>navigate('/admin/dashboard')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Dashboard
+            </button>
+            <button onClick={()=>navigate('/admin/vehicles')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Vehicles
+            </button>
+            <button onClick={()=>navigate('/admin/packages')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Packages
+            </button>
+            <button onClick={()=>navigate('/admin/users')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Users
+            </button>
+            <button onClick={()=>navigate('/admin/bookings')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Bookings
+            </button>
+            <button onClick={()=>navigate('/admin/dashboard')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Packages Bookings
+            </button>
+            <button onClick={()=>navigate('/admin/chats')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Chat
+            </button>
+            <button onClick={()=>navigate('/admin/reviews')} className='px-2 h-fit py-1 text-sm kanit-regular rounded bg-white '>
+              Reviews
+            </button>
+            <button onClick={()=>{
+                localStorage.removeItem('admin')
+
+                navigate('/admin')
+            }} className='px-2 text-white h-fit py-1 text-sm kanit-regular rounded bg-red-500 '>
+              Logout
+            </button>
+            </nav>
+            </>
   )
 }
 

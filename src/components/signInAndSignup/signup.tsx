@@ -229,7 +229,6 @@ const SignUp: React.FC<SignUpProps> = () => {
             <img src={Image} alt="" />
 
           </div>
-          <img src={Image} className="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div className="content">

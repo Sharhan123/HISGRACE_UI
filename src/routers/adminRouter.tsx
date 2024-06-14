@@ -9,6 +9,7 @@ import AdminDriverPage from "../pages/adminPages/adminDrivers"
 import AdminBookingsPage from "../pages/adminPages/adminBookingPage"
 import AdminMessagesPage from "../pages/adminPages/adminMessagesPage"
 import AdminPackageBookings from "../pages/adminPages/adminPackageBookings"
+import AdminReviewsPage from "../pages/adminPages/adminReviewsPage"
 
 const AdminRoutes: React.FC = () => {
 
@@ -24,6 +25,7 @@ return (
                 <Route path="/admin/bookings" element={<adminProtected.ProtectedRouteWrapper><AdminBookingsPage/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/packageBookings" element={<adminProtected.ProtectedRouteWrapper><AdminPackageBookings/></adminProtected.ProtectedRouteWrapper>} />
                 <Route path="/admin/chats" element={<adminProtected.ProtectedRouteWrapper><AdminMessagesPage /></adminProtected.ProtectedRouteWrapper>} />
+                <Route path="/admin/reviews" element={<adminProtected.ProtectedRouteWrapper><AdminReviewsPage /></adminProtected.ProtectedRouteWrapper>} />
             </Routes>
        
     )

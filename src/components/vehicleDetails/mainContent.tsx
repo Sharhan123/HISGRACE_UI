@@ -1,21 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import './style.css'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getVehicles } from '../../services/vehicleService';
-import { IvehicleRes } from '../../interfaces';
+import { getReviews, getVehicles, setVehicleReview } from '../../services/vehicleService';
+import { IreviewRes, IvehicleRes } from '../../interfaces';
 import { FaClock, FaLeaf, FaSnowflake } from 'react-icons/fa';
 import CustomsButtons from '../customUI/customsButtons';
 import { showAlert } from '../../redux/slices/alertSlice';
 import { useDispatch } from 'react-redux';
 import Review from '../customUI/reviewShow';
+import ReviewModal from '../customUI/reviewModal';
 
 const MainContent: React.FC = () => {
     const [data, setData] = useState<IvehicleRes>()
+    const [rate, setRate] = useState<number>(0)
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id')
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [review, setReview] = useState(false)
+    const [reviewData, setReviewData] = useState<{
+        driverId: any,
+        vehicle: boolean,
+        review: string,
+        rating: number
+        vehicleId: any
+    }>({
+        rating: 0,
+        driverId: '',
+        vehicle: true,
+        review: '',
+        vehicleId: ''
+    })
+
+
+    
+
+    const handleReviewSubmit = async (rate: number, review: string) => {
+        setReviewData(prev => ({ ...prev, rating: rate, review: review }))
+        const data = { vehicle: true, review: review, rating: rate, vehicleId: reviewData.vehicleId }
+        try {
+            await setVehicleReview(data)
+            setReview(false)
+            setReviewData({
+                rating: 0, vehicle: true, review: '', driverId: '', vehicleId: ''
+            })
+        } catch (err: any) {
+            if (err.response.data.message) {
+                dispatch(showAlert({ content: err.response.data.message, color: 'red' }))
+                return
+            }
+            dispatch(showAlert({ content: err.message, color: 'red' }))
+
+        }
+    }
     useEffect(() => {
         const fetch = async () => {
 
@@ -25,39 +63,42 @@ const MainContent: React.FC = () => {
 
                 if (id) {
 
-                    const unique = datas.filter((item: any) => item.id === parseFloat(id))
-                    console.log(unique);
+                    const unique = datas.filter((item: IvehicleRes) => item.id === parseFloat(id))
                     setData(unique[0])
+                    const res = await getReviews();
+                    
+                    const reviews = res.data.data.filter((item: IreviewRes) => item.vehicle === true && item.vehicleId._id === unique[0]._id);
+
+                    if (reviews.length === 0) {
+                        return 0;
+                    }
+
+                    const total = reviews.reduce((acc: number, review: IreviewRes) => acc + review.rating, 0);
+                    console.log(total, 'done');
+
+                    setRate(Math.round(total / reviews.length))
                 }
 
-            } catch (err:any) { 
+            } catch (err: any) {
                 console.error('Error fetching data:', err);
-                if(err.response.data){ 
-                    dispatch(showAlert({content:err.response.data.message,color:'red'}))
-                    return 
+                if (err.response.data) {
+                    dispatch(showAlert({ content: err.response.data.message, color: 'red' }))
+                    return
                 }
-                dispatch(showAlert({content:err.message,color:'red'}))
+                dispatch(showAlert({ content: err.message, color: 'red' }))
 
             }
         }
+
+
         fetch()
 
 
-    }, [id])
-    const getRate = ()=>{ 
-        const reviews = data?.reviews
-        if(reviews){
-            if(reviews.length === 0){
-                return 0
-            }
-            const total = reviews.reduce((acc, review) => acc + review.review, 0);
-            return Math.round(total/reviews.length)
-        }
-        return 0
+    }, [])
 
-    }
     return (
         <div >
+            <ReviewModal showModal={review} close={() => setReview(false)} submit={(rate: number, review: string) => handleReviewSubmit(rate, review)} />
             <div className="w-full max-w-5xl mt-10 rounded-3xl  bg-custom \ shadow-2xl   p-10 lg:p-20 mx-auto text-gray-800 relative md:text-left">
                 <div className="md:flex items-center -mx-10">
                     <div className="w-full md:w-1/2 px-10 mb-10 md:mb-0">
@@ -94,7 +135,16 @@ const MainContent: React.FC = () => {
                                 <p className='text-md mt-5 kanit-regular text-orange-500'>Please Note  : <span className='text-white opacity-100'>  For the First 100 km the price will be  <span className='text-yellow-400 opacity-100'>₹ {data?.startingPrice} /-</span> and for additional each km it will be charged <span className='text-yellow-400 opacity-100'>₹ {data?.price} /-</span> .</span></p>
 
                             </div>
-                            <Review rate={getRate()} totalStars={5} />
+                            <div className='flex justify-between items-center'>
+
+                                <Review rate={rate} totalStars={5} />
+                                <button
+                                    onClick={() => {
+                                        setReview(true)
+                                        setReviewData(prev => ({ ...prev, vehicleId: data?._id }))
+                                    }}
+                                    className='px-2 py-1 bg-green text-sm rounded-sm ro kanit-regular'>Review Vehicle</button>
+                            </div>
                         </div>
 
                         <div className='mt-10 flex justify-evenly'>

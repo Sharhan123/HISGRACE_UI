@@ -129,7 +129,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-blue-600">78%</strong>&nbsp;of Bookings
+                <strong className="text-blue-600">81%</strong>&nbsp;of Bookings
               </p>
             </div>
           </div>
@@ -143,7 +143,7 @@ const bookingsToday = bookingsData.filter(booking => {
             </div>
             <div className="border-t border-blue-gray-50 p-4">
               <p className="block antialiased kanit-regular text-base leading-relaxed font-normal text-blue-gray-600">
-                <strong className="text-orange-600">12%</strong>&nbsp; of Bookings
+                <strong className="text-orange-600">19%</strong>&nbsp; of Bookings
               </p>
             </div>
           </div>

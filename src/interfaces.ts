@@ -273,7 +273,16 @@ export interface IreviewData {
 }
 
 
+export interface IreviewRes{
+  _id:any,
+  review:string
+  rating:number
+  user:IuserRes,
+  vehicle:boolean,
+  driverId:IdriverRes
+  vehicleId:IvehicleRes
 
+}
 
 
 

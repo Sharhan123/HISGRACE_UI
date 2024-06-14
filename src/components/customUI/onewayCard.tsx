@@ -15,7 +15,7 @@ import { setBookingData } from '../../redux/slices/bookingSice';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 
 
@@ -78,6 +78,53 @@ if(selected ==='round-way'){
         const hour = parseInt(time.split(':')[0], 10);
         return hour >= 12 ? 'PM' : 'AM';
     };
+
+    const handleSelectCurrentLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                const apiKey = '2b1a504c63e94715aa252ab8128c20b3'; 
+                const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}`;
+    
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (data.results && data.results.length > 0) {
+                        const result = data.results[0];
+                        const location: Ilocation = {
+                            city: result.components.city || '',
+                            name: result.components.name || result.components.county,
+                            address_line1: result.components.road || '',
+                            address_line2: result.components.suburb || '',
+                            country: result.components.country || '',
+                            country_code: result.components.country_code || '',
+                            county: result.components.county || '',
+                            formatted: result.formatted || '',
+                            lat: result.geometry.lat,
+                            lon: result.geometry.lng,
+                            place_id: result.annotations.OSM.place_id || '',
+                            postcode: result.components.postcode || '',
+                            state: result.components.state || '',
+                            state_code: result.components.state_code || ''
+                        };
+    
+                        console.log(location,'location'); 
+                        setSelectedFrom(location)
+                    }
+                } catch (error) {
+                    console.error('Error fetching location data:', error);
+                }
+            }, (error) => {
+                console.error('Error getting current location:', error);
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    };
+    
 
     const handleBooking = async () => {
         if (!token) {
@@ -187,7 +234,7 @@ if(selected ==='round-way'){
                                     setType('from')
                                     setOpen(true)
                                 }} className='text-black kanit-regular text-lg'>{selectedFrom ? selectedFrom.name || selectedFrom.city : 'Select From Location'}</span>
-                                {/* <MyLocation onClick={handleSelectCurrentLocation} className='text-green ml-8' /> */}
+                                <MyLocationIcon onClick={handleSelectCurrentLocation} className='text-green ml-8' />
                             </div>
                             <div className='flex '>
                                 <span className='text-black kanit-light text-sm '>
